@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 import { View, Button, Text } from 'react-native';
 import * as Google from 'expo-auth-session/providers/google';
 import db from '../Database/baza.js'; // Uvoz funkcij iz db.tsx
@@ -93,4 +93,4 @@ const GoogleLogin = ({ onLogin }: { onLogin: (user: any) => void }) => {
   );
 };
 */
-export default GoogleLogin;
+//export default GoogleLogin;

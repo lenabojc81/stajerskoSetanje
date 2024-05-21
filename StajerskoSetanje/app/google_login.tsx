@@ -2,7 +2,11 @@ import React, { useEffect } from 'react';
 import { View, Button, Text } from 'react-native';
 import * as Google from 'expo-auth-session/providers/google';
 import * as SecureStore from 'expo-secure-store';
-import db, { initializeDatabase } from '../Database/baza'; // Poskrbite, da je pot pravilna
+import db, { initializeDatabase } from '../Database/baza'; 
+import { useNavigation } from '@react-navigation/native';
+
+
+
 
 const insertUser = (name: string, priimek: string, uporabnisko_ime: string, googleId: string) => {
   db.transaction(tx => {
@@ -32,10 +36,13 @@ const fetchUserByGoogleId = (googleId: string, callback: (user: any) => void) =>
   });
 };
 
-const GoogleLogin = () => {
+const google_login = () => {
+
+    const navigation = useNavigation();
+
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: '427616683093-ip5pkedj9is5qe8l5kqipqpup5d7haeh.apps.googleusercontent.com',
-    redirectUri: 'https://auth.expo.io/vivien_stampfer/StajerskoSetanje', // Poskrbite, da uporabite pravilen URI
+    redirectUri: 'https://auth.expo.io/vivien_stampfer/StajerskoSetanje', 
     scopes: ['profile', 'email'],
   });
 
@@ -53,7 +60,7 @@ const GoogleLogin = () => {
         .then(async data => {
           console.log(data);
 
-          // Store the token securely
+          // Shranjevanje tokena v SecureStore
           await SecureStore.setItemAsync('userToken', id_token);
 
           // Send the token to your backend for verification and user info storage
@@ -69,8 +76,10 @@ const GoogleLogin = () => {
               if (serverData.valid) {
                 const { name, sub: googleId, email } = serverData.payload;
 
-                // Insert user into the local database
+                // vstavljanje v lokalno bazo
                 insertUser(name, '', email, googleId);
+
+             //   navigation.navigate('index');
               } else {
                 console.error('Token validation failed');
               }
@@ -79,7 +88,9 @@ const GoogleLogin = () => {
         })
         .catch(err => console.error('Error fetching user info:', err));
     }
-  }, [response]);
+  }, [response, navigation]);
+
+ 
 
   return (
     <View>
@@ -97,4 +108,4 @@ const GoogleLogin = () => {
   );
 };
 
-export default GoogleLogin;
+export default google_login;
