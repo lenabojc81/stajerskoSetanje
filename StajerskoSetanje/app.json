@@ -13,9 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vivienstampfer.stajerskosetanje"
     },
     "android": {
+      "package": "com.vivienstampfer.stajerskosetanje",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -39,6 +41,7 @@
       "eas": {
         "projectId": "ba31abad-ae54-47a8-92cf-c74689263bfa"
       }
-    }
+    },
+    "owner": "vivien_stampfer"
   }
 }

@@ -10,6 +10,7 @@ const home = () => {
             <Link href={'/profile'}>Go to Profile</Link>
             <Link href={'/google_login'}>Go to login</Link>
             <Link href={'/login'}>Go to new login</Link>
+            <Link href={'/log'}>Go to log</Link>
         </View>
     );
 }
