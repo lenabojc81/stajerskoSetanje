@@ -9,6 +9,7 @@ export default function Layout(){
             <Stack.Screen name="index" />
             <Stack.Screen name="profile" />
             <Stack.Screen name="google_login" />
+            <Stack.Screen name="login" />
         </Stack>
     );
 }

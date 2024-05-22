@@ -4,6 +4,8 @@ import * as Google from 'expo-auth-session/providers/google';
 import * as SecureStore from 'expo-secure-store';
 import db, { initializeDatabase } from '../Database/baza'; 
 import { useNavigation } from '@react-navigation/native';
+import home from './home';
+import { Redirect } from 'expo-router';
 
 
 
@@ -38,7 +40,8 @@ const fetchUserByGoogleId = (googleId: string, callback: (user: any) => void) =>
 
 const google_login = () => {
 
-    const navigation = useNavigation();
+console.log('google_login');
+
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: '427616683093-ip5pkedj9is5qe8l5kqipqpup5d7haeh.apps.googleusercontent.com',
@@ -63,6 +66,8 @@ const google_login = () => {
           // Shranjevanje tokena v SecureStore
           await SecureStore.setItemAsync('userToken', id_token);
 
+          console.log('token shranjen');
+
           // Send the token to your backend for verification and user info storage
           fetch('YOUR_SERVER_ENDPOINT/verifyToken', {
             method: 'POST',
@@ -76,10 +81,13 @@ const google_login = () => {
               if (serverData.valid) {
                 const { name, sub: googleId, email } = serverData.payload;
 
+
+                console.log('User info:', name, googleId, email);
+
                 // vstavljanje v lokalno bazo
                 insertUser(name, '', email, googleId);
-
-             //   navigation.navigate('index');
+               
+              
               } else {
                 console.error('Token validation failed');
               }
@@ -88,7 +96,7 @@ const google_login = () => {
         })
         .catch(err => console.error('Error fetching user info:', err));
     }
-  }, [response, navigation]);
+  }, [response]);
 
  
 
