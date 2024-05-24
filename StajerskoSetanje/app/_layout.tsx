@@ -1,16 +1,9 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router/stack';
 
-//router do vseh strani(tukaj jih vstavljaš)
-//komponente ustvarjaš v app
-export default function Layout(){
-    return (
-        <Stack>
-            <Stack.Screen name="home" />
-            <Stack.Screen name="index" />
-            <Stack.Screen name="profile" />
-            <Stack.Screen name="google_login" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="log" />
-        </Stack>
-    );
+export default function Layout() {
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
+  );
 }
