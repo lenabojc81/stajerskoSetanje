@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "axios": "^1.7.2",
+    "expo-image-picker": "^15.0.5",
+    "expo-file-system": "~17.0.1"
+  }
+}
