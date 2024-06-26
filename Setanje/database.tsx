@@ -13,6 +13,7 @@ export const openDatabase = async () => {
 export const initDB = async (db: SQLite.WebSQLDatabase) => {
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
+    DROP TABLE IF EXISTS Uporabniki;
     CREATE TABLE IF NOT EXISTS Uporabniki (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL);
     INSERT INTO Uporabniki (name) VALUES ('John Doe');
     INSERT INTO Uporabniki (name) VALUES ('Jane Doe');

@@ -1,7 +1,9 @@
 // App.tsx
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { openDatabase, initDB, fetchUsers, User } from './database';
+import MyTabs from './components/Nav';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -33,18 +35,9 @@ const App: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={users}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text>ID: {item.id}</Text>
-            <Text>Name: {item.name}</Text>
-          </View>
-        )}
-      />
-    </View>
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
   );
 };
 
