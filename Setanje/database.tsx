@@ -15,6 +15,7 @@ export const initDB = async (db: SQLite.WebSQLDatabase) => {
     PRAGMA journal_mode = WAL;
     DROP TABLE IF EXISTS Uporabniki;
     CREATE TABLE IF NOT EXISTS Uporabniki (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS Poti (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL,pricakovana_dolzina_minute INTEGER NOT NULL, pricakovana_dolzina_m INTEGER NOT NULL, tezavnost INTEGER NOT NULL, opis TEXT NOT NULL);
     INSERT INTO Uporabniki (name) VALUES ('John Doe');
     INSERT INTO Uporabniki (name) VALUES ('Jane Doe');
     INSERT INTO Uporabniki (name) VALUES ('Mike Smith');
