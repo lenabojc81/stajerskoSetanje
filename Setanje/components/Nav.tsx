@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { openDatabase, initDB, fetchUsers, User } from './../database';
-import Dodajanje_poti from './Dodajanje_poti.tsx';
+import Dodajanje_poti from './Dodajanje_poti';
+import ImageUpload from './visionApi';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,8 +52,8 @@ const UsersScreen = () => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text>ID: {item.id}</Text>
             <Text>Name: {item.name}</Text>
+            <Text>ID: {item.id}</Text>
           </View>
         )}
       />
@@ -70,9 +71,10 @@ const MyTabs = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Users" component={UsersScreen} />
+      <Tab.Screen name="Users" component={ImageUpload} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Dodajanje poti" component={Dodajanje_poti} />
+      <Tab.Screen name="AI" component={UsersScreen} />
     </Tab.Navigator>
   );
 };
