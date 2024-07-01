@@ -1,15 +1,22 @@
-import request from 'supertest';
-import express, { Request, Response } from 'express';
+import request from "supertest";
+import { app, server } from "../src/index";
 
-const app = express();
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript with Express!');
+describe('GET /DBconnection', () => {
+    it('should check MongoDB connection', async () => {
+      const response = await request(app).get('/DBconnection');
+      expect(response.statusCode).toBe(200);
+      expect(response.text).toEqual("Successfully connected to MongoDB!");
+    });
 });
 
-describe('GET /', () => {
-  it('should return 200 and Hello, TypeScript with Express!', async () => {
-    const response = await request(app).get('/');
+describe("GET /", () => {
+  it("should return 200 and Hello, TypeScript with Express!", async () => {
+    const response = await request(app).get("/");
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Hello, TypeScript with Express!');
+    expect(response.text).toBe("Hello, TypeScript with Express!");
   });
+});
+
+afterAll(() => {
+  server.close();
 });
