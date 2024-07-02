@@ -16,17 +16,32 @@ import * as Location from "expo-location";
 import styles from "./styles";
 import {baseUrl} from "../../global";
 
+
+type FormData = {
+    Ime_poti: string;
+    Tezavnost: string;
+    Dolzina_poti: string;
+    Opis: string;
+  };
+  
+  type MarkerType = {
+    ime: string;
+    coordinate: {
+      latitude: number;
+      longitude: number;
+    };
+  };
+  
+
 const DodajanjePoti = () => {
     const { control, handleSubmit, reset } = useForm();
     const [paths, setPaths] = useState([]);
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState("");
+    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [errorMsg, setErrorMsg] = useState<String>("");
     const [markers, setMarkers] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [markerName, setMarkerName] = useState('');
-
-
 
     useEffect(() => {
         (async () => {
@@ -79,6 +94,7 @@ const DodajanjePoti = () => {
 
             }}
     };
+    
 
     const onSubmit = async (data) => {
 
@@ -113,6 +129,8 @@ const DodajanjePoti = () => {
     
             const responseData = await response.json();
             console.log('Podatki uspešno poslani:', responseData);
+            reset();
+            setMarkers([]);
         } catch (error) {
             console.error('Napaka pri pošiljanju podatkov:', error);
         }
