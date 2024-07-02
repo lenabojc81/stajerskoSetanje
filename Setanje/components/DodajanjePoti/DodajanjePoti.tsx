@@ -1,16 +1,26 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView , Modal} from 'react-native';
-import { useState, useEffect } from 'react';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
+import React from "react";
+import { useForm, Controller } from "react-hook-form";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+  Modal,
+} from "react-native";
+import { useState, useEffect } from "react";
+import MapView from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import styles from "./styles";
+import {baseUrl} from "../../global";
 
-const Dodajanje_poti = () => {
+const DodajanjePoti = () => {
     const { control, handleSubmit, reset } = useForm();
     const [paths, setPaths] = useState([]);
     const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
+    const [errorMsg, setErrorMsg] = useState("");
     const [markers, setMarkers] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -51,7 +61,7 @@ const Dodajanje_poti = () => {
         const { coordinate } = event.nativeEvent;
         setSelectedLocation(coordinate);
         setModalVisible(true);
-        console.log(coordinate);
+        //console.log(coordinate);
     };
 
     const savePin = () => {
@@ -63,19 +73,49 @@ const Dodajanje_poti = () => {
             };
             setMarkers([...markers, newMarker]);
             setSelectedLocation(null);
-            console.log(markers);
+            //console.log(markers);
             setMarkerName('');
             setModalVisible(false); 
 
             }}
     };
 
-    const onSubmit = data => {
-        
+    const onSubmit = async (data) => {
+
         data = { ...data, markers };
         console.log(data);
-        console.log(data.markers[0]);
-        
+        const bodyData = {
+            ime: data.Ime_poti,
+            tezavnost: data.Tezavnost,
+            dolzina: data.Dolzina_poti,
+            opis: data.Opis,
+            vmesne_tocke: data.markers.map((marker) => ({
+                ime: marker.ime,
+                lokacija: {
+                    lat: marker.coordinate["latitude"],
+                    lng: marker.coordinate["longitude"],
+                },
+            })),
+        }
+        console.log(bodyData);
+        try {
+            const response = await fetch(`${baseUrl}/dodajPot`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bodyData),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Napaka pri pošiljanju podatkov na strežnik');
+            }
+    
+            const responseData = await response.json();
+            console.log('Podatki uspešno poslani:', responseData);
+        } catch (error) {
+            console.error('Napaka pri pošiljanju podatkov:', error);
+        }
     };
 
     return (
@@ -197,49 +237,4 @@ const Dodajanje_poti = () => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-        flex: 1,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
-    },
-    input: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 10,
-    },
-    container1: {
-
-        height: '40%',
-        width: '100%',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    map: {
-        height: 300,
-        width: '100%',
-
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-      },
-});
-
-export default Dodajanje_poti;
+export default DodajanjePoti;

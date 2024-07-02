@@ -1,10 +1,10 @@
 // nav.tsx
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs/src';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { openDatabase, initDB, fetchUsers, User } from './../database';
-import Dodajanje_poti from './Dodajanje_poti';
+import DodajanjePoti from './DodajanjePoti/DodajanjePoti';
 import ImageUpload from './visionApi';
 
 const Tab = createBottomTabNavigator();
@@ -73,7 +73,7 @@ const MyTabs = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Users" component={ImageUpload} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Dodajanje poti" component={Dodajanje_poti} />
+      <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
       <Tab.Screen name="AI" component={UsersScreen} />
     </Tab.Navigator>
   );
