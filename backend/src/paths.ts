@@ -14,4 +14,13 @@ router.post('/dodajPot', async (req, res) => {
     }
 });
 
+router.get('/pridobiPoti', async (req, res) => {
+    try {
+        const poti = await Pot.find({});
+        res.status(200).json(poti);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error });
+    }
+});
 export default router;

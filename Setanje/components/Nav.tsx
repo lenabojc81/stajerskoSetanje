@@ -6,6 +6,7 @@ import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { openDatabase, initDB, fetchUsers, User } from './../database';
 import DodajanjePoti from './DodajanjePoti/DodajanjePoti';
 import ImageUpload from './visionApi';
+import Poti from './Poti/poti';
 
 const Tab = createBottomTabNavigator();
 
@@ -71,10 +72,12 @@ const MyTabs = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Users" component={ImageUpload} />
+      <Tab.Screen name="AI" component={ImageUpload} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
-      <Tab.Screen name="AI" component={UsersScreen} />
+      <Tab.Screen name="Users" component={UsersScreen} />
+      <Tab.Screen name="Poti" component={Poti} />
+
     </Tab.Navigator>
   );
 };

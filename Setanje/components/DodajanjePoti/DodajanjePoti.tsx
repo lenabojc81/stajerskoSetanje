@@ -22,6 +22,7 @@ type FormData = {
     Tezavnost: string;
     Dolzina_poti: string;
     Opis: string;
+    Tocke: number;
   };
   
   type MarkerType = {
@@ -30,6 +31,7 @@ type FormData = {
       latitude: number;
       longitude: number;
     };
+    uganka: string;
   };
   
 
@@ -42,6 +44,8 @@ const DodajanjePoti = () => {
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [markerName, setMarkerName] = useState('');
+    const [uganke, setUganke] = useState([]);
+    const [tocke, setTocke] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -76,7 +80,7 @@ const DodajanjePoti = () => {
         const { coordinate } = event.nativeEvent;
         setSelectedLocation(coordinate);
         setModalVisible(true);
-        //console.log(coordinate);
+        console.log(coordinate);
     };
 
     const savePin = () => {
@@ -85,10 +89,11 @@ const DodajanjePoti = () => {
                 const newMarker = {
                   ime: markerName,
                   coordinate: selectedLocation,
+                  uganka: uganke,
             };
             setMarkers([...markers, newMarker]);
             setSelectedLocation(null);
-            //console.log(markers);
+            console.log(markers);
             setMarkerName('');
             setModalVisible(false); 
 
@@ -105,12 +110,14 @@ const DodajanjePoti = () => {
             tezavnost: data.Tezavnost,
             dolzina: data.Dolzina_poti,
             opis: data.Opis,
+            tocke: data.Tocke,
             vmesne_tocke: data.markers.map((marker) => ({
                 ime: marker.ime,
                 lokacija: {
                     lat: marker.coordinate["latitude"],
                     lng: marker.coordinate["longitude"],
                 },
+                uganka: marker.uganka,
             })),
         }
         console.log(bodyData);
@@ -194,6 +201,19 @@ const DodajanjePoti = () => {
                     />
                 )}
             />
+             <Controller
+                control={control}
+                name="Tocke"
+                defaultValue=""
+                render={({ field: { onChange, value } }) => (
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Točke"
+                        onChangeText={onChange}
+                        value={value}
+                    />
+                )}
+            />
             <MapView style={styles.map} region={region} onPress={handleMapPress}>
                 {markers.map((marker, index) => (
                     <Marker
@@ -216,6 +236,7 @@ const DodajanjePoti = () => {
                         <Text>Težavnost: {path.Tezavnost}</Text>
                         <Text>Dolžina poti: {path.Dolzina_poti}</Text>
                         <Text>Opis: {path.Opis}</Text>
+                        <Text>Točke: {path.Tocke}</Text>
                     </View>
                 ))}
             </View>
@@ -227,6 +248,7 @@ const DodajanjePoti = () => {
                         <Text style={styles.pathName}>Ime: {marker.ime}</Text> 
                         <Text style={styles.pathName}>Latitude: {marker.coordinate["latitude"]}</Text>
                         <Text style={styles.pathName}>longitude: {marker.coordinate["longitude"]}</Text>
+                        <Text style={styles.pathName}>Uganka: {marker.uganka}</Text>
                     </View>
 
                 ))}
@@ -247,6 +269,12 @@ const DodajanjePoti = () => {
             placeholder="Ime markerja"
             value={markerName}
             onChangeText={setMarkerName}
+          />
+           <TextInput
+            style={styles.input}
+            placeholder="Napiši uganko"
+            value={uganke}
+            onChangeText={setUganke}
           />
           <Button title="Shrani" onPress={savePin} />
         </View>
