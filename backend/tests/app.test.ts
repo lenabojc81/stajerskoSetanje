@@ -62,6 +62,10 @@ describe('POST /dodajPot', () => {
   });
 });
 
+describe("GET /premikNaZacetnoTocko/:startLong/:startLat/:endLong/:endLat", () => {
+
+});
+
 afterAll(async () => {
   await mongoose.disconnect();
   server.close();

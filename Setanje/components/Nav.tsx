@@ -7,6 +7,7 @@ import { openDatabase, initDB, fetchUsers, User } from './../database';
 import DodajanjePoti from './DodajanjePoti/DodajanjePoti';
 import ImageUpload from './visionApi';
 import Poti from './Poti/poti';
+import IzvajanjePoti from './IzvajanjePoti/IzvajanjePoti';
 
 const Tab = createBottomTabNavigator();
 
@@ -77,6 +78,7 @@ const MyTabs = () => {
       <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
       <Tab.Screen name="Users" component={UsersScreen} />
       <Tab.Screen name="Poti" component={Poti} />
+      <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} />
 
     </Tab.Navigator>
   );
