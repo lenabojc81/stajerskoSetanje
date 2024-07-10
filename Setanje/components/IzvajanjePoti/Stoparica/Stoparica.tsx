@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text } from 'react-native';
 
 interface StoparicaProps {
     startTime: Date;
+    onElapsedTime: (time: number) => void;
 }
 
-const Stoparica: React.FC<StoparicaProps> = ({ startTime }) => {
+const Stoparica: React.FC<StoparicaProps> = ({ startTime, onElapsedTime }) => {
     const [time, setTime] = useState(0);
     const [isRunning, setIsRunning] = useState(true);
 
@@ -14,6 +15,7 @@ const Stoparica: React.FC<StoparicaProps> = ({ startTime }) => {
             const now = new Date();
             const elapsedTime = Math.floor((now.getTime() - startTime.getTime()) / 1000);
             setTime(elapsedTime);
+            onElapsedTime(elapsedTime);
         };
 
         let interval: NodeJS.Timeout | undefined = undefined;
@@ -24,7 +26,7 @@ const Stoparica: React.FC<StoparicaProps> = ({ startTime }) => {
         }
 
         return () => clearInterval(interval);
-    }, [isRunning, startTime]);
+    }, [isRunning, startTime, onElapsedTime]);
 
     const formatTime = (seconds: number) => {
         const getSeconds = `0${seconds % 60}`.slice(-2);
