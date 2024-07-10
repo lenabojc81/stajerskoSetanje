@@ -3,7 +3,9 @@ import { View, Text, Button } from 'react-native';
 import MapView, { Circle, Region, Polyline, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from './styles';
-import CustomButton from '../GumbPoMeri/GumbPoMeri';
+import CustomButton from '../../GumbPoMeri/GumbPoMeri';
+import { haversineDistance } from '../MerjenjeDistance/RazdaljaMedDvemaTockama';
+import MerjenjeDistance from '../MerjenjeDistance/MerjenjeDistance';
 
 interface LocationType {
   coords: {
@@ -15,6 +17,7 @@ interface LocationType {
 const Zemljevid: React.FC<{ endLocation: LocationType }> = ({ endLocation }) => {
   const [initialLocation, setInitialLocation] = useState<LocationType | null>(null);
   const [changedLocation, setChangedLocation] = useState<LocationType | null>(null);
+  const [lastKnownLocation, setLastKnownLocation] = useState<LocationType | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [region, setRegion] = useState<Region>({
     latitude: 37.78825,
@@ -23,6 +26,7 @@ const Zemljevid: React.FC<{ endLocation: LocationType }> = ({ endLocation }) => 
     longitudeDelta: 0.005,
   });
   const [path, setPath] = useState<Array<{ latitude: number; longitude: number }>>([]);
+  const [distanceTraveled, setDistanceTraveled] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
@@ -35,6 +39,8 @@ const Zemljevid: React.FC<{ endLocation: LocationType }> = ({ endLocation }) => 
       let location = await Location.getCurrentPositionAsync({});
       setInitialLocation(location);
       setChangedLocation(location);
+      setLastKnownLocation(location);
+
       setRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -62,6 +68,13 @@ const Zemljevid: React.FC<{ endLocation: LocationType }> = ({ endLocation }) => 
       );
     })();
   }, []);
+
+  useEffect(() => {
+    if (changedLocation && lastKnownLocation) {
+      setDistanceTraveled((prevDistance) => prevDistance + haversineDistance(lastKnownLocation.coords, changedLocation.coords));
+      setLastKnownLocation(changedLocation);
+    }
+  }, [changedLocation])
 
   const increaseDelta = () => {
     setRegion((prevRegion) => ({
@@ -139,6 +152,9 @@ const Zemljevid: React.FC<{ endLocation: LocationType }> = ({ endLocation }) => 
     <View style={styles.goToButtons}>
       <CustomButton title="Skok na cilj" onPress={goToEnd} styleName='button_go_to' />
       <CustomButton title="Skok na trenutno lokacijo" onPress={goToNow} styleName='button_go_to' />
+    </View>
+    <View>
+        <MerjenjeDistance distance={distanceTraveled} />
     </View>
     </>
   );

@@ -2,5 +2,7 @@ node_modules
 .env.development
 .env.test
 .env
+Setanje/global.tsx
+
 env.development
 env.test
