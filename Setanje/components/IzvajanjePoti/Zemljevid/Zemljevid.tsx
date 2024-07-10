@@ -4,8 +4,8 @@ import MapView, { Circle, Region, Polyline, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from './styles';
 import CustomButton from '../../GumbPoMeri/GumbPoMeri';
-import { haversineDistance } from '../MerjenjeDistance/RazdaljaMedDvemaTockama';
-import MerjenjeDistance from '../MerjenjeDistance/MerjenjeDistance';
+import { haversineDistance } from './MerjenjeDistance/RazdaljaMedDvemaTockama';
+import MerjenjeDistance from './MerjenjeDistance/MerjenjeDistance';
 
 interface LocationType {
   coords: {
