@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { openDatabase, initDB, fetchUsers, User } from "./database";
-import MyTabs from "./components/Nav";
+import MyTabs from "./components/Navigacija/Nav";
 import { enableScreens } from "react-native-screens";
 import { RootStackParamList } from "./components/Navigacija/types";
 import { createStackNavigator } from '@react-navigation/stack';
-import BottomNav from "./components/BottomTab/Bottomtab";
 import Poti from "./components/Poti/poti";
 import Pot from "./components/Poti/Pot/Pot";
+import Nav from "./components/Navigacija/Nav";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -44,14 +44,9 @@ const App: React.FC = () => {
   }
 
   return (
-
-  //   <NavigationContainer>
-  //       <MyTabs />
-  //   </NavigationContainer>
-
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='BottomNav' component={BottomNav} options={{headerShown: false}} />
+        <Stack.Screen name='BottomNav' component={Nav} options={{headerShown: false}} />
         <Stack.Screen name='Poti' component={Poti} />
         <Stack.Screen name='Pot' component={Pot} />
       </Stack.Navigator>

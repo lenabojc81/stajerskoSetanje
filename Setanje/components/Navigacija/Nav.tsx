@@ -3,20 +3,20 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs/src';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
-import { openDatabase, initDB, fetchUsers, User } from './../database';
-import DodajanjePoti from './DodajanjePoti/DodajanjePoti';
-import ImageUpload from './visionApi';
-import Poti from './Poti/poti';
-import IzvajanjePoti from './IzvajanjePoti/IzvajanjePoti';
+import { openDatabase, initDB, fetchUsers, User } from '../../database';
+import DodajanjePoti from '../DodajanjePoti/DodajanjePoti';
+import ImageUpload from '../visionApi';
+import Poti from '../Poti/poti';
+import IzvajanjePoti from '../IzvajanjePoti/IzvajanjePoti';
+import Domov from '../Domov/Domov';
 
 const Tab = createBottomTabNavigator();
 
-
-const HomeScreen = () => (
-  <View style={styles.screen}>
-    <Text>Home Screen</Text>
-  </View>
-);
+// const HomeScreen = () => (
+//   <View style={styles.screen}>
+//     <Text>Home Screen</Text>
+//   </View>
+// );
 
 const UsersScreen = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -72,13 +72,13 @@ const SettingsScreen = () => (
 const MyTabs = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home" component={Domov} options={{headerShown: false}}/>
       <Tab.Screen name="AI" component={ImageUpload} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
       <Tab.Screen name="Users" component={UsersScreen} />
-      <Tab.Screen name="Poti" component={Poti} />
-      <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} />
+      {/* <Tab.Screen name="Poti" component={Poti} />
+      <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
 
     </Tab.Navigator>
   );

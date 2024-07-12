@@ -11,7 +11,11 @@ import { baseUrl } from "../../global";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import IPot from "./IPot";
+import { RootStackParamList } from "../Navigacija/types";
+import { StackNavigationProp } from "@react-navigation/stack";
 //`${baseUrl}/pridobiPoti`
+
+type PotiScreenNavigationProp = StackNavigationProp<RootStackParamList, "Poti">;
 
 const testPoti = [
   {
@@ -65,7 +69,7 @@ const Poti = () => {
   const [poti, setPoti] = useState<IPot[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<PotiScreenNavigationProp>();
 
   const fetchPoti = async () => {
     try {

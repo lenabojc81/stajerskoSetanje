@@ -12,7 +12,6 @@ const Domov = ({ navigation}: { navigation: HomeScreenNavigationProp}) => {
     <View style={styles.container}>
       <Text>Home Screen</Text>
       <Poti />
-      <Button title="Click Here" onPress={() => navigation.navigate('Poti')} />
     </View>
  );
 }

@@ -5,19 +5,18 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import styles from './styles';
 import { RootStackParamList } from '../../Navigacija/types';
-import Zemljevid from '../../IzvajanjePoti/Zemljevid/Zemljevid';
 import PremikDoZacetneLokacije from '../../IzvajanjePoti/PremikDoZacetneLokacije/PremikDoZacetneLokacije';
 
 
 type PotScreenRouteProp = RouteProp<RootStackParamList, 'Pot'>;
 type PotScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Pot'>;
 
-type Props = {
+type NavProps = {
   route: PotScreenRouteProp;
   navigation: PotScreenNavigationProp;
 };
 
-const Pot: React.FC<Props> = ({ route, navigation }) => {
+const Pot: React.FC<NavProps> = ({ route, navigation }) => {
   const { pot } = route.params;
 
   return (
