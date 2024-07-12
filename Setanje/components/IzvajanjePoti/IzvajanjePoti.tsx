@@ -3,12 +3,24 @@ import Zemljevid from "./Zemljevid/Zemljevid";
 import { Button, SafeAreaView, View } from "react-native";
 import { Text } from "react-native";
 import styles from "./styles";
-import PremikDoZacetneLokacije from "./PremikDoZacetneLokacije/PremikDoZacetneLokacije";
 import Stoparica from "./Stoparica/Stoparica";
+import { RootStackParamList } from "../Navigacija/types";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const IzvajanjePoti = () => {
-    const [gameStarted, setGameStarted] = useState<boolean>(false);
-    const [startTime, setStartTime] = useState<Date | null>(null);
+type IzvajanjePotiScreenProp = RouteProp<RootStackParamList, 'IzvajanjePoti'>;
+type IzvajanjePotiNavigationProp = StackNavigationProp<RootStackParamList, 'IzvajanjePoti'>;
+
+type NavProps = {
+    route: IzvajanjePotiScreenProp;
+    navigation: IzvajanjePotiNavigationProp;
+};
+
+const IzvajanjePoti: React.FC<NavProps> = ({ route, navigation }) => {
+    const { pot } = route.params;
+
+    const [gameStarted, setGameStarted] = useState<boolean>(true);
+    const [startTime, setStartTime] = useState<Date>(new Date());
     const [elapsedTime, setElapsedTime] = useState<number>(0);
     const [gamePlayed, setGamePlayed] = useState<boolean>(false);
 
@@ -20,10 +32,10 @@ const IzvajanjePoti = () => {
         }
     };
 
-    const startGame = () => {
-        setStartTime(new Date());
-        setGameStarted(true);
-    };
+    // const startGame = () => {
+    //     setStartTime(new Date());
+    //     setGameStarted(true);
+    // };
 
     const endGame = async () => {
         setGameStarted(false);
@@ -46,9 +58,9 @@ const IzvajanjePoti = () => {
                 <Text>Čas potovanja: {elapsedTime} sekund</Text>
             )}</View>
             <View>
-                {!gameStarted && !gamePlayed && (
+                {/* {!gameStarted && !gamePlayed && (
                     <Button title="Začni igro" onPress={startGame} />
-                )}
+                )} */}
                 {gameStarted && (
                     <>
                         <Stoparica

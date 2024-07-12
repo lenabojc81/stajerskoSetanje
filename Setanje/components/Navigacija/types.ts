@@ -5,4 +5,5 @@ export type RootStackParamList = {
     Home: undefined;
     Poti: undefined;
     Pot: { pot: IPot };
+    IzvajanjePoti: { pot: IPot };
 };

@@ -10,6 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Poti from "./components/Poti/poti";
 import Pot from "./components/Poti/Pot/Pot";
 import Nav from "./components/Navigacija/Nav";
+import IzvajanjePoti from "./components/IzvajanjePoti/IzvajanjePoti";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -49,6 +50,7 @@ const App: React.FC = () => {
         <Stack.Screen name='BottomNav' component={Nav} options={{headerShown: false}} />
         <Stack.Screen name='Poti' component={Poti} />
         <Stack.Screen name='Pot' component={Pot} />
+        <Stack.Screen name='IzvajanjePoti' component={IzvajanjePoti} />
       </Stack.Navigator>
     </NavigationContainer>
   );
