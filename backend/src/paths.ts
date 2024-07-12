@@ -7,7 +7,7 @@ router.post('/dodajPot', async (req, res) => {
     try {
         const pot = new Pot(req.body);
         await pot.save();
-        res.status(201).send(pot);
+        res.status(200).send(pot);
     } catch (error) {
         console.error(error);
         res.status(400).json({ error: error });
@@ -23,4 +23,5 @@ router.get('/pridobiPoti', async (req, res) => {
         res.status(500).json({ error: error });
     }
 });
+
 export default router;

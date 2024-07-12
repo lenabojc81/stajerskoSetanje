@@ -252,6 +252,9 @@ const DodajanjePoti = () => {
                     </View>
 
                 ))}
+                
+            </View>
+            <View style={styles.container}>
                 <Button title="Dodaj" onPress={handleSubmit(onSubmit)} />
             </View>
 

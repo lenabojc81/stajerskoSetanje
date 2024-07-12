@@ -4,11 +4,11 @@ import { mongoose } from "../src/db";
 import {describe, expect, it, afterAll} from '@jest/globals';
 
 describe('GET /DBconnection', () => {
-    it('should check MongoDB connection', async () => {
-      const response = await request(app).get('/DBconnection');
-      expect(response.statusCode).toBe(200);
-      expect(response.text).toEqual("Successfully connected to MongoDB using Mongoose!");
-    });
+  it('should check MongoDB connection', async () => {
+    const response = await request(app).get('/DBconnection');
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toEqual("Successfully connected to MongoDB using Mongoose!");
+  });
 });
 
 describe("GET /", () => {
@@ -32,21 +32,24 @@ describe('POST /dodajPot', () => {
           lokacija: {
             lat: 46.056946,
             lng: 14.505751
-          }
+          },
+          uganka: 'test uganka'
         },
         {
           ime: 'Checkpoint',
           lokacija: {
             lat: 46.056946,
             lng: 14.505752
-          }
+          },
+          uganka: 'test uganka'
         },
         {
           ime: 'End Point',
           lokacija: {
             lat: 46.056947,
             lng: 14.505753
-          }
+          },
+          uganka: 'test uganka'
         }
       ]
     };
@@ -56,15 +59,20 @@ describe('POST /dodajPot', () => {
       .send(newPathData)
       .set('Accept', 'application/json');
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(200);
     expect(response.body.ime).toBe(newPathData.ime);
     
   });
 });
 
-describe("GET /premikNaZacetnoTocko/:startLong/:startLat/:endLong/:endLat", () => {
-
+describe('GET /pridobiPoti', () => {
+  it('should get all the paths from DB', async () => {
+    const response = await request(app).get('/pridobiPoti');
+    expect(response.statusCode).toBe(200);
+  });
 });
+
+
 
 afterAll(async () => {
   await mongoose.disconnect();

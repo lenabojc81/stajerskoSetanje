@@ -5,6 +5,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { openDatabase, initDB, fetchUsers, User } from "./database";
 import MyTabs from "./components/Nav";
 import { enableScreens } from "react-native-screens";
+import { RootStackParamList } from "./components/Navigacija/types";
+import { createStackNavigator } from '@react-navigation/stack';
+import BottomNav from "./components/BottomTab/Bottomtab";
+import Poti from "./components/Poti/poti";
+import Pot from "./components/Poti/Pot/Pot";
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -37,8 +44,17 @@ const App: React.FC = () => {
   }
 
   return (
+
+  //   <NavigationContainer>
+  //       <MyTabs />
+  //   </NavigationContainer>
+
     <NavigationContainer>
-        <MyTabs />
+      <Stack.Navigator>
+        <Stack.Screen name='BottomNav' component={BottomNav} options={{headerShown: false}} />
+        <Stack.Screen name='Poti' component={Poti} />
+        <Stack.Screen name='Pot' component={Pot} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
