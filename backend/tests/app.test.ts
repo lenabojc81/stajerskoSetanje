@@ -26,6 +26,7 @@ describe('POST /dodajPot', () => {
       tezavnost: 3,
       dolzina: 5.2,
       opis: 'A beautiful and challenging trail through the mountains.',
+      tocke: 100,
       vmesne_tocke: [
         {
           ime: 'Start Point',
