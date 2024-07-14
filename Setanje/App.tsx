@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { openDatabase, initDB, fetchUsers, User } from "./database";
-import MyTabs from "./components/Navigacija/Nav";
 import { enableScreens } from "react-native-screens";
 import { RootStackParamList } from "./components/Navigacija/types";
 import { createStackNavigator } from '@react-navigation/stack';
@@ -50,7 +49,7 @@ const App: React.FC = () => {
         <Stack.Screen name='BottomNav' component={Nav} options={{headerShown: false}} />
         <Stack.Screen name='Poti' component={Poti} />
         <Stack.Screen name='Pot' component={Pot} />
-        <Stack.Screen name='IzvajanjePoti' component={IzvajanjePoti} />
+        <Stack.Screen name='IzvajanjePoti' component={IzvajanjePoti} options={{headerLeft: () => null}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

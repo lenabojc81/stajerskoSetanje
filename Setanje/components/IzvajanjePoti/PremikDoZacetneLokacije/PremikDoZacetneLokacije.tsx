@@ -1,28 +1,36 @@
 import React, { useState } from "react";
 import { Text, Button, View } from "react-native";
 import Zemljevid from "../Zemljevid/Zemljevid";
-import LocationType from "../Zemljevid/ILocationType";
+import ILokacija from "../../../models/ILokacija";
 import { haversineDistance } from "../Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
+import IPot from "../../../models/IPot";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../Navigacija/types";
+import { useNavigation } from "@react-navigation/native";
+
+type ZacetnaLokacijaNavigationProp = StackNavigationProp<RootStackParamList, 'ZacetnaLokacija'>;
 
 interface PremikDoZacetneLokacijeProps {
-  zacetna_tocka: {
-    ime: string;
-    lokacija: { lat: string; lng: string };
-    uganka: string;
-  };
+  pot: IPot;
 }
 
-const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ zacetna_tocka }) => {
+const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }) => {
   const [showStartButton, setShowStartButton] = useState<boolean>(false);
 
-  const zacetna_lokacija: LocationType = {
+  const navigation = useNavigation<ZacetnaLokacijaNavigationProp>();
+
+  const zacetna_lokacija: ILokacija = {
     coords: {
-      latitude: parseFloat(zacetna_tocka.lokacija.lat),
-      longitude: parseFloat(zacetna_tocka.lokacija.lng),
+      latitude: parseFloat(pot.vmesne_tocke[0].lokacija.lat),
+      longitude: parseFloat(pot.vmesne_tocke[0].lokacija.lng),
     },
+    // coords: {
+    //   latitude: pot.vmesne_tocke[0].lokacija.coords.latitude,
+    //   longitude: pot.vmesne_tocke[0].lokacija.coords.longitude,
+    // },
   };
 
-  const handleLocationUpdate = (currentLocation: LocationType) => {
+  const handleLocationUpdate = (currentLocation: ILokacija) => {
     const distanceToStart = haversineDistance(currentLocation.coords, zacetna_lokacija.coords);
     if (distanceToStart <= 50) {
       setShowStartButton(true);
@@ -40,7 +48,7 @@ const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ zacet
       <Zemljevid endLocation={zacetna_lokacija} onLocationUpdate={handleLocationUpdate} />
       {showStartButton && (
         <View>
-          <Button title="Začni igro" onPress={() => "zaceta igra"} />
+          <Button title="Začni igro" onPress={() => navigation.push('IzvajanjePoti', {pot})} />
         </View>
       )}
     </>
