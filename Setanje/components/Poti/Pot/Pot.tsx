@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import IPot from "../IPot";
-import { RouteProp, useRoute } from '@react-navigation/native';
+import IPot from "../../../models/IPot";
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import styles from './styles';
 import { RootStackParamList } from '../../Navigacija/types';
@@ -13,11 +13,11 @@ type PotScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Pot'>;
 
 type NavProps = {
   route: PotScreenRouteProp;
-  navigation: PotScreenNavigationProp;
 };
 
-const Pot: React.FC<NavProps> = ({ route, navigation }) => {
+const Pot: React.FC<NavProps> = ({ route }) => {
   const { pot } = route.params;
+  const navigation = useNavigation<PotScreenNavigationProp>();
 
   return (
     <View style={styles.container}>
@@ -29,9 +29,9 @@ const Pot: React.FC<NavProps> = ({ route, navigation }) => {
       <Text>Število točk: {pot.tocke}</Text>
     <Text>Vmesna točka 1: {pot.vmesne_tocke[0].ime}</Text>
     <Text>Lokacija: {pot.vmesne_tocke[0].lokacija.lat}, {pot.vmesne_tocke[0].lokacija.lng}</Text>
+    {/* <Text>Lokacija: {pot.vmesne_tocke[0].lokacija.coords.latitude}, {pot.vmesne_tocke[0].lokacija.coords.longitude}</Text> */}
     <Text>Uganka: {pot.vmesne_tocke[0].uganka}</Text>
-    {/* spremeni na zacetna_tocka={pot.zacetna_lokacija} */}
-    <PremikDoZacetneLokacije zacetna_tocka={pot.vmesne_tocke[0]} />
+    <PremikDoZacetneLokacije pot={pot}/>
     </View>
   );
 };

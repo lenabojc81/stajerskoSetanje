@@ -10,7 +10,7 @@ import {
 import { baseUrl } from "../../global";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
-import IPot from "./IPot";
+import IPot from "../../models/IPot";
 import { RootStackParamList } from "../Navigacija/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 //import UrediPot from "../UrejanjePoti/UrediPot";
@@ -96,7 +96,7 @@ const Poti = () => {
         <TouchableOpacity
           key={index}
           style={styles.pathItem}
-          onPress={() => navigation.navigate("Pot", { pot })}
+          onPress={() => {navigation.navigate("Pot", { pot }); console.log(pot.vmesne_tocke)}}
         >
           <Text style={styles.pathName}>Ime poti: {pot.ime}</Text>
           <Text>Opis: {pot.opis}</Text>

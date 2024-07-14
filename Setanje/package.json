@@ -13,7 +13,7 @@
     "@react-native-segmented-control/segmented-control": "^2.5.2",
     "@react-navigation/bottom-tabs": "^6.6.0",
     "@react-navigation/native": "^6.1.17",
-    "@react-navigation/native-stack": "^6.9.26",
+    "@react-navigation/native-stack": "^6.10.0",
     "@react-navigation/stack": "^6.4.0",
     "expo": "~51.0.17",
     "expo-asset": "~10.0.10",

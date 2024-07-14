@@ -5,7 +5,7 @@ import { Text } from "react-native";
 import styles from "./styles";
 import Stoparica from "./Stoparica/Stoparica";
 import { RootStackParamList } from "../Navigacija/types";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 type IzvajanjePotiScreenProp = RouteProp<RootStackParamList, 'IzvajanjePoti'>;
@@ -13,11 +13,12 @@ type IzvajanjePotiNavigationProp = StackNavigationProp<RootStackParamList, 'Izva
 
 type NavProps = {
     route: IzvajanjePotiScreenProp;
-    navigation: IzvajanjePotiNavigationProp;
 };
 
-const IzvajanjePoti: React.FC<NavProps> = ({ route, navigation }) => {
+const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     const { pot } = route.params;
+
+    const navigation = useNavigation<IzvajanjePotiNavigationProp>();
 
     const [gameStarted, setGameStarted] = useState<boolean>(true);
     const [startTime, setStartTime] = useState<Date>(new Date());
@@ -25,17 +26,12 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route, navigation }) => {
     const [gamePlayed, setGamePlayed] = useState<boolean>(false);
 
     const startLocationOfPath = {
-        // pridobi iz baze glede na id poti
+        // pridobi iz uporabnikove vnesene lokacije
         coords: {
-            latitude: 44.87567,
-            longitude: 13.84981,
+            latitude: 44.87567, //pot.zacetna_lokacija.lokacija.coords.latitude,
+            longitude: 13.84981, //pot.zacetna_lokacija.lokacija.coords.longitude,
         }
     };
-
-    // const startGame = () => {
-    //     setStartTime(new Date());
-    //     setGameStarted(true);
-    // };
 
     const endGame = async () => {
         setGameStarted(false);
@@ -48,6 +44,12 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route, navigation }) => {
         setElapsedTime(time);
     };
 
+    const stopGame = () => {
+        setGameStarted(false);
+        navigation.goBack();
+        // posiljanje podatkov na streznik
+    }
+
     return (
         <View style={styles.container}>
             <Text>Izvajanje poti</Text>
@@ -58,9 +60,6 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route, navigation }) => {
                 <Text>Čas potovanja: {elapsedTime} sekund</Text>
             )}</View>
             <View>
-                {/* {!gameStarted && !gamePlayed && (
-                    <Button title="Začni igro" onPress={startGame} />
-                )} */}
                 {gameStarted && (
                     <>
                         <Stoparica
@@ -70,6 +69,9 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route, navigation }) => {
                         <Button title="Končaj igro" onPress={endGame} />
                     </>
                 )}
+            </View>
+            <View>
+                <Button title="Nazaj" onPress={stopGame} />
             </View>
         </View>
     );

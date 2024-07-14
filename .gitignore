@@ -3,6 +3,3 @@ node_modules
 .env.test
 .env
 Setanje/global.tsx
-
-env.development
-env.test

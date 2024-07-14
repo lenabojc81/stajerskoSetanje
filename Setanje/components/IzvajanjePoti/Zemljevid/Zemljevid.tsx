@@ -6,22 +6,22 @@ import styles from "./styles";
 import CustomButton from "../../GumbPoMeri/GumbPoMeri";
 import { haversineDistance } from "./MerjenjeDistance/RazdaljaMedDvemaTockama";
 import MerjenjeDistance from "./MerjenjeDistance/MerjenjeDistance";
-import LocationType from "./ILocationType";
+import ILokacija from "../../../models/ILokacija";
 
 interface ZemljevidProps {
-  endLocation: LocationType;
-  onLocationUpdate?: (location: LocationType) => void;
+  endLocation: ILokacija;
+  onLocationUpdate?: (location: ILokacija) => void;
 }
 
 const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) => {
-  const [initialLocation, setInitialLocation] = useState<LocationType | null>(
+  const [initialLocation, setInitialLocation] = useState<ILokacija | null>(
     null
   );
-  const [changedLocation, setChangedLocation] = useState<LocationType | null>(
+  const [changedLocation, setChangedLocation] = useState<ILokacija | null>(
     null
   );
   const [lastKnownLocation, setLastKnownLocation] =
-    useState<LocationType | null>(null);
+    useState<ILokacija | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [region, setRegion] = useState<Region>({
     latitude: 37.78825,
