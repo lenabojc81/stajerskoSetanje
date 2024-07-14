@@ -17,6 +17,7 @@ interface IPot extends Document {
     tezavnost: number;
     dolzina: number;
     opis: string;
+    tocke: number;
     //zacetna_lokacija: ICoordinate;
     vmesne_tocke: ITocka[];
 }
@@ -36,6 +37,7 @@ const PotSchema: Schema = new Schema({
     tezavnost: { type: Number, required: true },
     dolzina: { type: Number, required: true },
     opis: { type: String, required: true },
+    tocke: { type: Number, required: true },
     //zacetna_lokacija: { type: { lat: Number, lng: Number}, required: true},
     vmesne_tocke: { type: [TockaSchema], required: true }
 });
