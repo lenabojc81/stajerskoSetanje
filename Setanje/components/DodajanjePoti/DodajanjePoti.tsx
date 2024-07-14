@@ -34,9 +34,14 @@ type MarkerType = {
     uganka: string;
     dodatna_vprasanja: {
         vprasanje: string;
-        odgovori: string[];
-    }[];
-};
+        odgovori: {
+            odgovor: string;
+            true: boolean;
+        }
+
+    };
+}[];
+
 
 
 const DodajanjePoti = () => {
@@ -52,8 +57,11 @@ const DodajanjePoti = () => {
     const [tocke, setTocke] = useState([]);
     const [dodatnaVprasanja, setDodatnaVprasanja] = useState<{
         vprasanje: string;
-        odgovori: string[];
-      }[]>([{ vprasanje: "", odgovori: ["", "", "", ""] }]);
+        odgovori: {
+            odgovor: string;
+            pravilen: boolean;
+        }[];
+    }[]>([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
 
 
     useEffect(() => {
@@ -99,11 +107,8 @@ const DodajanjePoti = () => {
                     ime: markerName,
                     coordinate: selectedLocation,
                     uganka: uganke,
-                    dodatna_vprasanja: dodatnaVprasanja.map((item) => ({
-                        vprasanje: item.vprasanje,
-                        odgovori: item.odgovori.filter((odgovor) => odgovor.trim() !== ""),
-                      })),
-                    odgovori: dodatnaVprasanja.map((item) => item.odgovori),
+                    dodatna_vprasanja: dodatnaVprasanja,
+
                 };
                 setMarkers([...markers, newMarker]);
                 setSelectedLocation(null);
@@ -111,7 +116,7 @@ const DodajanjePoti = () => {
                 setMarkerName('');
                 setModalVisible(false);
                 setUganke('');
-                setDodatnaVprasanja([{ vprasanje: '', odgovori: ['', '', '', ''] }]);
+                setDodatnaVprasanja([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
 
             }
         }
@@ -120,17 +125,31 @@ const DodajanjePoti = () => {
         const newDodatnaVprasanja = [...dodatnaVprasanja];
         newDodatnaVprasanja[index].vprasanje = text;
         setDodatnaVprasanja(newDodatnaVprasanja);
-      };
-    
-      const handleOdgovorChange = (
+    };
+
+    const handleOdgovorChange = (
         text: string,
         vprasanjeIndex: number,
-        odgovorIndex: number
-      ) => {
+        odgovorIndex: number,
+    ) => {
         const newDodatnaVprasanja = [...dodatnaVprasanja];
-        newDodatnaVprasanja[vprasanjeIndex].odgovori[odgovorIndex] = text;
+        console.log(newDodatnaVprasanja);
+
+
+        newDodatnaVprasanja[vprasanjeIndex].odgovori[odgovorIndex]["odgovor"] = text;
+        console.log(newDodatnaVprasanja);
+
         setDodatnaVprasanja(newDodatnaVprasanja);
-      };
+        console.log("to so dodatna vprasanja", dodatnaVprasanja[0]["odgovori"][0]["odgovor"]);
+    };
+
+    const handlePravilenChange = (vprasanjeIndex: number, odgovorIndex: number) => {
+        const newDodatnaVprasanja = [...dodatnaVprasanja];
+        newDodatnaVprasanja[vprasanjeIndex].odgovori.forEach((odgovor, index) => {
+            odgovor.pravilen = index === odgovorIndex;
+        });
+        setDodatnaVprasanja(newDodatnaVprasanja);
+    };
 
     const onSubmit = async (data) => {
 
@@ -175,7 +194,7 @@ const DodajanjePoti = () => {
         }
     };
 
-   
+
 
     return (
         <ScrollView style={styles.container}>
@@ -278,13 +297,18 @@ const DodajanjePoti = () => {
             <View>
                 {paths.length > 0 && <Text style={styles.listPins}>Seznam Pinov:</Text>}
                 {markers.map((marker, index) => (
+                    console.log(marker),
+                    console.log(marker.dodatna_vprasanja[0]["odgovori"]),
                     <View key={index} style={styles.pathItem}>
                         <Text style={styles.pathName}>Ime: {marker.ime}</Text>
                         <Text style={styles.pathName}>Latitude: {marker.coordinate["latitude"]}</Text>
                         <Text style={styles.pathName}>longitude: {marker.coordinate["longitude"]}</Text>
                         <Text style={styles.pathName}>Uganka: {marker.uganka}</Text>
-                        <Text style={styles.pathName}>Dodatno vprašanje: {marker.dodatno_vprasanje}</Text>
-                        <Text style={styles.pathName}>Odgovori: {marker.odgovori.join(', ')}</Text>
+                        <Text style={styles.pathName}>Dodatno vprašanje: {marker.dodatna_vprasanja[0]["vprasanje"]}</Text>
+                        {marker.dodatna_vprasanja[0]["odgovori"].map((odgovor) => (
+                            <Text style={styles.pathName}>Odgovor: {odgovor["odgovor"]}, pravilen: {odgovor["pravilen"] ? ("true") : ("false")}</Text>
+                        ))}
+
                     </View>
 
                 ))}
@@ -295,55 +319,59 @@ const DodajanjePoti = () => {
             </View>
 
             <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => {
-    setModalVisible(!modalVisible);
-  }}
->
-<View style={styles.modalView}>
-  <TextInput
-    style={styles.input}
-    placeholder="Ime markerja"
-    placeholderTextColor="#000000"
-    value={markerName}
-    onChangeText={setMarkerName}
-  />
-  <TextInput
-    style={styles.input}
-    placeholder="Napiši uganko"
-    placeholderTextColor="#000000"
-    value={uganke}
-    onChangeText={setUganke}
-  />
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.modalView}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Ime markerja"
+                        placeholderTextColor="#000000"
+                        value={markerName}
+                        onChangeText={setMarkerName}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Napiši uganko"
+                        placeholderTextColor="#000000"
+                        value={uganke}
+                        onChangeText={setUganke}
+                    />
 
-  {/* Input fields for additional questions and answers */}
-  {dodatnaVprasanja.map((vprasanje, vprasanjeIndex) => (
-    <View key={vprasanjeIndex}>
-      <TextInput
-        style={styles.input}
-        placeholder={`Dodatno vprašanje ${vprasanjeIndex + 1}`}
-        placeholderTextColor="#000000"
-        value={vprasanje.vprasanje}
-        onChangeText={(text) => handleVprasanjeChange(text, vprasanjeIndex)}
-      />
-      {/* Input fields for answers */}
-      {vprasanje.odgovori.map((odgovor, odgovorIndex) => (
-        <TextInput
-          key={odgovorIndex}
-          style={styles.input}
-          placeholder={`Odgovor ${odgovorIndex + 1}`}
-          placeholderTextColor="#000000"
-          value={odgovor}
-          onChangeText={(text) => handleOdgovorChange(text, vprasanjeIndex, odgovorIndex)}
-        />
-      ))}
-    </View>
-  ))}
+                   
+                    {dodatnaVprasanja.map((vprasanje, vprasanjeIndex) => (
+                        <View key={vprasanjeIndex}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder={`Dodatno vprašanje ${vprasanjeIndex + 1}`}
+                                placeholderTextColor="#000000"
+                                value={vprasanje.vprasanje}
+                                onChangeText={(text) => handleVprasanjeChange(text, vprasanjeIndex)}
+                            />
+                            {vprasanje.odgovori.map((odgovor, odgovorIndex) => (
+                                <View key={odgovorIndex} style={styles.answerContainer}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder={`Odgovor ${odgovorIndex + 1}`}
+                                        value={odgovor.odgovor}
+                                        onChangeText={(text) => handleOdgovorChange(text, vprasanjeIndex, odgovorIndex)}
+                                    />
+                                    <Button
+                                        title={odgovor.pravilen ? "Pravilen" : "Nastavi kot pravilen"}
+                                        onPress={() => handlePravilenChange(vprasanjeIndex, odgovorIndex)}
+                                        color={odgovor.pravilen ? "green" : "blue"}
+                                    />
+                                </View>
+                            ))}
+                        </View>
+                    ))}
 
-    <Button title="Shrani" onPress={savePin} />
-  </View>
+                    <Button title="Shrani" onPress={savePin} />
+                </View>
             </Modal>
         </ScrollView>
     );
