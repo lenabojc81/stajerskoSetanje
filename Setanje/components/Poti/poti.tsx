@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import IPot from "./IPot";
 import { RootStackParamList } from "../Navigacija/types";
 import { StackNavigationProp } from "@react-navigation/stack";
+//import UrediPot from "../UrejanjePoti/UrediPot";
+import { useForm } from "react-hook-form";
 //`${baseUrl}/pridobiPoti`
 
 type PotiScreenNavigationProp = StackNavigationProp<RootStackParamList, "Poti">;
@@ -68,7 +70,7 @@ const testPoti = [
 const Poti = () => {
   const [poti, setPoti] = useState<IPot[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>("");
-
+  const { control, handleSubmit, reset } = useForm();
   const navigation = useNavigation<PotiScreenNavigationProp>();
 
   const fetchPoti = async () => {
@@ -98,8 +100,13 @@ const Poti = () => {
         >
           <Text style={styles.pathName}>Ime poti: {pot.ime}</Text>
           <Text>Opis: {pot.opis}</Text>
+          <View style={styles.container}>
+                <Button title="Uredi" onPress={() => navigation.navigate("UrediPot", { potId: pot._id })} />
+            </View>
         </TouchableOpacity>
+        
       ))}
+      
     </ScrollView>
   );
 };

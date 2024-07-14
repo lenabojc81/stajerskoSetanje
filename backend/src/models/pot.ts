@@ -5,11 +5,21 @@ interface ICoordinate {
     lng: number;
 }
 
+interface IOdgovor {
+    odgovor: string;
+    pravilen: boolean;
+}
+interface IDodatnoVprasanje extends Document {
+    vprasanje: string;
+    odgovori: IOdgovor[];
+}
+
 interface ITocka extends Document {
     ime: string;
     lokacija: ICoordinate;
     uganka: string;
     // zaporedje: number;
+    dodatna_vprasanja: IDodatnoVprasanje[];
 }
 
 interface IPot extends Document {
@@ -21,6 +31,15 @@ interface IPot extends Document {
     //zacetna_lokacija: ICoordinate;
     vmesne_tocke: ITocka[];
 }
+const OdgovorSchema: Schema = new Schema({
+    odgovor: { type: String, required: true },
+    pravilen: { type: Boolean, required: true }
+});
+
+const DodatnoVprasanjeSchema: Schema = new Schema({
+    vprasanje: { type: String, required: true },
+    odgovori: { type: [OdgovorSchema], required: true }
+});
 
 const TockaSchema: Schema = new Schema({
     ime: { type: String, required: true },
@@ -29,7 +48,9 @@ const TockaSchema: Schema = new Schema({
         lng: { type: Number, required: true }
     },
     uganka: { type: String, required: true },
+    dodatna_vprasanja: { type: [DodatnoVprasanjeSchema], required: true }
     // zaporedje: {type: Number, required: true}
+    
 });
 
 const PotSchema: Schema = new Schema({

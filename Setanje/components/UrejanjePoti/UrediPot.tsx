@@ -1,20 +1,22 @@
-import React from "react";
+/*import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
-    View,
-    Text,
-    TextInput,
-    Button,
-    StyleSheet,
-    ScrollView,
-    Modal,
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+  Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import MapView from "react-native-maps";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import {baseUrl} from "../../global";
 import styles from "./styles";
-import { baseUrl } from "../../global";
+
+
 
 
 type FormData = {
@@ -23,23 +25,20 @@ type FormData = {
     Dolzina_poti: string;
     Opis: string;
     Tocke: number;
-};
-
-type MarkerType = {
+  };
+  
+  type MarkerType = {
     ime: string;
     coordinate: {
-        latitude: number;
-        longitude: number;
+      latitude: number;
+      longitude: number;
     };
     uganka: string;
-    dodatna_vprasanja: {
-        vprasanje: string;
-        odgovori: string[];
-    }[];
-};
+  };
 
 
-const DodajanjePoti = () => {
+const UrediPot = (idPot:any) => {
+    const potId = idPot.route.params.id;
     const { control, handleSubmit, reset } = useForm();
     const [paths, setPaths] = useState([]);
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -50,11 +49,6 @@ const DodajanjePoti = () => {
     const [markerName, setMarkerName] = useState('');
     const [uganke, setUganke] = useState([]);
     const [tocke, setTocke] = useState([]);
-    const [dodatnaVprasanja, setDodatnaVprasanja] = useState<{
-        vprasanje: string;
-        odgovori: string[];
-      }[]>([{ vprasanje: "", odgovori: ["", "", "", ""] }]);
-
 
     useEffect(() => {
         (async () => {
@@ -68,6 +62,35 @@ const DodajanjePoti = () => {
             setLocation(location);
         })();
     }, []);
+   
+
+    const fetchPathData = async () => {
+        try {
+          const response = await fetch(`${baseUrl}/pridobiPoti/${Id}`);
+          const data = await response.json();
+          setPaths(data);
+          setMarkers(data.vmesne_tocke.map(marker => ({
+            ime: marker.ime,
+            coordinate: {
+              latitude: marker.lokacija.lat,
+              longitude: marker.lokacija.lng,
+            },
+            uganka: marker.uganka,
+          })));
+          reset({
+            Ime_poti: data.ime,
+            Tezavnost: data.tezavnost,
+            Dolzina_poti: data.dolzina,
+            Opis: data.opis,
+            Tocke: data.tocke,
+          });
+        } catch (error) {
+          console.error('Error fetching path data:', error);
+        }
+      };
+  
+      fetchPathData();
+    }, [Id, reset]);
 
     let region = {
         latitude: 37.78825,
@@ -96,41 +119,19 @@ const DodajanjePoti = () => {
         if (selectedLocation) {
             if (markerName.trim() !== '') {
                 const newMarker = {
-                    ime: markerName,
-                    coordinate: selectedLocation,
-                    uganka: uganke,
-                    dodatna_vprasanja: dodatnaVprasanja.map((item) => ({
-                        vprasanje: item.vprasanje,
-                        odgovori: item.odgovori.filter((odgovor) => odgovor.trim() !== ""),
-                      })),
-                    odgovori: dodatnaVprasanja.map((item) => item.odgovori),
-                };
-                setMarkers([...markers, newMarker]);
-                setSelectedLocation(null);
-                console.log(markers);
-                setMarkerName('');
-                setModalVisible(false);
-                setUganke('');
-                setDodatnaVprasanja([{ vprasanje: '', odgovori: ['', '', '', ''] }]);
+                  ime: markerName,
+                  coordinate: selectedLocation,
+                  uganka: uganke,
+            };
+            setMarkers([...markers, newMarker]);
+            setSelectedLocation(null);
+            console.log(markers);
+            setMarkerName('');
+            setModalVisible(false); 
 
-            }
-        }
+            }}
     };
-    const handleVprasanjeChange = (text: string, index: number) => {
-        const newDodatnaVprasanja = [...dodatnaVprasanja];
-        newDodatnaVprasanja[index].vprasanje = text;
-        setDodatnaVprasanja(newDodatnaVprasanja);
-      };
     
-      const handleOdgovorChange = (
-        text: string,
-        vprasanjeIndex: number,
-        odgovorIndex: number
-      ) => {
-        const newDodatnaVprasanja = [...dodatnaVprasanja];
-        newDodatnaVprasanja[vprasanjeIndex].odgovori[odgovorIndex] = text;
-        setDodatnaVprasanja(newDodatnaVprasanja);
-      };
 
     const onSubmit = async (data) => {
 
@@ -149,7 +150,6 @@ const DodajanjePoti = () => {
                     lng: marker.coordinate["longitude"],
                 },
                 uganka: marker.uganka,
-                dodatna_vprasanja: marker.dodatna_vprasanja,
             })),
         }
         console.log(bodyData);
@@ -161,11 +161,11 @@ const DodajanjePoti = () => {
                 },
                 body: JSON.stringify(bodyData),
             });
-
+    
             if (!response.ok) {
                 throw new Error('Napaka pri pošiljanju podatkov na strežnik');
             }
-
+    
             const responseData = await response.json();
             console.log('Podatki uspešno poslani:', responseData);
             reset();
@@ -174,8 +174,6 @@ const DodajanjePoti = () => {
             console.error('Napaka pri pošiljanju podatkov:', error);
         }
     };
-
-   
 
     return (
         <ScrollView style={styles.container}>
@@ -235,7 +233,7 @@ const DodajanjePoti = () => {
                     />
                 )}
             />
-            <Controller
+             <Controller
                 control={control}
                 name="Tocke"
                 defaultValue=""
@@ -262,91 +260,51 @@ const DodajanjePoti = () => {
                     />
                 )}
             </MapView>
-            <View style={styles.pathList}>
-                {paths.length > 0 && <Text style={styles.listTitle}>Seznam Poti:</Text>}
-                {paths.map((path, index) => (
-                    <View key={index} style={styles.pathItem}>
-                        <Text style={styles.pathName}>Ime poti: {path.Ime_poti}</Text>
-                        <Text>Težavnost: {path.Tezavnost}</Text>
-                        <Text>Dolžina poti: {path.Dolzina_poti}</Text>
-                        <Text>Opis: {path.Opis}</Text>
-                        <Text>Točke: {path.Tocke}</Text>
-                    </View>
-                ))}
-            </View>
+           
 
             <View>
                 {paths.length > 0 && <Text style={styles.listPins}>Seznam Pinov:</Text>}
                 {markers.map((marker, index) => (
                     <View key={index} style={styles.pathItem}>
-                        <Text style={styles.pathName}>Ime: {marker.ime}</Text>
+                        <Text style={styles.pathName}>Ime: {marker.ime}</Text> 
                         <Text style={styles.pathName}>Latitude: {marker.coordinate["latitude"]}</Text>
                         <Text style={styles.pathName}>longitude: {marker.coordinate["longitude"]}</Text>
                         <Text style={styles.pathName}>Uganka: {marker.uganka}</Text>
-                        <Text style={styles.pathName}>Dodatno vprašanje: {marker.dodatno_vprasanje}</Text>
-                        <Text style={styles.pathName}>Odgovori: {marker.odgovori.join(', ')}</Text>
                     </View>
 
                 ))}
-
+                
             </View>
             <View style={styles.container}>
                 <Button title="Dodaj" onPress={handleSubmit(onSubmit)} />
             </View>
 
             <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => {
-    setModalVisible(!modalVisible);
-  }}
->
-<View style={styles.modalView}>
-  <TextInput
-    style={styles.input}
-    placeholder="Ime markerja"
-    placeholderTextColor="#000000"
-    value={markerName}
-    onChangeText={setMarkerName}
-  />
-  <TextInput
-    style={styles.input}
-    placeholder="Napiši uganko"
-    placeholderTextColor="#000000"
-    value={uganke}
-    onChangeText={setUganke}
-  />
-
-  {/* Input fields for additional questions and answers */}
-  {dodatnaVprasanja.map((vprasanje, vprasanjeIndex) => (
-    <View key={vprasanjeIndex}>
-      <TextInput
-        style={styles.input}
-        placeholder={`Dodatno vprašanje ${vprasanjeIndex + 1}`}
-        placeholderTextColor="#000000"
-        value={vprasanje.vprasanje}
-        onChangeText={(text) => handleVprasanjeChange(text, vprasanjeIndex)}
-      />
-      {/* Input fields for answers */}
-      {vprasanje.odgovori.map((odgovor, odgovorIndex) => (
-        <TextInput
-          key={odgovorIndex}
-          style={styles.input}
-          placeholder={`Odgovor ${odgovorIndex + 1}`}
-          placeholderTextColor="#000000"
-          value={odgovor}
-          onChangeText={(text) => handleOdgovorChange(text, vprasanjeIndex, odgovorIndex)}
-        />
-      ))}
-    </View>
-  ))}
-
-    <Button title="Shrani" onPress={savePin} />
-  </View>
-            </Modal>
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <TextInput
+            style={styles.input}
+            placeholder="Ime markerja"
+            value={markerName}
+            onChangeText={setMarkerName}
+          />
+           <TextInput
+            style={styles.input}
+            placeholder="Napiši uganko"
+            value={uganke}
+            onChangeText={setUganke}
+          />
+          <Button title="Shrani" onPress={savePin} />
+        </View>
+      </Modal>
         </ScrollView>
     );
 };
 
-export default DodajanjePoti;
+export default UrediPot;*/
