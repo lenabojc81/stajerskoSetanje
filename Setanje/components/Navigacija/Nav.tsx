@@ -9,7 +9,7 @@ import ImageUpload from '../visionApi';
 import Poti from '../Poti/poti';
 import IzvajanjePoti from '../IzvajanjePoti/IzvajanjePoti';
 import Domov from '../Domov/Domov';
-//import UrediPot from '../UrediPot/UrediPot';
+import UrediPot from '../UrediPot/UrediPot';
 
 const Tab = createBottomTabNavigator();
 
@@ -78,7 +78,7 @@ const MyTabs = () => {
       <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
       <Tab.Screen name="Users" component={UsersScreen} />
-    { /* <Tab.Screen name="UrediPot" component={UrediPot} />*/}
+      <Tab.Screen name="UrediPot" component={UrediPot} />
       {/* <Tab.Screen name="Poti" component={Poti} />
       <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
 

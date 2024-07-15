@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import IPot from "../../models/IPot";
 import { RootStackParamList } from "../Navigacija/types";
 import { StackNavigationProp } from "@react-navigation/stack";
-//import UrediPot from "../UrediPot/UrediPot";
+import UrediPot from "../UrediPot/UrediPot";
 import { useForm } from "react-hook-form";
 //`${baseUrl}/pridobiPoti`
 
@@ -101,7 +101,7 @@ const Poti = () => {
           <Text style={styles.pathName}>Ime poti: {pot.ime}</Text>
           <Text>Opis: {pot.opis}</Text>
           <View style={styles.container}>
-                <Button title="Uredi" onPress={() => navigation.navigate("UrediPot", { pot: pot._id })} />
+                <Button title="UrediPot" onPress={() => navigation.navigate("UrediPot", { pot })} />
             </View>
         </TouchableOpacity>
         
