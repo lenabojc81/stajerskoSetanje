@@ -47,12 +47,21 @@ const UrediPot = ({ route, navigation }) => {
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [errorMsg, setErrorMsg] = useState<String>("");
     const [markers, setMarkers] = useState<MarkerType[]>([]);
-    const [markerEdit, setEditMarker] = useState<MarkerType[]>([]);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
-    const [pinModalVisible, setPinModalVisible] = useState(false);
     const [markerName, setMarkerName] = useState('');
     const [uganke, setUganke] = useState('');
+
+    //Tukaj so podatki za urejanje
+    const [pinModalVisible, setPinModalVisible] = useState(false);
+    const [markerEdit, setEditMarker] = useState<MarkerType[]>([]);
+    const [editMarkerName, setEditMarkerName] = useState('');
+    const [ugankeEdit, setUgankeEdit] = useState("");
+    const [dodatnaVprasanjaEdit, setDodatnaVprasanjaEdit] = useState([])
+    const [editMarkerIndex, setEditMarkerIndex] = useState(0);
+    ///////////////////////////////////////////////////////////
+
+
     const [dodatnaVprasanja, setDodatnaVprasanja] = useState<{
         vprasanje: string;
         odgovori: {
@@ -72,20 +81,20 @@ const UrediPot = ({ route, navigation }) => {
     Tocke: "100",
     vmesne_tocke: [
       {
-        ime: "pin",
+        ime: "pin 1",
         lokacija: [{ lat: "46.657398789705226", lng: "16.023557070370984" }],
-        uganka: "uganka",
+        uganka: "uganka 1",
         dodatna_vprasanja: ([{ vprasanje: "vprasanje1", odgovori: [{ odgovor: "blabla", pravilen: true }, { odgovor: "hhhhh", pravilen: false }, { odgovor: "jjjjj", pravilen: false }, { odgovor: "kkkk", pravilen: false }] }])
       },
       {
-        ime: "pin",
+        ime: "pin 2",
         lokacija: [{ lat: "46.657398789705226", lng: "16.023557070370984" }],
-        uganka: "uganka",
+        uganka: "uganka 2",
         dodatna_vprasanja: ([{ vprasanje: "vprasanje1", odgovori: [{ odgovor: "aaaa", pravilen: true }, { odgovor: "bbbb", pravilen: false }, { odgovor: "cccc", pravilen: false }, { odgovor: "dddd", pravilen: false }] }])
       },
     ],
   }
-console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen);
+//console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen);
 
 
 
@@ -140,7 +149,6 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
         setValue('Opis', data.opis);
         setValue('Tocke', data.Tocke);
         setMarkers(data.vmesne_tocke.map(tocka => (
-            console.log("Tocka:", tocka),
             {
             ime: tocka.ime,
             coordinate: {
@@ -151,16 +159,10 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
             dodatna_vprasanja: tocka.dodatna_vprasanja,
         })));
 
-        console.log("Data:", data.vmesne_tocke[0].lokacija[0]["lat"]);
-    
-        
         setLocation(location);
-    
-        
         setModalVisible(false);
     
-        setMarkerName('');
-        setUganke('');
+    
         setDodatnaVprasanja([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
     }, []);
 
@@ -180,14 +182,11 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
         };
     }
     
-   
     const handleMapPress = (event) => {
         const { coordinate } = event.nativeEvent;
         setSelectedLocation(coordinate);
         setModalVisible(true);
     };
-
-
 
     const savePin = () => {
         if (selectedLocation) {
@@ -207,7 +206,6 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
             }
         }
     };
-
 
     const handleVprasanjeChange = (text: string, index: number) => {
         const newDodatnaVprasanja = [...dodatnaVprasanja];
@@ -234,15 +232,47 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
     };
 
     const editPin = (marker:any, index:any) => () => {
-        console.log("Marker:", marker);
-        console.log("Index:", index);
-        
+        console.log("To je param marker: ", marker);
+        console.log("To je param index: ", index);
         setPinModalVisible(true);
-        setEditMarker(marker);
-        setDodatnaVprasanja(marker.dodatna_vprasanja);
+        console.log("To je marker.ime: ",marker.ime)
+        setMarkerName(marker.ime.toString());
+        console.log("To je markerName: ", markerName)
+        console.log("To je novi marker name: ", editMarkerName);
+        setDodatnaVprasanja(marker.dodatna_vprasanja)    
+        setSelectedLocation(marker.coordinate)
+        console.log("To je selected location: ",selectedLocation);
+        console.log("To je marker.uganka: ", marker.uganka);
+        setUganke(marker.uganka);
+        console.log("To je uganka: ", uganke);
+        setEditMarkerIndex(index);
     };
 
-    const onSubmit = async (data) => {
+    const saveEditedPin = () => {
+        console.log("save edit pin selected location; ",selectedLocation);
+        console.log("markerName: " , markerName);
+        console.log("Marker uganka: " , uganke)
+        if (selectedLocation) {
+                const newMarker = {
+                    ime: markerName,
+                    coordinate: selectedLocation,
+                    uganka: uganke,
+                    dodatna_vprasanja: dodatnaVprasanja,
+                };
+                updateMarkerAtIndex(editMarkerIndex, newMarker);
+                setPinModalVisible(false);
+        }
+    };
+    const updateMarkerAtIndex = (indexToUpdate:number, newMarker:any) => {
+        setMarkers((prevMarkers) => 
+          prevMarkers.map((marker, index) =>
+            index === indexToUpdate ? newMarker : marker
+          )
+        );
+      };
+      
+
+    const onSubmit = async (data: any) => {
         data = { ...data, markers };
         const bodyData = {
             ime: data.Ime_poti,
@@ -453,6 +483,9 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
                     <Button title="Shrani" onPress={savePin} />
                 </View>
             </Modal>
+
+{/* ------------------------------------------------------------------------------------ */}
+            
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -466,14 +499,14 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
                         style={styles.input}
                         placeholder="Ime pina"
                         placeholderTextColor="#000000"
-                        value={markerEdit.ime}
+                        value={markerName}
                         onChangeText={setMarkerName}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder="Napiši uganko"
                         placeholderTextColor="#000000"
-                        value={markerEdit.uganka}
+                        value={uganke}
                         onChangeText={setUganke}
                     />
 
@@ -504,10 +537,11 @@ console.log(testnaPot.vmesne_tocke[0].dodatna_vprasanja[0].odgovori[0].pravilen)
                         </View>
                     ))}
 
-                    <Button title="Shrani" onPress={savePin} />
+                    <Button title="Shrani" onPress={saveEditedPin} />
                     <Button title="Cancel" onPress={closeModal} />
                 </View>
             </Modal>
+            {/* ------------------------------------------------------------------------------------ */}
         </ScrollView>
     );
 };
