@@ -7,18 +7,19 @@ interface ICoordinate {
 
 interface IOdgovor {
     odgovor: string;
-    pravilen: boolean;
+    tip_odgovor: string;
 }
+
 interface IDodatnoVprasanje extends Document {
     vprasanje: string;
-    odgovori: IOdgovor[];
+    odgovori: {odgovor: string, pravilen: boolean}[];
 }
 
 interface ITocka extends Document {
     ime: string;
     lokacija: ICoordinate;
     uganka: string;
-    // zaporedje: number;
+    odgovor: IOdgovor;
     dodatna_vprasanja: IDodatnoVprasanje[];
 }
 
@@ -28,17 +29,17 @@ interface IPot extends Document {
     dolzina: number;
     opis: string;
     tocke: number;
-    //zacetna_lokacija: ICoordinate;
+    zacetna_lokacija: ICoordinate;
     vmesne_tocke: ITocka[];
 }
 const OdgovorSchema: Schema = new Schema({
     odgovor: { type: String, required: true },
-    pravilen: { type: Boolean, required: true }
+    tip_odgovor: { type: String, required: true }
 });
 
 const DodatnoVprasanjeSchema: Schema = new Schema({
     vprasanje: { type: String, required: true },
-    odgovori: { type: [OdgovorSchema], required: true }
+    odgovori: { type: [{odgovor: {type: String, required: true}, pravilen: {type: Boolean, required: true}}], required: true }
 });
 
 const TockaSchema: Schema = new Schema({
@@ -48,9 +49,8 @@ const TockaSchema: Schema = new Schema({
         lng: { type: Number, required: true }
     },
     uganka: { type: String, required: true },
-    dodatna_vprasanja: { type: [DodatnoVprasanjeSchema], required: true }
-    // zaporedje: {type: Number, required: true}
-    
+    odgovor: { type: OdgovorSchema, required: true },
+    dodatna_vprasanja: { type: [DodatnoVprasanjeSchema], required: true }    
 });
 
 const PotSchema: Schema = new Schema({
@@ -59,7 +59,7 @@ const PotSchema: Schema = new Schema({
     dolzina: { type: Number, required: true },
     opis: { type: String, required: true },
     tocke: { type: Number, required: true },
-    //zacetna_lokacija: { type: { lat: Number, lng: Number}, required: true},
+    zacetna_lokacija: { type: { lat: Number, lng: Number}, required: true},
     vmesne_tocke: { type: [TockaSchema], required: true }
 });
 

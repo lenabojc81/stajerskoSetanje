@@ -7,6 +7,7 @@ import Stoparica from "./Stoparica/Stoparica";
 import { RootStackParamList } from "../Navigacija/types";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import IzvajanjeVmesneTocke from "./IzvajanjeVmesneTocke/IzvajanjeVmesneTocke";
 
 type IzvajanjePotiScreenProp = RouteProp<RootStackParamList, 'IzvajanjePoti'>;
 type IzvajanjePotiNavigationProp = StackNavigationProp<RootStackParamList, 'IzvajanjePoti'>;
@@ -25,12 +26,10 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     const [elapsedTime, setElapsedTime] = useState<number>(0);
     const [gamePlayed, setGamePlayed] = useState<boolean>(false);
 
-    const startLocationOfPath = {
+    const endLocationOfPath = {
         // pridobi iz uporabnikove vnesene lokacije
-        coords: {
-            latitude: 44.87567, //pot.zacetna_lokacija.lokacija.coords.latitude,
-            longitude: 13.84981, //pot.zacetna_lokacija.lokacija.coords.longitude,
-        }
+        lat: pot.zacetna_lokacija.lat, 
+        lng: 13.84981, //pot.zacetna_lokacija.lng,
     };
 
     const endGame = async () => {
@@ -53,8 +52,8 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     return (
         <View style={styles.container}>
             <Text>Izvajanje poti</Text>
-            <SafeAreaView style={styles.container}>
-                <Zemljevid endLocation={startLocationOfPath} />
+            <SafeAreaView>
+                <IzvajanjeVmesneTocke vmesna_tocka={pot.vmesne_tocke[0]} />
             </SafeAreaView>
             <View>{gamePlayed && (
                 <Text>Čas potovanja: {elapsedTime} sekund</Text>

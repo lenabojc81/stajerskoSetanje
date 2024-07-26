@@ -15,6 +15,8 @@ import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "./styles";
 import { baseUrl } from "../../global";
+import IDodatnoVprasanje from "../../models/IDodatnoVprasanje";
+import IPot from "../../models/IPot";
 
 
 type FormData = {
@@ -52,16 +54,10 @@ const DodajanjePoti = () => {
     const [markers, setMarkers] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
-    const [markerName, setMarkerName] = useState('');
+    const [markerName, setMarkerName] = useState<String>('');
     const [uganke, setUganke] = useState([]);
     const [tocke, setTocke] = useState([]);
-    const [dodatnaVprasanja, setDodatnaVprasanja] = useState<{
-        vprasanje: string;
-        odgovori: {
-            odgovor: string;
-            pravilen: boolean;
-        }[];
-    }[]>([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
+    const [dodatnaVprasanja, setDodatnaVprasanja] = useState<IDodatnoVprasanje[]>([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
 
 
     useEffect(() => {
@@ -155,12 +151,16 @@ const DodajanjePoti = () => {
 
         data = { ...data, markers };
         console.log(data);
-        const bodyData = {
+        const bodyData: IPot = {
             ime: data.Ime_poti,
             tezavnost: data.Tezavnost,
             dolzina: data.Dolzina_poti,
             opis: data.Opis,
             tocke: data.Tocke,
+            zacetna_lokacija: {
+                lat: 0, //vnos zacetne lokacije
+                lng: 0, //vnos zacetne lokacije
+            },
             vmesne_tocke: data.markers.map((marker) => ({
                 ime: marker.ime,
                 lokacija: {
@@ -168,6 +168,10 @@ const DodajanjePoti = () => {
                     lng: marker.coordinate["longitude"],
                 },
                 uganka: marker.uganka,
+                odgovori: {
+                    odgovor: marker.uganka,
+                    tip_odgovor: "tekst",
+                },
                 dodatna_vprasanja: marker.dodatna_vprasanja,
             })),
         }

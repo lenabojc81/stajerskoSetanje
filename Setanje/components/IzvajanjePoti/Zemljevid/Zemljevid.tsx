@@ -14,14 +14,9 @@ interface ZemljevidProps {
 }
 
 const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) => {
-  const [initialLocation, setInitialLocation] = useState<ILokacija | null>(
-    null
-  );
-  const [changedLocation, setChangedLocation] = useState<ILokacija | null>(
-    null
-  );
-  const [lastKnownLocation, setLastKnownLocation] =
-    useState<ILokacija | null>(null);
+  const [initialLocation, setInitialLocation] = useState<ILokacija | null>(null);
+  const [changedLocation, setChangedLocation] = useState<ILokacija | null>(null);
+  const [lastKnownLocation, setLastKnownLocation] = useState<ILokacija | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [region, setRegion] = useState<Region>({
     latitude: 37.78825,
@@ -29,9 +24,7 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
     latitudeDelta: 0.005,
     longitudeDelta: 0.005,
   });
-  const [path, setPath] = useState<
-    Array<{ latitude: number; longitude: number }>
-  >([]);
+  const [path, setPath] = useState<ILokacija[]>([]);
   const [distanceTraveled, setDistanceTraveled] = useState<number>(0);
 
 
@@ -44,9 +37,13 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setInitialLocation(location);
-      setChangedLocation(location);
-      setLastKnownLocation(location);
+      let convertedLocation: ILokacija = {
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
+      }
+      setInitialLocation(convertedLocation);
+      setChangedLocation(convertedLocation);
+      setLastKnownLocation(convertedLocation);
 
       setRegion({
         latitude: location.coords.latitude,
@@ -56,8 +53,8 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
       });
       setPath([
         {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          lat: location.coords.latitude,
+          lng: location.coords.longitude,
         },
       ]);
 
@@ -68,7 +65,8 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
           distanceInterval: 10,
         },
         (newLocation) => {
-          setChangedLocation(newLocation);
+          let newLocationConversion: ILokacija = {lat: newLocation.coords.latitude, lng: newLocation.coords.longitude}; 
+          setChangedLocation(newLocationConversion);
           setRegion({
             latitude: newLocation.coords.latitude,
             longitude: newLocation.coords.longitude,
@@ -78,12 +76,12 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
           setPath((prevPath) => [
             ...prevPath,
             {
-              latitude: newLocation.coords.latitude,
-              longitude: newLocation.coords.longitude,
+              lat: newLocation.coords.latitude,
+              lng: newLocation.coords.longitude,
             },
           ]);
           if (onLocationUpdate) {
-            onLocationUpdate(newLocation);
+            onLocationUpdate(newLocationConversion);
           }
         }
       );
@@ -92,11 +90,11 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
 
   useEffect(() => {
     if (changedLocation && lastKnownLocation) {
-      const distanceToEnd = haversineDistance(changedLocation.coords, endLocation.coords);
+      const distanceToEnd = haversineDistance(changedLocation, endLocation);
       setDistanceTraveled(
         (prevDistance) =>
           prevDistance +
-          haversineDistance(lastKnownLocation.coords, changedLocation.coords)
+          haversineDistance(lastKnownLocation, changedLocation)
       );
       setLastKnownLocation(changedLocation);
     }
@@ -120,8 +118,8 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
 
   const goToEnd = () => {
     setRegion({
-      latitude: endLocation.coords.latitude,
-      longitude: endLocation.coords.longitude,
+      latitude: endLocation.lat,
+      longitude: endLocation.lng,
       latitudeDelta: 0.005,
       longitudeDelta: 0.005,
     });
@@ -129,8 +127,8 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
 
   const goToNow = () => {
     setRegion({
-      latitude: changedLocation?.coords.latitude || 0,
-      longitude: changedLocation?.coords.longitude || 0,
+      latitude: changedLocation?.lat || 0,
+      longitude: changedLocation?.lng || 0,
       latitudeDelta: 0.005,
       longitudeDelta: 0.005,
     });
@@ -144,20 +142,20 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
           {initialLocation && (
             <Circle
               center={{
-                latitude: initialLocation.coords.latitude,
-                longitude: initialLocation.coords.longitude,
+                latitude: initialLocation.lat,
+                longitude: initialLocation.lng,
               }}
               radius={15}
               strokeColor="rgba(0, 0, 255, 0.5)"
               fillColor="rgba(0, 0, 255, 0.2)"
             />
           )}
-          <Polyline coordinates={path} strokeColor="blue" strokeWidth={5} />
+          <Polyline coordinates={path.map((loc) => ({latitude: loc.lat, longitude: loc.lng}))} strokeColor="blue" strokeWidth={5} />
           {endLocation && (
             <Marker
               coordinate={{
-                latitude: endLocation.coords.latitude,
-                longitude: endLocation.coords.longitude,
+                latitude: endLocation.lat,
+                longitude: endLocation.lng,
               }}
               title="Cilj"
               description="Slikaj okolico in se prepričaj, da si na pravi lokaciji"

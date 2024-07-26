@@ -17,7 +17,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({vmesna_tocka
 
     const handleLocationUpdate = (currentLocation: ILokacija) => {
         if (selectedEndLocation == null) return;
-        const distanceToStart = haversineDistance(currentLocation.coords, selectedEndLocation.coords);
+        const distanceToStart = haversineDistance(currentLocation, selectedEndLocation);
         if (distanceToStart <= 50) {
           setShowAIButton(true);
         } else {
@@ -30,7 +30,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({vmesna_tocka
     return (
         <View>
             <View>
-            <Text>uganka: {vmesna_tocka.uganka}</Text>
+            <Text>uganka: {vmesna_tocka.uganka}, {vmesna_tocka.odgovor.odgovor}</Text>
             {/* 
             <Button title='odgovor1' onPress={() => setSelectedEndLocation(vmesna_tocka.odgovor.lokacija)} />
             <Button title='odgovor2' onPress={() => setSelectedEndLocation(vmesna_tocka.odgovori[1].lokacija)} />

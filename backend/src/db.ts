@@ -22,6 +22,4 @@ router.get('/DBconnection', async (req, res) => {
     }
 });
 
-
-
 export { router, mongoose };
