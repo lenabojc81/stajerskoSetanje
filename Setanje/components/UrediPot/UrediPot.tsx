@@ -70,7 +70,7 @@ const UrediPot = ({ route, navigation }) => {
         }[];
     }[]>([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
 
-    const { potId } = route.params;
+    ///rconst { potId } = route.params;
 
     let testnaPot = {
         id: "1",

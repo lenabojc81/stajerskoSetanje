@@ -10,6 +10,7 @@ import Poti from '../Poti/poti';
 import IzvajanjePoti from '../IzvajanjePoti/IzvajanjePoti';
 import Domov from '../Domov/Domov';
 import UrediPot from '../UrediPot/UrediPot';
+import Lestvica from '../Lestvica/Lestvica';
 
 const Tab = createBottomTabNavigator();
 
@@ -81,6 +82,7 @@ const MyTabs = () => {
       <Tab.Screen name="UrediPot" component={UrediPot} />
       {/* <Tab.Screen name="Poti" component={Poti} />
       <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
+      <Tab.Screen name="Lestvica" component={Lestvica} />
 
     </Tab.Navigator>
   );
