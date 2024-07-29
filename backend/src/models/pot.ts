@@ -34,7 +34,7 @@ interface IPot extends Document {
 }
 const OdgovorSchema: Schema = new Schema({
     odgovor: { type: String, required: true },
-    tip_odgovor: { type: String, required: true }
+    tip_odgovor: { type: String, required: false }
 });
 
 const DodatnoVprasanjeSchema: Schema = new Schema({
