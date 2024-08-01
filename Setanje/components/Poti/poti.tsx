@@ -139,8 +139,8 @@ const Poti = () => {
   };
 
   useEffect(() => {
-    // fetchPoti();
-    setPoti(testPoti);
+    fetchPoti();
+    //setPoti(testPoti);
   }, []);
 
   return (

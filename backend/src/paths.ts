@@ -8,6 +8,7 @@ router.post('/dodajPot', async (req, res) => {
     try {
         const pot = new Pot(req.body);
         await pot.save();
+        console.log('successfully added');
         res.status(200).send(pot);
     } catch (error) {
         console.error(error);
@@ -25,17 +26,17 @@ router.get('/pridobiPoti', async (req, res) => {
     }
 });
 
-router.get('/pridobiOdgovore/:potId/:tipOdgovora', async (req, res) => {
+router.get('/pridobiOdgovore/:tipOdgovora/:neOdgovor', async (req, res) => {
     try {
-        const potId = req.params.potId;
+        const neOdgovor = req.params.neOdgovor;
         const tip = req.params.tipOdgovora;
         const odgovori = await Pot.aggregate([
-            { $match: { "_id": new mongoose.Types.ObjectId(potId) } },
+           // { $match: { "_id": new mongoose.Types.ObjectId(potId) } },
             { $unwind: "$vmesne_tocke" },
-            { $unwind: "$vmesne_tocke.odgovori" },
-            { $match: { "vmesne_tocke.odgovori.tip_odgovor": tip } },
-            { $limit: 3 },
-            { $project: { "vmesne_tocke.odgovori.odgovor": 1, _id: 0 } }
+            { $match: { "vmesne_tocke.odgovor.tip_odgovor": tip } },
+            { $project: { "vmesne_tocke.odgovor.odgovor": 1, _id: 0, "vmesne_tocke.lokacija": 1, "isNotSame": { $ne: ["$vmesne_tocke.odgovor.odgovor", neOdgovor] } } },
+            { $match: { "isNotSame": true } },
+            { $sample: { size: 3 } },
         ]);
         res.status(200).json(odgovori);
     } catch (error) {

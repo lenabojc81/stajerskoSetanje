@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Zemljevid from "./Zemljevid/Zemljevid";
 import { Button, SafeAreaView, View } from "react-native";
 import { Text } from "react-native";
@@ -18,24 +18,17 @@ type NavProps = {
 
 const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     const { pot } = route.params;
-
     const navigation = useNavigation<IzvajanjePotiNavigationProp>();
 
     const [gameStarted, setGameStarted] = useState<boolean>(true);
     const [startTime, setStartTime] = useState<Date>(new Date());
     const [elapsedTime, setElapsedTime] = useState<number>(0);
     const [gamePlayed, setGamePlayed] = useState<boolean>(false);
-
-    const endLocationOfPath = {
-        // pridobi iz uporabnikove vnesene lokacije
-        lat: pot.zacetna_lokacija.lat, 
-        lng: 13.84981, //pot.zacetna_lokacija.lng,
-    };
+    const [indexOfMidwayPoint, setIndexOfMidwayPoint] = useState<number>(0);
 
     const endGame = async () => {
         setGameStarted(false);
         setGamePlayed(true);
-
         // posiljanje podatkov na streznik
     };
 
@@ -49,24 +42,38 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
         // posiljanje podatkov na streznik
     }
 
+    const handleIndexChange = (index: number) => {
+        if (index < pot.vmesne_tocke.length) {
+            setIndexOfMidwayPoint(index);
+        } else {
+            setIndexOfMidwayPoint(-1);
+        }
+    }
+
     return (
         <View style={styles.container}>
+            <Text>{indexOfMidwayPoint}</Text>
             <Text>Izvajanje poti</Text>
-            <SafeAreaView>
-                <IzvajanjeVmesneTocke vmesna_tocka={pot.vmesne_tocke[0]} />
-            </SafeAreaView>
+            {indexOfMidwayPoint >= 0 && (
+                <SafeAreaView>
+                    <IzvajanjeVmesneTocke index={indexOfMidwayPoint} vmesna_tocka={pot.vmesne_tocke[indexOfMidwayPoint]} onIndexChange={handleIndexChange} />
+                </SafeAreaView>
+            )}
             <View>{gamePlayed && (
                 <Text>Čas potovanja: {elapsedTime} sekund</Text>
             )}</View>
+            {indexOfMidwayPoint == -1 && (
+                <Text>konec igre</Text>
+            )}
             <View>
                 {gameStarted && (
-                    <>
+                    <View>
                         <Stoparica
                             startTime={startTime!}
                             onElapsedTime={handleElapsedTime}
                         />
                         <Button title="Končaj igro" onPress={endGame} />
-                    </>
+                    </View>
                 )}
             </View>
             <View>

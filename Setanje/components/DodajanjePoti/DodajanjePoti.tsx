@@ -172,8 +172,8 @@ const DodajanjePoti = () => {
         opis: data.Opis,
         tocke: data.Tocke,
         zacetna_lokacija: {
-            lat: 12.44,
-            lng: 12.99,
+            lat: 51.45261453063607,
+            lng: -0.9525601099720353,
         },
         vmesne_tocke: data.markers.map((marker) => ({
             ime: marker.ime,
@@ -184,7 +184,8 @@ const DodajanjePoti = () => {
             uganka: marker.uganka,
             odgovor: {
                 odgovor: marker.odgovor,
-                tip_odgovor: marker.tip_odgovor,
+                tip_odgovor: 'text',
+                // tip_odgovor: marker.tip_odgovor,
             },
             dodatna_vprasanja: marker.dodatna_vprasanja,
         })),
