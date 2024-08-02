@@ -15,7 +15,7 @@ import IVmesnaTocka from "./IVmesnaTocka";
 // export default IPot;
 
 interface IPot {
-    _id: string;
+    _id?: string;
     ime: string;
     tezavnost: number;
     dolzina: number;

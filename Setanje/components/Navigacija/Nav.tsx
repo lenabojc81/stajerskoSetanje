@@ -11,6 +11,7 @@ import IzvajanjePoti from '../IzvajanjePoti/IzvajanjePoti';
 import Domov from '../Domov/Domov';
 import UrediPot from '../UrediPot/UrediPot';
 import Lestvica from '../Lestvica/Lestvica';
+import DodajanjePotiII from '../DodajanjePoti/DodajanjePotiII';
 
 const Tab = createBottomTabNavigator();
 
@@ -78,6 +79,7 @@ const MyTabs = () => {
       <Tab.Screen name="AI" component={ImageUpload} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
+      <Tab.Screen name="IIDodajanje poti" component={DodajanjePotiII} />
       <Tab.Screen name="Users" component={UsersScreen} />
       <Tab.Screen name="UrediPot" component={UrediPot} />
       {/* <Tab.Screen name="Poti" component={Poti} />
