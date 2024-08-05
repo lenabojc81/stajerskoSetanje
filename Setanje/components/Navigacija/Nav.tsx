@@ -108,19 +108,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
-const MyTabs = () => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Domov} options={{ headerShown: false }} />
-      <Tab.Screen name="AI" component={ImageUpload} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
-      <Tab.Screen name="Users" component={UsersScreen} />
-    </Tab.Navigator>
-  );
-};
-
 const AuthStack = () => {
   return (
     <Stack.Navigator initialRouteName="Login">
