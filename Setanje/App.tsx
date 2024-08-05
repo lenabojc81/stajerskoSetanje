@@ -10,6 +10,7 @@ import Nav from "./components/Navigacija/Nav";
 import IzvajanjePoti from "./components/IzvajanjePoti/IzvajanjePoti";
 import EmailPasswordAuth from './components/LogReg/EmailPasswordAuth';
 import GoogleAuth from './components/LogReg/GoogleAuth'; 
+import { getToken } from "./components/LogReg/AuthServices";
 
 enableScreens();
 
@@ -18,6 +19,7 @@ const AuthStack = createStackNavigator();
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -34,6 +36,13 @@ const App: React.FC = () => {
       }
     };
 
+    const checkToken = async () => {
+      const token = await getToken();
+      setIsLoggedIn(!!token);
+      setLoading(false);
+    };
+
+    checkToken();
     setupDatabase();
   }, []);
 
@@ -47,12 +56,22 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <AuthStack.Navigator initialRouteName="Login">
+      {isLoggedIn ? ( 
+      <AuthStack.Navigator initialRouteName="Main">
+      <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
+      <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
+      <AuthStack.Screen name="GoogleLogin" component={GoogleAuth} />
+      <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
+    </AuthStack.Navigator>
+       ) :(
+        <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
         <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
         <AuthStack.Screen name="GoogleLogin" component={GoogleAuth} />
         <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
       </AuthStack.Navigator>
+    )}
+      
     </NavigationContainer>
   );
 };

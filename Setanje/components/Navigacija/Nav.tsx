@@ -12,7 +12,6 @@ import Domov from '../Domov/Domov';
 import EmailPasswordAuth from '../LogReg/EmailPasswordAuth'; // Adjust the path as necessary
 import GoogleAuth from '../LogReg/GoogleAuth'; // Adjust the path as necessary
 import { createStackNavigator } from '@react-navigation/stack';
-
 import UrediPot from '../UrediPot/UrediPot';
 import Lestvica from '../Lestvica/Lestvica';
 import DodajanjePotiII from '../DodajanjePoti/DodajanjePotiII';

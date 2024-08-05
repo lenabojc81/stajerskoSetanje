@@ -1,10 +1,9 @@
 // AuthService.ts
-import { baseUrl } from "../../global"; // Adjust the path according to your project structure
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { baseUrl } from '../../global';
 
 export const register = async (email: string, password: string) => {
   try {
-    console.log('Sending request to:', `${baseUrl}/api/auth/register`);
-    console.log('Request payload:', { email, password });
     const response = await fetch(`${baseUrl}/api/auth/register`, {
       method: 'POST',
       headers: {
@@ -16,18 +15,14 @@ export const register = async (email: string, password: string) => {
     if (result.status !== 'success') {
       throw new Error(result.message || 'Registration failed');
     }
-    console.log('Registration response:', result); // Debugging: Log the response
-    return result.data; // Return the user data
+    return result.data;
   } catch (error) {
-    console.error('Network request failed', error);
     throw error;
   }
 };
 
 export const login = async (email: string, password: string) => {
   try {
-    console.log('Sending request to:', `${baseUrl}/api/auth/login`);
-    console.log('Request payload:', { email, password });
     const response = await fetch(`${baseUrl}/api/auth/login`, {
       method: 'POST',
       headers: {
@@ -39,10 +34,24 @@ export const login = async (email: string, password: string) => {
     if (result.status !== 'success') {
       throw new Error(result.message || 'Login failed');
     }
-    console.log('Login response:', result); // Debugging: Log the response
-    return result.data; // Return the user data
+
+    console.log('Login response token:', result.token); // Debugging: Log the token
+    if (!result.token) {
+      throw new Error('Token is missing in the response');
+    }
+
+    await AsyncStorage.setItem('token', result.token);
+    return result.data;
   } catch (error) {
-    console.error('Network request failed', error);
+    console.error('Login error:', error.message);
     throw error;
   }
+};
+
+export const logout = async () => {
+  await AsyncStorage.removeItem('token');
+};
+
+export const getToken = async () => {
+  return await AsyncStorage.getItem('token');
 };
