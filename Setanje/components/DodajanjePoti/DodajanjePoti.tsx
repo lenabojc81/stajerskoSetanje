@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import {
     View,
     Text,
@@ -15,6 +15,9 @@ import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "./styles";
 import { baseUrl } from "../../global";
+import IDodatnoVprasanje from "../../models/IDodatnoVprasanje";
+import IPot from "../../models/IPot";
+import IOdgovor from "../../models/IOdgovor";
 
 
 type FormData = {
@@ -23,6 +26,10 @@ type FormData = {
     Dolzina_poti: string;
     Opis: string;
     Tocke: number;
+    zacetna_lokacija: {
+        lat: number;
+        lng: number;
+    };
 };
 
 type MarkerType = {
@@ -32,11 +39,15 @@ type MarkerType = {
         longitude: number;
     };
     uganka: string;
+    odgovor:{
+        odgovor: string;
+        tip_odgovor: "tekst";
+    }
     dodatna_vprasanja: {
         vprasanje: string;
         odgovori: {
             odgovor: string;
-            true: boolean;
+            pravilen: boolean;
         }
 
     };
@@ -52,17 +63,14 @@ const DodajanjePoti = () => {
     const [markers, setMarkers] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
-    const [markerName, setMarkerName] = useState('');
+    const [markerName, setMarkerName] = useState<String>('');
     const [uganke, setUganke] = useState([]);
     const [tocke, setTocke] = useState([]);
-    const [dodatnaVprasanja, setDodatnaVprasanja] = useState<{
-        vprasanje: string;
-        odgovori: {
-            odgovor: string;
-            pravilen: boolean;
-        }[];
-    }[]>([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
-
+    const [dodatnaVprasanja, setDodatnaVprasanja] = useState<IDodatnoVprasanje[]>([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
+    const [ugankaOdgovor, setUgankaOdgovor] = useState<IOdgovor[]>([{
+        odgovor: "",
+        tip_odgovor: "",
+    }]);
 
     useEffect(() => {
         (async () => {
@@ -107,6 +115,7 @@ const DodajanjePoti = () => {
                     ime: markerName,
                     coordinate: selectedLocation,
                     uganka: uganke,
+                    odgovor: ugankaOdgovor,
                     dodatna_vprasanja: dodatnaVprasanja,
 
                 };
@@ -117,7 +126,8 @@ const DodajanjePoti = () => {
                 setModalVisible(false);
                 setUganke('');
                 setDodatnaVprasanja([{ vprasanje: "", odgovori: [{ odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }, { odgovor: "", pravilen: false }] }]);
-
+                setUgankaOdgovor([{ odgovor: "", tip_odgovor: "" }]);
+                console.log("uganka odgovori", ugankaOdgovor);
             }
         }
     };
@@ -155,23 +165,35 @@ const DodajanjePoti = () => {
 
         data = { ...data, markers };
         console.log(data);
-        const bodyData = {
-            ime: data.Ime_poti,
-            tezavnost: data.Tezavnost,
-            dolzina: data.Dolzina_poti,
-            opis: data.Opis,
-            tocke: data.Tocke,
-            vmesne_tocke: data.markers.map((marker) => ({
-                ime: marker.ime,
-                lokacija: {
-                    lat: marker.coordinate["latitude"],
-                    lng: marker.coordinate["longitude"],
-                },
-                uganka: marker.uganka,
-                dodatna_vprasanja: marker.dodatna_vprasanja,
-            })),
+        const bodyData: IPot = {
+        ime: data.Ime_poti,
+        tezavnost: data.Tezavnost,
+        dolzina: data.Dolzina_poti,
+        opis: data.Opis,
+        tocke: data.Tocke,
+        zacetna_lokacija: {
+            lat: 51.45261453063607,
+            lng: -0.9525601099720353,
+        },
+        vmesne_tocke: data.markers.map((marker) => ({
+            ime: marker.ime,
+            lokacija: {
+                lat: marker.coordinate.latitude,
+                lng: marker.coordinate.longitude,
+            },
+            uganka: marker.uganka,
+            odgovor: {
+                odgovor: marker.odgovor,
+                tip_odgovor: 'text',
+                // tip_odgovor: marker.tip_odgovor,
+            },
+            dodatna_vprasanja: marker.dodatna_vprasanja,
+        })),
         }
-        console.log(bodyData);
+        console.log("TO SO VSI PODATKI", bodyData);
+        console.log(data.markers[0].ime);
+        console.log(data.markers[0].odgovor);
+        console.log(data.markers[0].odgovor.tip_odgovor);
         try {
             const response = await fetch(`${baseUrl}/dodajPot`, {
                 method: 'POST',
@@ -304,6 +326,7 @@ const DodajanjePoti = () => {
                         <Text style={styles.pathName}>Latitude: {marker.coordinate["latitude"]}</Text>
                         <Text style={styles.pathName}>longitude: {marker.coordinate["longitude"]}</Text>
                         <Text style={styles.pathName}>Uganka: {marker.uganka}</Text>
+                        <Text style={styles.pathName}>Odgovor na uganko: {marker.odgovor}</Text>
                         <Text style={styles.pathName}>Dodatno vprašanje: {marker.dodatna_vprasanja[0]["vprasanje"]}</Text>
                         {marker.dodatna_vprasanja[0]["odgovori"].map((odgovor) => (
                             <Text style={styles.pathName}>Odgovor: {odgovor["odgovor"]}, pravilen: {odgovor["pravilen"] ? ("true") : ("false")}</Text>
@@ -340,6 +363,13 @@ const DodajanjePoti = () => {
                         placeholderTextColor="#000000"
                         value={uganke}
                         onChangeText={setUganke}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Napiši odgovor na uganko"
+                        placeholderTextColor="#000000"
+                        value={ugankaOdgovor}
+                        onChangeText={setUgankaOdgovor}
                     />
 
                    

@@ -29,7 +29,6 @@ const Pot: React.FC<NavProps> = ({ route }) => {
       <Text>Število točk: {pot.tocke}</Text>
     <Text>Vmesna točka 1: {pot.vmesne_tocke[0].ime}</Text>
     <Text>Lokacija: {pot.vmesne_tocke[0].lokacija.lat}, {pot.vmesne_tocke[0].lokacija.lng}</Text>
-    {/* <Text>Lokacija: {pot.vmesne_tocke[0].lokacija.coords.latitude}, {pot.vmesne_tocke[0].lokacija.coords.longitude}</Text> */}
     <Text>Uganka: {pot.vmesne_tocke[0].uganka}</Text>
     <PremikDoZacetneLokacije pot={pot}/>
     </View>

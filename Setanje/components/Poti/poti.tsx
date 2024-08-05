@@ -13,55 +13,109 @@ import { useNavigation } from "@react-navigation/native";
 import IPot from "../../models/IPot";
 import { RootStackParamList } from "../Navigacija/types";
 import { StackNavigationProp } from "@react-navigation/stack";
-//import UrediPot from "../UrediPot/UrediPot";
+import UrediPot from "../UrediPot/UrediPot";
 import { useForm } from "react-hook-form";
 //`${baseUrl}/pridobiPoti`
 
 type PotiScreenNavigationProp = StackNavigationProp<RootStackParamList, "Poti">;
 
-const testPoti = [
+const testPoti: IPot[] = [
   {
-    id: "1",
-    dolzina: "20km",
+    _id: "1",
+    dolzina: 20,
     ime: "Lojzetova pot",
     opis: "pot je dolga 5km in je primerna za vse starosti. Pot je primerna za družine z otroki, saj je pot zelo enostavna in nezahtevna. Na poti se nahaja tudi igrišče za otroke. Pot je primerna za vse starosti.",
-    tezavnost: "lahka",
-    Tocke: "100",
+    tezavnost: 1,
+    tocke: 100,
+    zacetna_lokacija: { lat: 46.657398789705226, lng: 16.023557070370984 },
     vmesne_tocke: [
       {
         ime: "pin",
-        lokacija: [{ lat: "46.657398789705226", lng: "16.023557070370984" }],
+        lokacija: { lat: 46.657398789705226, lng: 16.023557070370984 },
         uganka: "uganka",
+        odgovor: { odgovor: "odgovor", tip_odgovor: "tip" },
+        dodatna_vprasanja: [
+          {
+            vprasanje: "vprasanje",
+            odgovori: [
+              { odgovor: "odgovor", pravilen: true },
+              { odgovor: "odgovor", pravilen: false },
+            ],
+          },
+        ],
       },
     ],
   },
   {
-    id: "2",
-    dolzina: "10km",
+    _id: "2",
+    dolzina: 10,
     ime: "Štefkina pot",
     opis: "Pot je dolga 10km in je primerna za vse starosti. Pot je primerna za družine z otroki, saj je pot zelo enostavna in nezahtevna. Na poti se nahaja tudi igrišče za otroke. Pot je primerna za vse starosti.",
-    tezavnost: "srednje",
-    Tocke: "100",
+    tezavnost: 2,
+    tocke: 100,
+    zacetna_lokacija: { lat: 46.459245, lng: 15.618544 },
     vmesne_tocke: [
       {
         ime: "pin",
-        lokacija: [{ lat: "46.657398789705226", lng: "16.023557070370984" }],
+        lokacija: { lat: 46.459245, lng: 15.618544 },
         uganka: "uganka",
+        odgovor: { odgovor: "odgovor", tip_odgovor: "tip" },
+        dodatna_vprasanja: [
+          {
+            vprasanje: "vprasanje",
+            odgovori: [
+              { odgovor: "odgovor1", pravilen: true },
+              { odgovor: "odgovor2", pravilen: false },
+              {odgovor: "odgovor3", pravilen: false},
+              {odgovor: "odgovor4", pravilen: false},
+            ],
+          },
+        ],
       },
+      {
+        ime: "pin2",
+        lokacija: { lat: 46.459245, lng: 15.618544 },
+        uganka: "uganka2",
+        odgovor: { odgovor: "odgovor", tip_odgovor: "tip" },
+        dodatna_vprasanja: [
+          {
+            vprasanje: "vprasanje",
+            odgovori: [
+              { odgovor: "odgovor1", pravilen: true },
+              { odgovor: "odgovor2", pravilen: false },
+              {odgovor: "odgovor3", pravilen: false},
+              {odgovor: "odgovor4", pravilen: false},
+            ],
+          },
+        ],
+      }
     ],
   },
   {
-    id: "3",
-    dolzina: "ggffff",
+    _id: "3",
+    dolzina: 10,
     ime: "Kekčeva pot",
     opis: "Pot je dolga 20km in je primerna za vse starosti. Pot je primerna za družine z otroki, saj je pot zelo enostavna in nezahtevna. Na poti se nahaja tudi igrišče za otroke. Pot je primerna za vse starosti.",
-    tezavnost: "težka",
-    Tocke: "200",
+    tezavnost: 5,
+    tocke: 200,
+    zacetna_lokacija: { lat: 46.657398789705226, lng: 16.023557070370984 },
     vmesne_tocke: [
       {
         ime: "pin",
-        lokacija: [{ lat: "46.657398789705226", lng: "16.023557070370984" }],
+        lokacija: { lat: 46.657398789705226, lng: 16.023557070370984 },
         uganka: "uganka",
+        odgovor: { odgovor: "odgovor", tip_odgovor: "tip" },
+        dodatna_vprasanja: [
+          {
+            vprasanje: "vprasanje",
+            odgovori: [
+              { odgovor: "odgovor", pravilen: true },
+              { odgovor: "odgovor", pravilen: false },
+              { odgovor: "odgovor", pravilen: false },
+              { odgovor: "odgovor", pravilen: false },
+            ],
+          },
+        ],
       },
     ],
   },
@@ -99,6 +153,7 @@ const Poti = () => {
 
   useEffect(() => {
     fetchPoti();
+    //setPoti(testPoti);
   }, []);
 
   return (
@@ -109,12 +164,12 @@ const Poti = () => {
         <TouchableOpacity
           key={index}
           style={styles.pathItem}
-          onPress={() => {navigation.navigate("Pot", { pot }); console.log(pot.vmesne_tocke)}}
+          onPress={() => navigation.navigate("Pot", { pot })}
         >
           <Text style={styles.pathName}>Ime poti: {pot.ime}</Text>
           <Text>Opis: {pot.opis}</Text>
           <View style={styles.container}>
-                <Button title="Uredi" onPress={() => navigation.navigate("UrediPot", { pot: pot._id })} />
+                <Button title="UrediPot" onPress={() => navigation.navigate("UrediPot", { pot })} />
             </View>
         </TouchableOpacity>
       ))}

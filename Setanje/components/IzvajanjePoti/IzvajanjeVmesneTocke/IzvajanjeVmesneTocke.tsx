@@ -1,54 +1,132 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, ScrollView } from 'react-native';
 import IPot from '../../../models/IPot';
 import IVmesnaTocka from '../../../models/IVmesnaTocka';
 import ILokacija from '../../../models/ILokacija';
 import Zemljevid from '../Zemljevid/Zemljevid';
 import { haversineDistance } from '../Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama';
 import ImageUpload from '../../visionApi';
+import { baseUrl } from '../../../global';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface IzvajanjeVmesneTockeProps {
+    index: number;
     vmesna_tocka: IVmesnaTocka;
+    onIndexChange: (index: number) => void;
 }
 
-const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({vmesna_tocka}) => {
+interface IOdgovor {
+    odgovor: string;
+}
+
+interface IMozniOdgovori {
+    lokacija: ILokacija;
+    odgovor: IOdgovor;
+}
+
+const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({index, vmesna_tocka, onIndexChange}) => {
     const [selectedEndLocation, setSelectedEndLocation] = React.useState<ILokacija | null>(null);
     const [showAIButton, setShowAIButton] = React.useState<boolean>(false);
+    const [mozniOdgovori, setMozniOdgovori] = useState<IMozniOdgovori[]>([]);
+    const [selectedAnswer, setSelectedAnswer] = useState<string>('');
+    const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(-1);
+    const [locationAtEnd, setLocationAtEnd] = useState<ILokacija | null>(null);
+    const [rightLocation, setRightLocation] = useState<boolean>(false);
 
-    const handleLocationUpdate = (currentLocation: ILokacija) => {
-        if (selectedEndLocation == null) return;
-        const distanceToStart = haversineDistance(currentLocation.coords, selectedEndLocation.coords);
-        if (distanceToStart <= 50) {
-          setShowAIButton(true);
-        } else {
-          setShowAIButton(false);
+    useEffect (() => {
+        fetchAnswers();
+    }, [vmesna_tocka]);
+
+    const fetchAnswers = async () => {
+        try {
+            const response = await fetch(`${baseUrl}/pridobiOdgovore/${vmesna_tocka.odgovor.tip_odgovor}/${vmesna_tocka.odgovor.odgovor}`);
+            const data = await response.json();
+            let extract: IMozniOdgovori[] = data.map((item: any) => item.vmesne_tocke);
+            extract.push({'lokacija': vmesna_tocka.lokacija, 'odgovor': {'odgovor': vmesna_tocka.odgovor.odgovor}});
+            extract.sort(() => Math.random() - 0.5);
+            setMozniOdgovori(extract);
+        } catch (error) {
+            console.log(error);
         }
     };
 
-    // pridobi 3 odgovore določenega tipa iz baze + random prikaz buttonov 
+    const handleLocationUpdate = (currentLocation: ILokacija) => {
+        if (selectedEndLocation == null) return;
+        const distanceToStart = haversineDistance(currentLocation, selectedEndLocation);
+        if (distanceToStart <= 50) {
+          setShowAIButton(true);
+          setLocationAtEnd(currentLocation);
+        } else {
+          setShowAIButton(false);
+        }
+    }; 
+
+    const selectedDestination = (mo: IMozniOdgovori, index: number) => {
+        setSelectedEndLocation(mo.lokacija);
+        setSelectedButtonIndex(index);
+        setSelectedAnswer(mo.odgovor.odgovor);
+    };
+
+    const resetAnswer = () => {
+        setSelectedEndLocation(null);
+        setSelectedButtonIndex(-1);
+        setSelectedAnswer('');
+        setShowAIButton(false);
+    };
+
+    const nextMidwayPoint = () => {
+        setSelectedEndLocation(null);
+        setShowAIButton(false);
+        setMozniOdgovori([]);
+        setSelectedAnswer('');
+        setSelectedButtonIndex(-1);
+        setLocationAtEnd(null);
+        setRightLocation(false);
+        onIndexChange(index + 1);
+    };
+
+    const checkLocation = () => {
+        if (locationAtEnd == null) return;
+        const distance = haversineDistance(locationAtEnd, vmesna_tocka.lokacija);
+        if (distance <= 50) {
+            setRightLocation(true);
+        } else {
+            setRightLocation(false);
+        }
+    };
 
     return (
-        <View>
+        <ScrollView>
             <View>
-            <Text>uganka: {vmesna_tocka.uganka}</Text>
-            {/* 
-            <Button title='odgovor1' onPress={() => setSelectedEndLocation(vmesna_tocka.odgovor.lokacija)} />
-            <Button title='odgovor2' onPress={() => setSelectedEndLocation(vmesna_tocka.odgovori[1].lokacija)} />
-            <Button title='odgovor3' onPress={() => setSelectedEndLocation(vmesna_tocka.odgovori[2].lokacija)} />
-            <Button title='odgovor4' onPress={() => setSelectedEndLocation(vmesna_tocka.odgovori[3].lokacija)} /> */}
+                <Text>{index}</Text>
+            <Text>uganka: {vmesna_tocka.uganka}, {vmesna_tocka.odgovor.odgovor}</Text>
+            {selectedButtonIndex == -1 && mozniOdgovori.map((mo, index) => (
+                <Button key={index} onPress={() => selectedDestination(mo, index)} title={mo.odgovor.odgovor} />
+            ))}
             </View>
             {selectedEndLocation != null && (
                 <View>
+                    <Text>{selectedAnswer}</Text>
+                <SafeAreaView>
                     <Zemljevid endLocation={selectedEndLocation} onLocationUpdate={handleLocationUpdate} /> 
+                </SafeAreaView>
+                <Button onPress={() => resetAnswer()} title='Spremeni odgovor' />
                 </View>
             )}
             {/* ne morem testirat */}
             {showAIButton && (
                 <View>
                     <ImageUpload />
+                    <Button title='preveri okolico' onPress={checkLocation} />
                 </View>
             )}
-        </View>
+            {rightLocation && (
+                <View>
+                    <Text>right</Text>
+                    <Button title='na naslednjo točko' onPress={nextMidwayPoint} />
+                </View>
+            )}
+        </ScrollView>
     );
 };
 

@@ -1,8 +1,6 @@
 interface ILokacija {
-    coords: {
-        latitude: number;
-        longitude: number;
-    };
+    lat: number;
+    lng: number;
 }
 
 export default ILokacija;

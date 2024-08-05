@@ -13,7 +13,9 @@ import EmailPasswordAuth from '../LogReg/EmailPasswordAuth'; // Adjust the path 
 import GoogleAuth from '../LogReg/GoogleAuth'; // Adjust the path as necessary
 import { createStackNavigator } from '@react-navigation/stack';
 
-//import UrediPot from '../UrediPot/UrediPot';
+import UrediPot from '../UrediPot/UrediPot';
+import Lestvica from '../Lestvica/Lestvica';
+import DodajanjePotiII from '../DodajanjePoti/DodajanjePotiII';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -74,6 +76,24 @@ const SettingsScreen = () => (
     <Text>Settings Screen</Text>
   </View>
 );
+
+const MyTabs = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={Domov} options={{headerShown: false}}/>
+      <Tab.Screen name="AI" component={ImageUpload} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
+      <Tab.Screen name="IIDodajanje poti" component={DodajanjePotiII} />
+      <Tab.Screen name="Users" component={UsersScreen} />
+      <Tab.Screen name="UrediPot" component={UrediPot} />
+      {/* <Tab.Screen name="Poti" component={Poti} />
+      <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
+      <Tab.Screen name="Lestvica" component={Lestvica} />
+
+    </Tab.Navigator>
+  );
+};
 
 const styles = StyleSheet.create({
   screen: {

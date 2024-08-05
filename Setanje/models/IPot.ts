@@ -1,25 +1,28 @@
+import ILokacija from "./ILokacija";
 import IVmesnaTocka from "./IVmesnaTocka";
 
+// interface IPot {
+//     _id?: string;
+//     ime: string;
+//     tezavnost: string;
+//     dolzina: string;
+//     opis: string;
+//     tocke: string;
+//     //zacetna_lokacija: { lat: string; lng: string };
+//     vmesne_tocke: IVmesnaTocka[];
+// }
+
+// export default IPot;
+
 interface IPot {
-    _id: string;
+    _id?: string;
     ime: string;
-    tezavnost: string;
-    dolzina: string;
+    tezavnost: number;
+    dolzina: number;
     opis: string;
-    Tocke: string;
-    //zacetna_lokacija: { lat: string; lng: string };
+    tocke: number;
+    zacetna_lokacija: ILokacija;
     vmesne_tocke: IVmesnaTocka[];
 }
 
 export default IPot;
-
-interface IPot_razsiritev {
-    _id: string;
-    ime: string;
-    tezavnost: string;
-    dolzina: string;
-    opis: string;
-    Tocke: string;
-    zacetna_lokacija: { lat: string; lng: string };
-    vmesne_tocke: IVmesnaTocka[];
-}

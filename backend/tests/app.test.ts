@@ -27,6 +27,10 @@ describe('POST /dodajPot', () => {
       dolzina: 5.2,
       opis: 'A beautiful and challenging trail through the mountains.',
       tocke: 100,
+      zacetna_lokacija: {
+        lat: 46.056946,
+        lng: 14.505751
+      },
       vmesne_tocke: [
         {
           ime: 'Start Point',
@@ -34,7 +38,30 @@ describe('POST /dodajPot', () => {
             lat: 46.056946,
             lng: 14.505751
           },
-          uganka: 'test uganka'
+          uganka: 'test uganka',
+          odgovor: {
+            odgovor: 'test odgovor',
+            tip_odgovor: 'text'
+          },
+          dodatna_vprasanja: [
+            {
+              vprasanje: 'test vprasanje',
+              odgovori: [
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: true
+                },
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: false
+                },
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: false
+                }
+              ]
+            }
+          ]
         },
         {
           ime: 'Checkpoint',
@@ -42,7 +69,30 @@ describe('POST /dodajPot', () => {
             lat: 46.056946,
             lng: 14.505752
           },
-          uganka: 'test uganka'
+          uganka: 'test uganka',
+          odgovor: {
+            odgovor: 'test odgovor',
+            tip_odgovor: 'text'
+          },
+          dodatna_vprasanja: [
+            {
+              vprasanje: 'test vprasanje',
+              odgovori: [
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: true
+                },
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: false
+                },
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: false
+                }
+              ]
+            }
+          ]
         },
         {
           ime: 'End Point',
@@ -50,7 +100,30 @@ describe('POST /dodajPot', () => {
             lat: 46.056947,
             lng: 14.505753
           },
-          uganka: 'test uganka'
+          uganka: 'test uganka',
+          odgovor: {
+            odgovor: 'test odgovor',
+            tip_odgovor: 'text'
+          },
+          dodatna_vprasanja: [
+            {
+              vprasanje: 'test vprasanje',
+              odgovori: [
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: true
+                },
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: false
+                },
+                {
+                  odgovor: 'test odgovor',
+                  pravilen: false
+                }
+              ]
+            }
+          ]
         }
       ]
     };
@@ -69,6 +142,13 @@ describe('POST /dodajPot', () => {
 describe('GET /pridobiPoti', () => {
   it('should get all the paths from DB', async () => {
     const response = await request(app).get('/pridobiPoti');
+    expect(response.statusCode).toBe(200);
+  });
+});
+
+describe('GET /pridobiOdgovore/text/neOdgovor', () => {
+  it('should get 3 answers of the same type text with the exception of neOdgovor', async () => {
+    const response = await request(app).get('/pridobiOdgovore/text/neOdgovor');
     expect(response.statusCode).toBe(200);
   });
 });

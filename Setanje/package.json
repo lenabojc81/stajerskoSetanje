@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google-cloud/vision": "^4.3.0",
+    "@react-native-picker/picker": "^2.7.7",
     "@react-native-segmented-control/segmented-control": "^2.5.2",
     "@react-navigation/bottom-tabs": "^6.6.0",
     "@react-navigation/native": "^6.1.18",
@@ -40,6 +41,7 @@
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
     "@types/react-native": "^0.73.0",
+    "expo-module-scripts": "^3.5.2",
     "typescript": "~5.3.3"
   },
   "private": true

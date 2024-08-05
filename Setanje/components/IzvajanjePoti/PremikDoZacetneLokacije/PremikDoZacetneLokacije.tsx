@@ -19,19 +19,8 @@ const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }
 
   const navigation = useNavigation<ZacetnaLokacijaNavigationProp>();
 
-  const zacetna_lokacija: ILokacija = {
-    coords: {
-      latitude: parseFloat(pot.vmesne_tocke[0].lokacija.lat),
-      longitude: parseFloat(pot.vmesne_tocke[0].lokacija.lng),
-    },
-    // coords: {
-    //   latitude: pot.vmesne_tocke[0].lokacija.coords.latitude,
-    //   longitude: pot.vmesne_tocke[0].lokacija.coords.longitude,
-    // },
-  };
-
   const handleLocationUpdate = (currentLocation: ILokacija) => {
-    const distanceToStart = haversineDistance(currentLocation.coords, zacetna_lokacija.coords);
+    const distanceToStart = haversineDistance(currentLocation, pot.zacetna_lokacija);
     if (distanceToStart <= 50) {
       setShowStartButton(true);
     } else {
@@ -45,7 +34,7 @@ const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }
         Premik do začetne lokacije: Premaknite se do te lokacije, da začnete z
         igro.
       </Text>
-      <Zemljevid endLocation={zacetna_lokacija} onLocationUpdate={handleLocationUpdate} />
+      <Zemljevid endLocation={pot.zacetna_lokacija} onLocationUpdate={handleLocationUpdate} />
       {showStartButton && (
         <View>
           <Button title="Začni igro" onPress={() => navigation.push('IzvajanjePoti', {pot})} />
