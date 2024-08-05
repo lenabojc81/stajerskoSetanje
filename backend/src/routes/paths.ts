@@ -1,6 +1,6 @@
 import express from 'express';
 import Pot from '../models/pot';
-import {mongoose} from  './db';
+import {mongoose} from  '../db';
 
 const router = express.Router();
 
