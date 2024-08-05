@@ -9,9 +9,14 @@ import ImageUpload from '../visionApi';
 import Poti from '../Poti/poti';
 import IzvajanjePoti from '../IzvajanjePoti/IzvajanjePoti';
 import Domov from '../Domov/Domov';
+import EmailPasswordAuth from '../LogReg/EmailPasswordAuth'; // Adjust the path as necessary
+import GoogleAuth from '../LogReg/GoogleAuth'; // Adjust the path as necessary
+import { createStackNavigator } from '@react-navigation/stack';
+
 //import UrediPot from '../UrediPot/UrediPot';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 // const HomeScreen = () => (
 //   <View style={styles.screen}>
@@ -70,22 +75,6 @@ const SettingsScreen = () => (
   </View>
 );
 
-const MyTabs = () => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Domov} options={{headerShown: false}}/>
-      <Tab.Screen name="AI" component={ImageUpload} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
-      <Tab.Screen name="Users" component={UsersScreen} />
-    { /* <Tab.Screen name="UrediPot" component={UrediPot} />*/}
-      {/* <Tab.Screen name="Poti" component={Poti} />
-      <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
-
-    </Tab.Navigator>
-  );
-};
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -98,5 +87,30 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
 });
+
+
+const MyTabs = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={Domov} options={{ headerShown: false }} />
+      <Tab.Screen name="AI" component={ImageUpload} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
+      <Tab.Screen name="Users" component={UsersScreen} />
+    </Tab.Navigator>
+  );
+};
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen name="Login" component={EmailPasswordAuth} />
+      <Stack.Screen name="Register" component={EmailPasswordAuth} /> {/* Use the same component for simplicity */}
+      <Stack.Screen name="GoogleLogin" component={GoogleAuth} />
+      <Stack.Screen name="Main" component={MyTabs} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+};
+
 
 export default MyTabs;

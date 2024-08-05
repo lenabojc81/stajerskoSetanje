@@ -67,6 +67,7 @@ const testPoti = [
   },
 ];
 
+// Poti.tsx
 const Poti = () => {
   const [poti, setPoti] = useState<IPot[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -75,12 +76,24 @@ const Poti = () => {
 
   const fetchPoti = async () => {
     try {
-      const response = await fetch(`${baseUrl}/pridobiPoti`);
+      const response = await fetch(`${baseUrl}/api/paths/pridobiPoti`);
+      
+      // Check if the response is OK (status code 200-299)
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      // Ensure the response is of type JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Invalid content type, expected application/json");
+      }
+
       const data = await response.json();
       setPoti(data);
     } catch (error) {
       console.error(error);
-      setErrorMsg("Napaka pri pridobivanju podatkov");
+      setErrorMsg(error.message || "Napaka pri pridobivanju podatkov");
     }
   };
 
@@ -104,9 +117,7 @@ const Poti = () => {
                 <Button title="Uredi" onPress={() => navigation.navigate("UrediPot", { pot: pot._id })} />
             </View>
         </TouchableOpacity>
-        
       ))}
-      
     </ScrollView>
   );
 };

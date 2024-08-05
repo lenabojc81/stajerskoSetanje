@@ -1,5 +1,5 @@
 import express from 'express';
-import Pot from './models/pot';
+import Pot from '../models/pot';
 
 const router = express.Router();
 
