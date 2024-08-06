@@ -19,7 +19,7 @@ describe("GET /", () => {
   });
 });
 
-describe('POST /dodajPot', () => {
+describe('POST /api/path/dodajPot', () => {
   it('should create a new path and return 201 status', async () => {
     const newPathData = {
       ime: 'Scenic Mountain Trail',
@@ -129,7 +129,7 @@ describe('POST /dodajPot', () => {
     };
 
     const response = await request(app)
-      .post('/dodajPot')
+      .post('/api/paths/dodajPot')
       .send(newPathData)
       .set('Accept', 'application/json');
 
@@ -139,20 +139,31 @@ describe('POST /dodajPot', () => {
   });
 });
 
-describe('GET /pridobiPoti', () => {
+describe('GET /api/paths/pridobiPoti', () => {
   it('should get all the paths from DB', async () => {
-    const response = await request(app).get('/pridobiPoti');
+    const response = await request(app).get('/api/paths/pridobiPoti');
     expect(response.statusCode).toBe(200);
   });
 });
 
-describe('GET /pridobiOdgovore/text/neOdgovor', () => {
-  it('should get 3 answers of the same type text with the exception of neOdgovor', async () => {
-    const response = await request(app).get('/pridobiOdgovore/text/neOdgovor');
-    expect(response.statusCode).toBe(200);
+describe('POST /api/paths/pridobiOdgovore', () => {
+  it('should return 200 and a list of odgovori', async () => {
+      const response = await request(app)
+          .post('/api/paths/pridobiOdgovore')
+          .send({
+              tipOdgovora: 'nekTipOdgovora',
+              neOdgovor: 'nekNeOdgovor'
+          });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toBeInstanceOf(Array);
+      // Dodatne preverbe glede na strukturo podatkov
+      response.body.forEach((odgovor: any) => {
+          expect(odgovor).toHaveProperty('vmesne_tocke.odgovor.odgovor');
+          expect(odgovor).toHaveProperty('vmesne_tocke.lokacija');
+      });
   });
 });
-
 
 
 afterAll(async () => {

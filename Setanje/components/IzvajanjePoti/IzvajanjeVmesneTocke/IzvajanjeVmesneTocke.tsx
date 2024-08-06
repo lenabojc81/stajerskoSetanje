@@ -39,7 +39,19 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({index, vmesn
 
     const fetchAnswers = async () => {
         try {
-            const response = await fetch(`${baseUrl}/pridobiOdgovore/${vmesna_tocka.odgovor.tip_odgovor}/${vmesna_tocka.odgovor.odgovor}`);
+            const response = await fetch(`${baseUrl}/api/paths/pridobiOdgovore`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tipOdgovora: vmesna_tocka.odgovor.tip_odgovor,
+                    neOdgovor: vmesna_tocka.odgovor.odgovor,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
             let extract: IMozniOdgovori[] = data.map((item: any) => item.vmesne_tocke);
             extract.push({'lokacija': vmesna_tocka.lokacija, 'odgovor': {'odgovor': vmesna_tocka.odgovor.odgovor}});
@@ -98,7 +110,6 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({index, vmesn
     return (
         <ScrollView>
             <View>
-                <Text>{index}</Text>
             <Text>uganka: {vmesna_tocka.uganka}, {vmesna_tocka.odgovor.odgovor}</Text>
             {selectedButtonIndex == -1 && mozniOdgovori.map((mo, index) => (
                 <Button key={index} onPress={() => selectedDestination(mo, index)} title={mo.odgovor.odgovor} />
@@ -122,7 +133,6 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({index, vmesn
             )}
             {rightLocation && (
                 <View>
-                    <Text>right</Text>
                     <Button title='na naslednjo točko' onPress={nextMidwayPoint} />
                 </View>
             )}

@@ -52,7 +52,6 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
 
     return (
         <View style={styles.container}>
-            <Text>{indexOfMidwayPoint}</Text>
             <Text>Izvajanje poti</Text>
             {indexOfMidwayPoint >= 0 && (
                 <SafeAreaView>

@@ -26,14 +26,12 @@ router.get('/pridobiPoti', async (req, res) => {
     }
 });
 
-router.get('/pridobiOdgovore/:tipOdgovora/:neOdgovor', async (req, res) => {
+router.post('/pridobiOdgovore', async (req, res) => {
     try {
-        const neOdgovor = req.params.neOdgovor;
-        const tip = req.params.tipOdgovora;
+        const { tipOdgovora, neOdgovor } = req.body;
         const odgovori = await Pot.aggregate([
-           // { $match: { "_id": new mongoose.Types.ObjectId(potId) } },
             { $unwind: "$vmesne_tocke" },
-            { $match: { "vmesne_tocke.odgovor.tip_odgovor": tip } },
+            { $match: { "vmesne_tocke.odgovor.tip_odgovor": tipOdgovora } },
             { $project: { "vmesne_tocke.odgovor.odgovor": 1, _id: 0, "vmesne_tocke.lokacija": 1, "isNotSame": { $ne: ["$vmesne_tocke.odgovor.odgovor", neOdgovor] } } },
             { $match: { "isNotSame": true } },
             { $sample: { size: 3 } },
@@ -43,6 +41,6 @@ router.get('/pridobiOdgovore/:tipOdgovora/:neOdgovor', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: error });
     }
-})
+});
 
 export default router;
