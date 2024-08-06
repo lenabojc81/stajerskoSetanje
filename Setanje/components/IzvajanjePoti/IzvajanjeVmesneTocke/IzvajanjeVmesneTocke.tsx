@@ -84,6 +84,8 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({index, vmesn
         setSelectedButtonIndex(-1);
         setSelectedAnswer('');
         setShowAIButton(false);
+
+        //odbitek tock
     };
 
     const nextMidwayPoint = () => {

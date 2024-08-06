@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button, TouchableOpacity } from "react-native";
+import { View, Text, Button, TouchableOpacity, Alert } from "react-native";
 import IDodatnoVprasanje from "../../../../models/IDodatnoVprasanje";
 import DodajanjeTeksta from "../../DodajanjeTeksta/DodajanjeTeksta";
 import styles from "./styles";
@@ -43,7 +43,22 @@ const DodajanjeDodatnegaVprasanja: React.FC<DodajanjeDodatnegaVprasanjaProps> = 
         setOdgovori(newAnswers);
     };
 
+    const validateFields = () => {
+        if (!additionalQuestion.vprasanje.trim()) {
+            Alert.alert('Napaka', 'Vprašanje ne sme biti prazno.');
+            return false;
+        }
+        if (!(odgovori.length === numInputFields.length)) {
+            Alert.alert('Napaka', 'Odgovori ne smejo biti prazni.');
+            return false;
+        }
+        return true;
+    };
+
     const saveQuestion = (additionalQuestion: IDodatnoVprasanje) => {
+        if (!validateFields()) {
+            return;
+        }
         additionalQuestion.odgovori = odgovori;
         onAddQuestion(additionalQuestion);
         setAdditionalQuestion({ vprasanje: '', odgovori: [] });

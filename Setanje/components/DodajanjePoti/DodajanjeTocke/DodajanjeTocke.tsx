@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, SafeAreaView, View, Text, ScrollView } from "react-native";
+import { Button, SafeAreaView, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import ILokacija from "../../../models/ILokacija";
 import * as Location from "expo-location";
 import MapView, { Callout, MapPressEvent, Marker } from "react-native-maps";
 import styles from "./styles";
 import IVmesnaTocka from "../../../models/IVmesnaTocka";
 import DodajanjeInformacijTocke from "./DodajanjeInformacijTocke/DodajanjeInformacijTocke";
+import DodajanjePotiII from "../DodajanjePotiII";
 
 interface IRegion {
   latitude: number;
@@ -40,10 +41,12 @@ const initialMarker: IVmesnaTocka = {
 
 interface DodajanjeTockeProps {
   midwayPoint: (value: IVmesnaTocka[], data: ILokacija) => void;
+  handleDeleteAllMidwayPoints: () => void;
+  handleDeleteOneMidwayPoint: (index: number) => void;
 }
 
 const DodajanjeTocke: React.FC<DodajanjeTockeProps> = ({
-  midwayPoint,
+  midwayPoint, handleDeleteAllMidwayPoints, handleDeleteOneMidwayPoint
 }) => {
   const [location, setLocation] = useState<ILokacija>({ lat: 0, lng: 0 });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -132,6 +135,12 @@ const DodajanjeTocke: React.FC<DodajanjeTockeProps> = ({
     setMarkers([]);
     setStartLocation(initialStartLocation);
     setCurrentMarker(initialMarker);
+    handleDeleteAllMidwayPoints();
+  };
+
+  const removeMarker = (index: number) => {
+    setMarkers(markers.filter((_, i) => i !== index));
+    handleDeleteOneMidwayPoint(index);
   };
 
   return (
@@ -185,6 +194,17 @@ const DodajanjeTocke: React.FC<DodajanjeTockeProps> = ({
         disabled={startLocation.lokacija.lat === 0}
         onPress={() => {removeAllMarks()}}
       />
+      {markers.length > 0 && (
+        markers.map((marker, index) => (
+          <View key={index} style={styles.container}>
+            <Text>{marker.ime}</Text>
+            <Text>{marker.uganka}</Text>
+            <TouchableOpacity onPress={() => {removeMarker(index)}} style={styles.removeButton} >
+              <Text style={styles.removeButtonText}>-</Text>
+            </TouchableOpacity>
+          </View>
+        ))
+      )}
 
       <DodajanjeInformacijTocke
         midwayPoint={currentMarker}
