@@ -6,7 +6,7 @@ import MapView, { Callout, MapPressEvent, Marker } from "react-native-maps";
 import styles from "./styles";
 import IVmesnaTocka from "../../../models/IVmesnaTocka";
 import DodajanjeInformacijTocke from "./DodajanjeInformacijTocke/DodajanjeInformacijTocke";
-import DodajanjePotiII from "../DodajanjePotiII";
+import DodajanjePotiII from "../DodajanjePoti";
 
 interface IRegion {
   latitude: number;
