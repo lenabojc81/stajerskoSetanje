@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, Text, Button, ScrollView, Alert } from "react-native";
 import DodajanjeTeksta from "./DodajanjeTeksta/DodajanjeTeksta";
 import IPot from "../../models/IPot";
@@ -8,6 +8,7 @@ import IVmesnaTocka from "../../models/IVmesnaTocka";
 import ILokacija from "../../models/ILokacija";
 import { Picker } from "@react-native-picker/picker";
 import { baseUrl } from "../../global";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const initialPot: IPot = {
   dolzina: 0,
@@ -24,6 +25,7 @@ const initialPot: IPot = {
 
 const DodajanjePotiII = () => {
   const [pot, setPot] = useState<IPot>(initialPot);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const [enteredName, setEnteredName] = useState<string>('');
   const [enteredDifficulty, setEnteredDifficulty] = useState<string>("0");
@@ -42,6 +44,7 @@ const DodajanjePotiII = () => {
       vmesne_tocke: midwayPoints,
       zacetna_lokacija: dataStart,
     });
+    scrollViewRef.current?.scrollToEnd({animated: true});
   };
 
   const handleDeleteAllMidwayPoints = () => {
@@ -148,9 +151,8 @@ const DodajanjePotiII = () => {
     setVisibleMidwaypoint(false);
   };
 
-
   return (
-    <ScrollView style={style.container}>
+    <ScrollView ref={scrollViewRef} contentContainerStyle={{paddingBottom: 30}} style={style.container}>
       <Text>Dodajanje poti II</Text>
       <DodajanjeTeksta name="Ime poti" onEnteredValue={setEnteredName} value={enteredName} />
       {/* <DodajanjeTeksta name="Tezavnost" onEnteredValue={setEnteredDifficulty} value={enteredDifficulty}/> */}
@@ -170,7 +172,9 @@ const DodajanjePotiII = () => {
       {/* <DodajanjeTeksta name="Tocke" onEnteredValue={setEnteredPoints} value={enteredPoints}/> */}
       <Button title="Dodaj točke" onPress={() => setVisibleMidwaypoint(true)} />
       {visibleMidwaypoint && <DodajanjeTocke midwayPoint={handleMidwayPoint} handleDeleteAllMidwayPoints={handleDeleteAllMidwayPoints} handleDeleteOneMidwayPoint={handleDeleteOneMidwayPoint} />}
+      <View>
       <Button title="Dodaj pot" disabled={pot.vmesne_tocke.length === 0} onPress={() => savePath()} />
+      </View>
     </ScrollView>
   );
 };

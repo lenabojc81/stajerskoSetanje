@@ -87,8 +87,16 @@ const DodajanjeInformacijTocke: React.FC<DodajanjeInformacijTockeProps> = ({midw
                     selectedValue={marker.odgovor.tip_odgovor}
                     onValueChange={(itemValue) => setMarker({...marker, odgovor: {...marker.odgovor, tip_odgovor: itemValue}})}
                 >
-                    <Picker.Item label='besedilo' value='text' />
-                    <Picker.Item label='število' value='number' />
+                    <Picker.Item label='zanemnitosti/zgradbe' value='landmark' />
+                    <Picker.Item label='datum/leto' value='date' />
+                    <Picker.Item label='mesto/kraj' value='city' />
+                    <Picker.Item label='ulica/cesta' value='street' />
+                    <Picker.Item label='oseba/ime' value='person' />
+                    <Picker.Item label='številka' value='number' />
+                    <Picker.Item label='dogodek' value='event' />
+                    <Picker.Item label='barva' value='color' />
+                    <Picker.Item label='predmet/izdelek' value='object' />
+                    <Picker.Item label='hrana/pijača' value='food' />
                 </Picker>
                 {!visible && <Button title='Dodaj dodatno vprašanje' onPress={() => setVisible(true)} />}
                 {visible && <DodajanjeDodatnegaVprasanja onAddQuestion={handleAddQuestion}/>} 

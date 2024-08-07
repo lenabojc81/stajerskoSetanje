@@ -4,6 +4,7 @@ const style = StyleSheet.create({
     container: {
         padding: 20,
         flex: 1,
+        paddingBottom: 30,
     },
 });
 

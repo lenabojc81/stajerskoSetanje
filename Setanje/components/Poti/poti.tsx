@@ -154,7 +154,7 @@ const Poti = () => {
   useEffect(() => {
     fetchPoti();
     //setPoti(testPoti);
-  }, []);
+  });
 
   return (
     <ScrollView style={styles.container}>
