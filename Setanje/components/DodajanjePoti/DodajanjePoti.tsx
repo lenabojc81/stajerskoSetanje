@@ -9,6 +9,7 @@ import ILokacija from "../../models/ILokacija";
 import { Picker } from "@react-native-picker/picker";
 import { baseUrl } from "../../global";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { haversineDistance } from "../IzvajanjePoti/Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
 
 const initialPot: IPot = {
   dolzina: 0,
@@ -29,10 +30,8 @@ const DodajanjePotiII = () => {
 
   const [enteredName, setEnteredName] = useState<string>('');
   const [enteredDifficulty, setEnteredDifficulty] = useState<string>("0");
-  const [enteredLength, setEnteredLength] = useState<string>('');
+  const [enteredLength, setEnteredLength] = useState<number>(0);
   const [enteredDescription, setEnteredDescription] = useState<string>('');
-  // max tocke = 100 * tezavnost
-  const [enteredPoints, setEnteredPoints] = useState<number>(100);
   const [visibleMidwaypoint, setVisibleMidwaypoint] = useState<boolean>(false);
 
   const handleMidwayPoint = (
@@ -51,6 +50,7 @@ const DodajanjePotiII = () => {
     setPot({
       ...pot,
       vmesne_tocke: [],
+      dolzina: 0,
     });
   };
 
@@ -67,22 +67,14 @@ const DodajanjePotiII = () => {
       Alert.alert('Napaka','Ime ne sme biti prazno.');
       return false;
     }
-    // else if (enteredDifficulty === '') {
-    //   Alert.alert('Napaka','Tezavnost ne sme biti prazna.');
-    //   return false;
-    // }
-    // else if (isNaN(Number(enteredDifficulty))) {
-    //   Alert.alert('Napaka','Tezavnost mora biti število.');
-    //   return false;
-    // }
     else if (enteredDifficulty === "0") {
       Alert.alert('Napaka','Izberite težavnost.');
       return false;
     }
-    else if (enteredLength === '') {
-      Alert.alert('Napaka','Dolzina ne sme biti prazna.');
-      return false;
-    }
+    // else if (enteredLength === '') {
+    //   Alert.alert('Napaka','Dolzina ne sme biti prazna.');
+    //   return false;
+    // }
     else if (isNaN(Number(enteredLength))) {
       Alert.alert('Napaka','Dolzina mora biti število.');
       return false;
@@ -91,14 +83,6 @@ const DodajanjePotiII = () => {
       Alert.alert('Napaka','Opis ne sme biti prazen.');
       return false;
     }
-    // else if (enteredPoints === '') {
-    //   Alert.alert('Napaka','Tocke ne smejo biti prazne.');
-    //   return false;
-    // }
-    // else if (isNaN(Number(enteredPoints))) {
-    //   Alert.alert('Napaka','Tocke morajo biti število.');
-    //   return false;
-    // }
     return true;
   };
 
@@ -107,12 +91,22 @@ const DodajanjePotiII = () => {
       return;
     }
 
+    let allDistance: number = 0;
+    for (let i = 0; i < pot.vmesne_tocke.length; i++) {
+      if (i === 0) {
+        allDistance += haversineDistance(pot.zacetna_lokacija, pot.vmesne_tocke[i].lokacija);
+      } else {
+        allDistance += haversineDistance(pot.vmesne_tocke[i - 1].lokacija, pot.vmesne_tocke[i].lokacija);
+      }
+    };
+
     const newPot: IPot = {
-      dolzina: Number(enteredLength),
+      dolzina: Number((allDistance / 1000).toFixed(2)),
       ime: enteredName,
       opis: enteredDescription,
       tezavnost: Number(enteredDifficulty),
-      tocke: enteredPoints * Number(enteredDifficulty),
+      // max tocke = 100 * tezavnost + 10 * st vmesnih tock
+      tocke: 100 * Number(enteredDifficulty),
       vmesne_tocke: pot.vmesne_tocke,
       zacetna_lokacija: pot.zacetna_lokacija,
     };
@@ -130,7 +124,6 @@ const DodajanjePotiII = () => {
         console.error('Napaka pri pošiljanju podatkov');
       }
       const responseData = await response.json();
-      console.log(responseData);
       resetForm();
     } catch (error) {
       console.error('Napaka pri pošiljanju podatkov', error);
@@ -141,9 +134,8 @@ const DodajanjePotiII = () => {
     setPot(initialPot);
     setEnteredName('');
     setEnteredDifficulty("0");
-    setEnteredLength('');
+    setEnteredLength(0);
     setEnteredDescription('');
-    setEnteredPoints(100);
     setVisibleMidwaypoint(false);
   };
 
@@ -151,7 +143,6 @@ const DodajanjePotiII = () => {
     <ScrollView ref={scrollViewRef} contentContainerStyle={{paddingBottom: 30}} style={style.container}>
       <Text>Dodajanje poti II</Text>
       <DodajanjeTeksta name="Ime poti" onEnteredValue={setEnteredName} value={enteredName} />
-      {/* <DodajanjeTeksta name="Tezavnost" onEnteredValue={setEnteredDifficulty} value={enteredDifficulty}/> */}
       <View>
         <Text>Težavnost</Text>
         <Picker
@@ -163,9 +154,8 @@ const DodajanjePotiII = () => {
           <Picker.Item label="težko" value="3" />
         </Picker>
       </View>
-      <DodajanjeTeksta name="Dolzina poti (km)" onEnteredValue={setEnteredLength} value={enteredLength}/>
+      {/* <DodajanjeTeksta name="Dolzina poti (km)" onEnteredValue={setEnteredLength} value={enteredLength}/> */}
       <DodajanjeTeksta name="Opis poti" onEnteredValue={setEnteredDescription} value={enteredDescription}/>
-      {/* <DodajanjeTeksta name="Tocke" onEnteredValue={setEnteredPoints} value={enteredPoints}/> */}
       <Button title="Dodaj točke" onPress={() => setVisibleMidwaypoint(true)} />
       {visibleMidwaypoint && <DodajanjeTocke midwayPoint={handleMidwayPoint} handleDeleteAllMidwayPoints={handleDeleteAllMidwayPoints} handleDeleteOneMidwayPoint={handleDeleteOneMidwayPoint} />}
       <View>
