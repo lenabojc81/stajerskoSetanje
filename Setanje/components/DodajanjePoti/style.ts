@@ -7,6 +7,7 @@ const style = StyleSheet.create({
       },
       container: {
         padding: 16,
+       
       },
       card: {
         marginVertical: 16,
@@ -24,6 +25,7 @@ const style = StyleSheet.create({
       },
       picker: {
         height: 200,
+        backgroundColor: "white",
       },
       button: {
         marginVertical: 16,
