@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, Button, ScrollView, Alert } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import DodajanjeTeksta from "./DodajanjeTeksta/DodajanjeTeksta";
 import IPot from "../../models/IPot";
 import style from "./style";
@@ -10,7 +10,7 @@ import { Picker } from "@react-native-picker/picker";
 import { baseUrl } from "../../global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { haversineDistance } from "../IzvajanjePoti/Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
-
+import { TextInput, Button, Text, Divider, Dialog, Portal, IconButton, Card } from "react-native-paper";
 const initialPot: IPot = {
   dolzina: 0,
   ime: "",
@@ -140,28 +140,57 @@ const DodajanjePotiII = () => {
   };
 
   return (
-    <ScrollView ref={scrollViewRef} contentContainerStyle={{paddingBottom: 30}} style={style.container}>
-      <Text>Dodajanje poti II</Text>
-      <DodajanjeTeksta name="Ime poti" onEnteredValue={setEnteredName} value={enteredName} />
-      <View>
-        <Text>Težavnost</Text>
-        <Picker
-          selectedValue={enteredDifficulty}
-          onValueChange={(itemValue) => setEnteredDifficulty(itemValue)}
-        >
-          <Picker.Item label="lahko" value="1" />
-          <Picker.Item label="srednje težko" value="2" />
-          <Picker.Item label="težko" value="3" />
-        </Picker>
-      </View>
-      {/* <DodajanjeTeksta name="Dolzina poti (km)" onEnteredValue={setEnteredLength} value={enteredLength}/> */}
-      <DodajanjeTeksta name="Opis poti" onEnteredValue={setEnteredDescription} value={enteredDescription}/>
-      <Button title="Dodaj točke" onPress={() => setVisibleMidwaypoint(true)} />
-      {visibleMidwaypoint && <DodajanjeTocke midwayPoint={handleMidwayPoint} handleDeleteAllMidwayPoints={handleDeleteAllMidwayPoints} handleDeleteOneMidwayPoint={handleDeleteOneMidwayPoint} />}
-      <View>
-      <Button title="Dodaj pot" disabled={pot.vmesne_tocke.length === 0} onPress={() => savePath()} />
-      </View>
+    <SafeAreaView style={style.safeArea}>
+    <ScrollView ref={scrollViewRef} contentContainerStyle={{ paddingBottom: 30 }} style={style.container}>
+      <Card style={style.card}>
+        <Card.Title title="Dodajanje Poti II" />
+        <Card.Content>
+          <TextInput
+            label="Ime poti"
+            value={enteredName}
+            onChangeText={setEnteredName}
+            mode="outlined"
+            style={style.input}
+          />
+          <Text>Težavnost</Text>
+          <View style={style.pickerContainer}>
+            <Picker
+              selectedValue={enteredDifficulty}
+              onValueChange={(itemValue) => setEnteredDifficulty(itemValue)}
+              style={style.picker}
+            >
+              <Picker.Item label="lahko" value="1" />
+              <Picker.Item label="srednje težko" value="2" />
+              <Picker.Item label="težko" value="3" />
+            </Picker>
+          </View>
+          <TextInput
+            label="Opis poti"
+            value={enteredDescription}
+            onChangeText={setEnteredDescription}
+            mode="outlined"
+            multiline
+            style={style.input}
+          />
+          <Button mode="contained" onPress={() => setVisibleMidwaypoint(true)} style={style.button}>
+            Dodaj točke
+          </Button>
+          {visibleMidwaypoint && (
+            <DodajanjeTocke
+              midwayPoint={handleMidwayPoint}
+              handleDeleteAllMidwayPoints={handleDeleteAllMidwayPoints}
+              handleDeleteOneMidwayPoint={handleDeleteOneMidwayPoint}
+            />
+          )}
+        </Card.Content>
+        <Card.Actions>
+          <Button mode="contained" disabled={pot.vmesne_tocke.length === 0} onPress={savePath} style={style.button}>
+            Dodaj pot
+          </Button>
+        </Card.Actions>
+      </Card>
     </ScrollView>
+  </SafeAreaView>
   );
 };
 

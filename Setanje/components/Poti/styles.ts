@@ -3,12 +3,13 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-    },
-    title: {
+        padding: 16,
+      },
+      title: {
         fontSize: 24,
-        marginBottom: 20,
-    },
+        fontWeight: 'bold',
+        marginBottom: 16,
+      },
     pathItem: {
         marginBottom: 10,
         padding: 10,
@@ -30,6 +31,17 @@ const styles = StyleSheet.create({
         color: 'red',
         marginBottom: 10,
     },
+   
+      card: {
+        marginBottom: 16,
+        padding: 8,
+        backgroundColor: "#E0EFDE",
+      },
+      button: {
+        marginHorizontal: 8,
+        backgroundColor: "gray",
+      },
+
 });
 
 export default styles;

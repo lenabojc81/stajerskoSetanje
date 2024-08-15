@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { baseUrl } from "../../global";
@@ -15,6 +14,7 @@ import { RootStackParamList } from "../Navigacija/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import UrediPot from "../UrediPot/UrediPot";
 import { useForm } from "react-hook-form";
+import { Card, Button } from 'react-native-paper';
 //`${baseUrl}/pridobiPoti`
 
 type PotiScreenNavigationProp = StackNavigationProp<RootStackParamList, "Poti">;
@@ -66,8 +66,8 @@ const testPoti: IPot[] = [
             odgovori: [
               { odgovor: "odgovor1", pravilen: true },
               { odgovor: "odgovor2", pravilen: false },
-              {odgovor: "odgovor3", pravilen: false},
-              {odgovor: "odgovor4", pravilen: false},
+              { odgovor: "odgovor3", pravilen: false },
+              { odgovor: "odgovor4", pravilen: false },
             ],
           },
         ],
@@ -83,8 +83,8 @@ const testPoti: IPot[] = [
             odgovori: [
               { odgovor: "odgovor1", pravilen: true },
               { odgovor: "odgovor2", pravilen: false },
-              {odgovor: "odgovor3", pravilen: false},
-              {odgovor: "odgovor4", pravilen: false},
+              { odgovor: "odgovor3", pravilen: false },
+              { odgovor: "odgovor4", pravilen: false },
             ],
           },
         ],
@@ -131,7 +131,7 @@ const Poti = () => {
   const fetchPoti = async () => {
     try {
       const response = await fetch(`${baseUrl}/api/paths/pridobiPoti`);
-      
+
       // Check if the response is OK (status code 200-299)
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
@@ -158,19 +158,29 @@ const Poti = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Prikaz Poti</Text>
+      <Text style={styles.title}>Poti</Text>
       {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
       {poti.map((pot, index) => (
         <TouchableOpacity
           key={index}
-          style={styles.pathItem}
           onPress={() => navigation.navigate("Pot", { pot })}
         >
-          <Text style={styles.pathName}>Ime poti: {pot.ime}</Text>
-          <Text>Opis: {pot.opis}</Text>
-          <View style={styles.container}>
-                <Button title="UrediPot" onPress={() => navigation.navigate("UrediPot", { pot })} />
-            </View>
+        <Card key={index} style={styles.card}>
+          <Card.Title title={`Ime poti: ${pot.ime}`} />
+          <Card.Content>
+            <Text>Opis: {pot.opis}</Text>
+          </Card.Content>
+          <Card.Actions>
+         
+            <Button
+              mode="contained"
+              onPress={() => navigation.navigate("UrediPot", { pot })}
+              style={styles.button}
+            >
+              Uredi Pot
+            </Button>
+          </Card.Actions>
+        </Card>
         </TouchableOpacity>
       ))}
     </ScrollView>

@@ -86,7 +86,7 @@ const MyTabs = () => {
       <Tab.Screen name="UrediPot" component={UrediPot} />
       {/* <Tab.Screen name="Poti" component={Poti} />
       <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
-      <Tab.Screen name="Lestvica" component={Lestvica} />
+  
 
     </Tab.Navigator>
   );
@@ -109,8 +109,8 @@ const AuthStack = () => {
   return (
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen name="Login" component={EmailPasswordAuth} />
-      <Stack.Screen name="Register" component={EmailPasswordAuth} /> {/* Use the same component for simplicity */}
-      <Stack.Screen name="GoogleLogin" component={GoogleAuth} />
+      <Stack.Screen name="Register" component={EmailPasswordAuth} /> 
+     <Stack.Screen name="GoogleLogin" component={GoogleAuth} />
       <Stack.Screen name="Main" component={MyTabs} options={{ headerShown: false }} />
     </Stack.Navigator>
   );

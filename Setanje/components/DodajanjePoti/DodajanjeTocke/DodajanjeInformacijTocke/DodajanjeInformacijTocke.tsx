@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Modal, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Button, Modal, TouchableOpacity, Alert, ScrollView} from "react-native";
 import IVmesnaTocka from "../../../../models/IVmesnaTocka";
 import DodajanjeTeksta from "../../DodajanjeTeksta/DodajanjeTeksta";
 import { Picker } from "@react-native-picker/picker";
@@ -77,12 +77,15 @@ const DodajanjeInformacijTocke: React.FC<DodajanjeInformacijTockeProps> = ({midw
     
     return (
         <Modal visible={visability} animationType="slide">
+             <ScrollView contentContainerStyle={{ paddingBottom: 20, paddingTop: 40 }}>
             <View>
-                <Button title='Nazaj' onPress={handleOnClose} />
+       
+            <Button title='Nazaj' onPress={handleOnClose} />
                 <DodajanjeVnosa name="Ime točke" onEnteredValue={(value: string) => setMarker({...marker, ime: value})} />
                 <DodajanjeVnosa name="Uganka" onEnteredValue={(value: string) => setMarker({...marker, uganka: value})} />
                 <DodajanjeVnosa name="Odgovor" onEnteredValue={(value: string) => setMarker({...marker, odgovor: {...midwayPoint.odgovor, odgovor: value}})} />
                 <Text>Tip odgovora</Text>
+                
                 <Picker
                     selectedValue={marker.odgovor.tip_odgovor}
                     onValueChange={(itemValue) => setMarker({...marker, odgovor: {...marker.odgovor, tip_odgovor: itemValue}})}
@@ -112,6 +115,7 @@ const DodajanjeInformacijTocke: React.FC<DodajanjeInformacijTockeProps> = ({midw
                 )}       
                 <Button title='Dodaj točko' onPress={() => handleSaveMidwayPoint()} disabled={additionalQuestions.length === 0}/>
             </View>
+            </ScrollView>
         </Modal>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { openDatabase, initDB, fetchUsers, User } from "./database";
 import { enableScreens } from "react-native-screens";
@@ -11,7 +11,9 @@ import IzvajanjePoti from "./components/IzvajanjePoti/IzvajanjePoti";
 import EmailPasswordAuth from './components/LogReg/EmailPasswordAuth';
 import GoogleAuth from './components/LogReg/GoogleAuth'; 
 import { getToken } from "./components/LogReg/AuthServices";
-
+import Lestvica from "./components/Lestvica/Lestvica";
+import MyTabs from "./components/Navigacija/Nav";
+import { useNavigation } from '@react-navigation/native';
 enableScreens();
 
 const Stack = createStackNavigator();
@@ -77,13 +79,28 @@ const App: React.FC = () => {
 };
 
 const MainStack = () => {
+  const navigation = useNavigation();
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="BottomNav" component={Nav} options={{ headerShown: false }} />
-      <Stack.Screen name="Poti" component={Poti} />
-      <Stack.Screen name="Pot" component={Pot} />
-      <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerLeft: () => null }} />
-    </Stack.Navigator>
+    <Stack.Navigator
+    screenOptions={{
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Text style={styles.headerButtonText}>Domov</Text>
+        </TouchableOpacity>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Lestvica')}>
+          <Text style={styles.headerButtonText}>Lestvica</Text>
+        </TouchableOpacity>
+      ),
+    }}
+  >
+    <Stack.Screen name="Setanje" component={MyTabs} options={{ headerShown: true }} />
+    <Stack.Screen name="Lestvica" component={Lestvica} options={{ headerShown: true }} />
+    <Stack.Screen name="Pot" component={Pot} />
+    <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerLeft: () => null }} />
+    <Stack.Screen name="Poti" component={Poti} />
+  </Stack.Navigator>
   );
 };
 
@@ -95,6 +112,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
+  },
+  headerButtonText: {
+    color: '#000',
+    paddingHorizontal: 10,
+    fontSize: 16,
   },
 });
 
