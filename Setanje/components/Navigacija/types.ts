@@ -8,5 +8,6 @@ export type RootStackParamList = {
     ZacetnaLokacija: { pot: IPot};
     DodajanjePotiII: undefined;
     IzvajanjePoti: { pot: IPot };
-    UrediPot: { pot: IPot };
+   // UrediPot: { pot: IPot };
+   UrejanjePotiII: { pot: IPot };
 };

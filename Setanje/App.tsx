@@ -14,6 +14,7 @@ import { getToken } from "./components/LogReg/AuthServices";
 import Lestvica from "./components/Lestvica/Lestvica";
 import MyTabs from "./components/Navigacija/Nav";
 import { useNavigation } from '@react-navigation/native';
+import UrejanjePotiII from "./components/UrediPot/UrejanjePoti";
 enableScreens();
 
 const Stack = createStackNavigator();
@@ -100,6 +101,7 @@ const MainStack = () => {
     <Stack.Screen name="Pot" component={Pot} />
     <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerLeft: () => null }} />
     <Stack.Screen name="Poti" component={Poti} />
+    <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII} />
   </Stack.Navigator>
   );
 };

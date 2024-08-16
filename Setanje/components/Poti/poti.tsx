@@ -15,7 +15,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import UrediPot from "../UrediPot/UrediPot";
 import { useForm } from "react-hook-form";
 import { Card, Button } from 'react-native-paper';
+import UrejanjePotiII from "../UrediPot/UrejanjePoti";
 //`${baseUrl}/pridobiPoti`
+
 
 type PotiScreenNavigationProp = StackNavigationProp<RootStackParamList, "Poti">;
 
@@ -174,7 +176,7 @@ const Poti = () => {
          
             <Button
               mode="contained"
-              onPress={() => navigation.navigate("UrediPot", { pot })}
+              onPress={() => navigation.navigate("UrejanjePotiII", {pot})}
               style={styles.button}
             >
               Uredi Pot

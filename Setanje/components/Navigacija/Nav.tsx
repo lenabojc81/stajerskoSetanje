@@ -14,6 +14,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import UrediPot from '../UrediPot/UrediPot';
 import Lestvica from '../Lestvica/Lestvica';
 import DodajanjePoti from '../DodajanjePoti/DodajanjePoti';
+import UrejanjePotiII from '../UrediPot/UrejanjePoti';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -84,6 +85,7 @@ const MyTabs = () => {
       <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
       <Tab.Screen name="Users" component={UsersScreen} />
       <Tab.Screen name="UrediPot" component={UrediPot} />
+      <Tab.Screen name="UrejanjePoti" component={UrejanjePotiII} />
       {/* <Tab.Screen name="Poti" component={Poti} />
       <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
   
