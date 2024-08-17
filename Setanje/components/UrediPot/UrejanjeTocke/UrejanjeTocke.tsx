@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Button, SafeAreaView, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { Button, SafeAreaView, View, Text, ScrollView, TouchableOpacity, Modal, TextInput } from "react-native";
 import ILokacija from "../../../models/ILokacija";
 import * as Location from "expo-location";
-import MapView, { Callout, MapPressEvent, Marker } from "react-native-maps";
+import MapView, { Callout, MapPressEvent, Marker, MarkerDragStartEndEvent  } from "react-native-maps";
 import styles from "./styles";
 import IVmesnaTocka from "../../../models/IVmesnaTocka";
 import UrejanjeInformacijTocke from "./UrejanjeInformacijTocke/UrejanjeInformacijTocke";
@@ -43,10 +43,11 @@ interface UrejanjeTockeProps {
   midwayPoint: (value: IVmesnaTocka[], data: ILokacija) => void;
   handleDeleteAllMidwayPoints: () => void;
   handleDeleteOneMidwayPoint: (index: number) => void;
+  existingPoints: IVmesnaTocka[];
 }
 
 const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
-  midwayPoint, handleDeleteAllMidwayPoints, handleDeleteOneMidwayPoint
+  midwayPoint, handleDeleteAllMidwayPoints, handleDeleteOneMidwayPoint, existingPoints,
 }) => {
   const [location, setLocation] = useState<ILokacija>({ lat: 0, lng: 0 });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -56,7 +57,15 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
   const [currentMarker, setCurrentMarker] =
     useState<IVmesnaTocka>(initialMarker);
   const [visibleInput, setVisibleInput] = useState<boolean>(false);
-  const [markers, setMarkers] = useState<IVmesnaTocka[]>([]);
+  const [markers, setMarkers] = useState<IVmesnaTocka[]>(existingPoints);
+
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [editableMarker, setEditableMarker] = useState<IVmesnaTocka | null>(null);
+
+
+
+  console.log("existingPoints", existingPoints);
+  console.log("markers", markers);
 
   useEffect(() => {
     (async () => {
@@ -82,24 +91,41 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
   }, []);
 
   useEffect(() => {
+    if (location.lat !== 0 && location.lng !== 0) {
+      
     setRegion({
       latitude: location.lat,
       longitude: location.lng,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     });
+  }
   }, [location]);
 
   useEffect(() => {
     //console.log("currentMarker", currentMarker);
     if (currentMarker.lokacija.lat !== 0) {
         setVisibleInput(true);
-    }
-  }, [currentMarker.lokacija.lat]);
+        setRegion({
+          latitude: currentMarker.lokacija.lat,
+          longitude: currentMarker.lokacija.lng,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        });
+      }
+    }, [currentMarker.lokacija]);
+
+
+    /////////????????
+   /* useEffect(() => {
+      setMarkers(existingPoints);
+    }, [existingPoints]);*/
+
+
 
   const handleMapPress = (event: MapPressEvent) => {
     const { coordinate } = event.nativeEvent;
-    if (startLocation === initialStartLocation) {
+    if (startLocation.lokacija.lat === 0 && startLocation.lokacija.lng === 0) {
       setStartLocation({
         lokacija: { lat: coordinate.latitude, lng: coordinate.longitude },
         naziv: "Začetna lokacija",
@@ -113,23 +139,55 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
   };
 
   const handleMidwayPointData = (data: IVmesnaTocka) => {
-    data.lokacija = currentMarker.lokacija;
-    setMarkers((prevMarkers) => {
-        const newMarkers = [...prevMarkers, data];
-        return newMarkers;
-    });
-    midwayPoint([...markers, data], {
+    const updatedMarkers = markers.map(marker => 
+      marker.lokacija.lat === data.lokacija.lat && marker.lokacija.lng === data.lokacija.lng
+        ? data
+        : marker
+    );
+    if (!markers.some(marker => marker.lokacija.lat === data.lokacija.lat && marker.lokacija.lng === data.lokacija.lng)) {
+      updatedMarkers.push(data);
+    }
+  
+    setMarkers(updatedMarkers);
+    midwayPoint(updatedMarkers, {
       lat: startLocation.lokacija.lat,
       lng: startLocation.lokacija.lng,
     });
-    setVisibleInput(false);
+    
     setCurrentMarker(initialMarker);
   };
 
+
+
+
   const handleCloseModal = () => {
-    setVisibleInput(false);
+    //setVisibleInput(false);
     setCurrentMarker(initialMarker);
+    setIsModalVisible(false);
   };
+
+
+  const handleEditMarker = (marker: IVmesnaTocka) => {
+    setEditableMarker(marker); 
+    setIsModalVisible(true);
+
+  };
+
+ 
+
+
+  const handleMarkerDragEnd = (event: MarkerDragStartEndEvent, index: number) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    const updatedMarkers = markers.map((marker, i) =>
+      i === index ? { ...marker, lokacija: { lat: latitude, lng: longitude } } : marker
+    );
+    setMarkers(updatedMarkers);
+    midwayPoint(updatedMarkers, {
+      lat: startLocation.lokacija.lat,
+      lng: startLocation.lokacija.lng,
+    });
+  };
+
 
   const removeAllMarks = () => {
     setMarkers([]);
@@ -142,12 +200,12 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
     setMarkers(markers.filter((_, i) => i !== index));
     handleDeleteOneMidwayPoint(index);
   };
-
+console.log("trenutni marker!!!!!!!!!!!!!!!!", currentMarker);
   return (
     <ScrollView>
       <SafeAreaView>
-        <MapView region={region} style={styles.map} onPress={handleMapPress}>
-          {startLocation && (
+      <MapView region={region} style={styles.map} onPress={handleMapPress}>
+          {startLocation && startLocation.lokacija.lat !== 0 && (
             <Marker
               coordinate={{
                 latitude: startLocation.lokacija.lat,
@@ -179,6 +237,8 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
                 longitude: marker.lokacija.lng,
               }}
               pinColor="red"
+              draggable
+              onDragEnd={(event) => handleMarkerDragEnd(event, index)}
             >
               <Callout>
                 <View>
@@ -196,23 +256,31 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
       />
       {markers.length > 0 && (
         markers.map((marker, index) => (
-          <View key={index} style={styles.container}>
-            <Text>{marker.ime}</Text>
-            <Text>{marker.uganka}</Text>
+          <View key={index} style={styles.calloutView}>
+            <Text style={styles.calloutText} >{marker.ime}</Text>
+            <Text style={styles.calloutText}>{marker.uganka}</Text>
             <TouchableOpacity onPress={() => {removeMarker(index)}} style={styles.removeButton} >
               <Text style={styles.removeButtonText}>-</Text>
             </TouchableOpacity>
+          
+            <Button
+              title="Edit"
+              onPress={() => handleEditMarker(marker)}
+              
+            />	
           </View>
         ))
       )}
 
       <UrejanjeInformacijTocke
-        midwayPoint={currentMarker}
+        midwayPoint={editableMarker || initialMarker}
         onEnteredMidwayPoint={handleMidwayPointData}
         onClose={handleCloseModal}
-        visability={visibleInput}
+       // visability={visibleInput}
+        visability={isModalVisible}
       />
     </ScrollView>
+  
   );
 };
 

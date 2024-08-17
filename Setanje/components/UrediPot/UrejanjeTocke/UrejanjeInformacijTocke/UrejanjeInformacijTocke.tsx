@@ -18,23 +18,47 @@ interface UrejanjeInformacijTockeProps {
 
 const UrejanjeInformacijTocke: React.FC<UrejanjeInformacijTockeProps> = ({midwayPoint, onEnteredMidwayPoint, visability, onClose}) => {
     const [marker, setMarker] = useState<IVmesnaTocka>(midwayPoint);
-    const [visible, setVisible] = useState<boolean>(false);
+    const [visible, setVisible] = useState<boolean>(true);
     const [additionalQuestions, setAdditionalQuestions] = useState<IDodatnoVprasanje[]>([]);
+    const [editingQuestion, setEditingQuestion] = useState<IDodatnoVprasanje | null>(null);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
+    useEffect(() => {
+        setMarker(midwayPoint);
+        setAdditionalQuestions(midwayPoint.dodatna_vprasanja || []);
+    }, [midwayPoint]);
+
+    console.log('midwayPoint v urejanju informacij točke', midwayPoint);
 
     const handleAddQuestion = (data: IDodatnoVprasanje) => {
         setVisible(false);
         setAdditionalQuestions([...additionalQuestions, data]);
+        setEditingQuestion(null);
     };
+console.log("markerji v urejnanju informacij točke!!!!!!!!!!!!!!", marker);
+   
+const handleEditQuestion = (question: IDodatnoVprasanje) => {
+    setEditingQuestion(question);
+    setIsEditing(true);
+};
+
+const handleEditVmesnaTocka = (data: IVmesnaTocka) => {
+    setMarker(data);
+};
+
+
+const handleEditComplete = (updatedQuestion: IDodatnoVprasanje) => {
+    setAdditionalQuestions(additionalQuestions.map(q => q === editingQuestion ? updatedQuestion : q));
+    setEditingQuestion(null);
+    setIsEditing(false);
+};
+
+
 
     const saveMidwayPoint = () => {
-        const newMidwayPoint = {...marker, dodatna_vprasanja: additionalQuestions};
-        onEnteredMidwayPoint(newMidwayPoint);
-
-        //console.log('newMidwayPoint', newMidwayPoint);
-        //console.log('questions', additionalQuestions.length);
-        setMarker(midwayPoint);
-        setVisible(false);
-        setAdditionalQuestions([]);
+        const updatedMidwayPoint = { ...marker, dodatna_vprasanja: additionalQuestions };
+        onEnteredMidwayPoint(updatedMidwayPoint);
+        setVisible(true);
     };
 
     const handleOnClose = () => {
@@ -43,7 +67,7 @@ const UrejanjeInformacijTocke: React.FC<UrejanjeInformacijTockeProps> = ({midway
         setVisible(false);
         setAdditionalQuestions([]);
     };
-
+console.log("marker ime", marker.ime);
     const validateFields = () => {
         if (marker.ime === '' || !marker.ime) {
             Alert.alert('Napaka', 'Ime točke ne sme biti prazno.');
@@ -81,9 +105,9 @@ const UrejanjeInformacijTocke: React.FC<UrejanjeInformacijTockeProps> = ({midway
             <View>
        
             <Button title='Nazaj' onPress={handleOnClose} />
-                <UrejanjeVnosa name="Ime točke" onEnteredValue={(value: string) => setMarker({...marker, ime: value})} />
-                <UrejanjeVnosa name="Uganka" onEnteredValue={(value: string) => setMarker({...marker, uganka: value})} />
-                <UrejanjeVnosa name="Odgovor" onEnteredValue={(value: string) => setMarker({...marker, odgovor: {...midwayPoint.odgovor, odgovor: value}})} />
+                <UrejanjeVnosa name="Ime točke"value={marker.ime} onEnteredValue={(value: string) => setMarker({...marker, ime: value})} />
+                <UrejanjeVnosa name="Uganka" value={marker.uganka} onEnteredValue={(value: string) => setMarker({...marker, uganka: value})} />
+                <UrejanjeVnosa name="Odgovor" value={marker.odgovor.odgovor} onEnteredValue={(value: string) => setMarker({...marker, odgovor: {...midwayPoint.odgovor, odgovor: value}})} />
                 <Text>Tip odgovora</Text>
                 
                 <Picker
@@ -101,8 +125,9 @@ const UrejanjeInformacijTocke: React.FC<UrejanjeInformacijTockeProps> = ({midway
                     <Picker.Item label='predmet/izdelek' value='object' />
                     <Picker.Item label='hrana/pijača' value='food' />
                 </Picker>
-                {!visible && <Button title='Dodaj dodatno vprašanje' onPress={() => setVisible(true)} />}
-                {visible && <UrejanjeDodatnegaVprasanja onAddQuestion={handleAddQuestion}/>} 
+                {visible && <Button title='Dodaj dodatno vprašanje' onPress={() => setVisible(true)} />}
+                {isEditing && <UrejanjeDodatnegaVprasanja onAddQuestion={handleAddQuestion} questionToEdit={editingQuestion || undefined }
+                        onEditComplete={handleEditComplete}/>} 
                 {additionalQuestions.length !== 0 && (
                     additionalQuestions.map((question, index) => (
                         <View key={index} style={styles.container}>
@@ -110,10 +135,12 @@ const UrejanjeInformacijTocke: React.FC<UrejanjeInformacijTockeProps> = ({midway
                             <TouchableOpacity style={styles.removeButton} onPress={() => setAdditionalQuestions(additionalQuestions.filter((_, i) => i !== index))}>
                                 <Text style={styles.removeButtonText}>X</Text>
                             </TouchableOpacity>
+                            <Button title='Uredi' onPress={() => handleEditQuestion(question)} />
                         </View>
                     ))
-                )}       
-                <Button title='Dodaj točko' onPress={() => handleSaveMidwayPoint()} disabled={additionalQuestions.length === 0}/>
+                )}   
+                    
+                <Button title='Shrani točko' onPress={() => handleSaveMidwayPoint()} disabled={additionalQuestions.length === 0}/>
             </View>
             </ScrollView>
         </Modal>

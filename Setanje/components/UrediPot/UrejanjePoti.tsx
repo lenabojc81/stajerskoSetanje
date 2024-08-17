@@ -13,6 +13,7 @@ import { baseUrl } from "../../global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { haversineDistance } from "../IzvajanjePoti/Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
 import { TextInput, Button, Text, Divider, Dialog, Portal, IconButton, Card } from "react-native-paper";
+import IzvajanjeVmesneTocke from "../IzvajanjePoti/IzvajanjeVmesneTocke/IzvajanjeVmesneTocke";
 const initialPot: IPot = {
   dolzina: 0,
   ime: "",
@@ -50,22 +51,22 @@ const UrejanjePotiII = () => {
   console.log("to je pot", pot);
 
   useEffect(() => {
-    if (pot) {
-      setEnteredName(pot.ime || '');
-      setEnteredDifficulty(pot.tezavnost.toString() || "0");
-      setEnteredLength(pot.dolzina || 0);
-      setEnteredDescription(pot.opis || '');
+    if (potU) {
+      setEnteredName(potU.ime || '');
+      setEnteredDifficulty(potU.tezavnost.toString() || "0");
+      setEnteredLength(potU.dolzina || 0);
+      setEnteredDescription(potU.opis || '');
     }
-  }, [pot]);
+  }, [potU]);
 
-
+console.log("to so vmesne točke poti UUUU", potU.vmesne_tocke);
 
   const handleMidwayPoint = (
     midwayPoints: IVmesnaTocka[],
     dataStart: ILokacija
   ) => {
     setPotU({
-      ...pot,
+      ...potU,
       vmesne_tocke: midwayPoints,
       zacetna_lokacija: dataStart,
     });
@@ -74,16 +75,16 @@ const UrejanjePotiII = () => {
 
   const handleDeleteAllMidwayPoints = () => {
     setPotU({
-      ...pot,
+      ...potU,
       vmesne_tocke: [],
       dolzina: 0,
     });
   };
 
   const handleDeleteOneMidwayPoint = (index: number) => {
-    const newMidwayPoints = pot.vmesne_tocke.filter((_, i) => i !== index);
+    const newMidwayPoints = potU.vmesne_tocke.filter((_, i) => i !== index);
     setPotU({
-      ...pot,
+      ...potU,
       vmesne_tocke: newMidwayPoints,
     });
   };
@@ -120,9 +121,9 @@ const UrejanjePotiII = () => {
     let allDistance: number = 0;
     for (let i = 0; i < pot.vmesne_tocke.length; i++) {
       if (i === 0) {
-        allDistance += haversineDistance(pot.zacetna_lokacija, pot.vmesne_tocke[i].lokacija);
+        allDistance += haversineDistance(potU.zacetna_lokacija, potU.vmesne_tocke[i].lokacija);
       } else {
-        allDistance += haversineDistance(pot.vmesne_tocke[i - 1].lokacija, pot.vmesne_tocke[i].lokacija);
+        allDistance += haversineDistance(potU.vmesne_tocke[i - 1].lokacija, potU.vmesne_tocke[i].lokacija);
       }
     };
 
@@ -133,8 +134,8 @@ const UrejanjePotiII = () => {
       tezavnost: Number(enteredDifficulty),
       // max tocke = 100 * tezavnost + 10 * st vmesnih tock
       tocke: 100 * Number(enteredDifficulty),
-      vmesne_tocke: pot.vmesne_tocke,
-      zacetna_lokacija: pot.zacetna_lokacija,
+      vmesne_tocke: potU.vmesne_tocke,
+      zacetna_lokacija: potU.zacetna_lokacija,
     };
 
     //save to db
@@ -157,7 +158,7 @@ const UrejanjePotiII = () => {
   };
 
   const resetForm = () => {
-    setPotU(pot);
+    setPotU(potU);
     setEnteredName('');
     setEnteredDifficulty("0");
     setEnteredLength(0);
@@ -206,11 +207,12 @@ const UrejanjePotiII = () => {
               midwayPoint={handleMidwayPoint}
               handleDeleteAllMidwayPoints={handleDeleteAllMidwayPoints}
               handleDeleteOneMidwayPoint={handleDeleteOneMidwayPoint}
+              existingPoints={potU.vmesne_tocke}
             />
           )}
         </Card.Content>
         <Card.Actions>
-          <Button mode="contained" disabled={pot.vmesne_tocke.length === 0} onPress={savePath} style={style.button}>
+          <Button mode="contained" disabled={potU.vmesne_tocke.length === 0} onPress={savePath} style={style.button}>
             Dodaj pot
           </Button>
         </Card.Actions>

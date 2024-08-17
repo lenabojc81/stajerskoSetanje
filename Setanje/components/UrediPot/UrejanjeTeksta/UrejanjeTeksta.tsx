@@ -1,37 +1,28 @@
 import React, { useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { TextInput, View } from "react-native";
+import { TextInput, View, Text } from "react-native";
 import styles from "./styles";
 
 interface UrejanjeTekstaProps {
     name: string;
-    value: string;
+    value?: string; 
     onEnteredValue: (value: string) => void;
 }
 
-const UrejanjeTeksta: React.FC<UrejanjeTekstaProps> = ({name, onEnteredValue, value}) => {
-    const { control } = useForm<FieldValues>();
-
-    const handleChange = (text: string) => {
-        onEnteredValue(text);
-    }
-
+const UrejanjeTeksta: React.FC<UrejanjeTekstaProps> = ({name, onEnteredValue, value =""}) => {
+    
     return (
-        <View>
-            <Controller
-                control={control}
-                name={name}
-                render={() => (
-                    <TextInput
-                        style={styles.input}
-                        placeholder={name}
-                        value={value}
-                        onChangeText={handleChange}
-                    />
-                )}
+        <View style={styles.container}>
+            <Text>{name}</Text>
+            <TextInput
+                style={styles.input}
+                value={value}
+                onChangeText={onEnteredValue}
+                placeholder={`Enter ${name}`}
             />
         </View>
     );
 };
+
 
 export default UrejanjeTeksta;

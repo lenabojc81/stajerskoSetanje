@@ -5,9 +5,12 @@ import UrejanjeTeksta from "../../UrejanjeTeksta/UrejanjeTeksta";
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import UrejanjeVnosa from "../UrejanjeInformacijTocke/UrejanjeVnosa";
+import IVmesnaTocka from "../../../../models/IVmesnaTocka";
 
 interface UrejanjeDodatnegaVprasanjaProps {
     onAddQuestion: (value: IDodatnoVprasanje) => void;
+    questionToEdit?: IDodatnoVprasanje| null;  
+    onEditComplete?: (updatedQuestion: IDodatnoVprasanje) => void; 
 }
 
 interface IDodatniOdgovor {
@@ -15,11 +18,18 @@ interface IDodatniOdgovor {
     pravilen: boolean;
 }
 
-const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({onAddQuestion}) => {
-    const [additionalQuestion, setAdditionalQuestion] = useState<IDodatnoVprasanje>({ vprasanje: '', odgovori: [] });
-    const [odgovori, setOdgovori] = useState<IDodatniOdgovor[]>([]);
-    const [numInputFields, setNumInputFields] = useState<number[]>([0, 1]);
-    const [selectedCorrectAnswer, setSelectedCorrectAnswer] = useState<number>(0);
+const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({onAddQuestion, questionToEdit, onEditComplete}) => {
+    const [additionalQuestion, setAdditionalQuestion] = useState<IDodatnoVprasanje>(questionToEdit || { vprasanje: '', odgovori: [] });
+    const [odgovori, setOdgovori] = useState<IDodatniOdgovor[]>(questionToEdit ? questionToEdit.odgovori : []);
+    const [numInputFields, setNumInputFields] = useState<number[]>(questionToEdit ? Array(questionToEdit.odgovori.length).fill(0) : [0, 1]);
+    const [selectedCorrectAnswer, setSelectedCorrectAnswer] = useState<number>(questionToEdit ? questionToEdit.odgovori.findIndex(o => o.pravilen) : 0);
+
+ 
+
+    console.log("TO BI NAJ BIL ADDITIONALQUESTINS ", additionalQuestion);
+    console.log("TO BI NAJ BIL ODGOVORI ", odgovori);
+    console.log("TO BI NAJ BIL NUMINPUTFIELDS ", numInputFields);
+    console.log("TO BI NAJ BIL SELECTEDCORRECTANSWER ", selectedCorrectAnswer);
 
     const addInputField = () => {
         if (numInputFields.length < 4) {
@@ -55,30 +65,35 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
         return true;
     };
 
-    const saveQuestion = (additionalQuestion: IDodatnoVprasanje) => {
+    const saveQuestion = () => {
         if (!validateFields()) {
             return;
         }
         additionalQuestion.odgovori = odgovori;
-        onAddQuestion(additionalQuestion);
+        if (questionToEdit) {
+            if (onEditComplete) {
+                onEditComplete(additionalQuestion);
+            }
+        } else {
+            onAddQuestion(additionalQuestion);
+        }
         setAdditionalQuestion({ vprasanje: '', odgovori: [] });
         setOdgovori([]);
         setNumInputFields([0, 1]);
         setSelectedCorrectAnswer(0);
     };
 
+
     return (
         <View>
             <Text>DodajanjeDodatnegaVprasanja</Text>
-            <UrejanjeVnosa name="Vprašanje" onEnteredValue={(value: string) => setAdditionalQuestion({ ...additionalQuestion, vprasanje: value })} />
-            {numInputFields.map((index) => (
+            <UrejanjeVnosa name="Vprašanje" value={additionalQuestion.vprasanje} onEnteredValue={(value: string) => setAdditionalQuestion({ ...additionalQuestion, vprasanje: value })} />
+            {numInputFields.map((index, value) => (
+                console.log("TO BI NAJ BIL INDEX ", index),
+                console.log("TO BI NAJ BIL INDEX ", value),
                 <View key={index} style={styles.inputContainer} >
-                    <UrejanjeVnosa name="Odgovor" onEnteredValue={(value: string) => {const newAnswers = [...odgovori]; newAnswers[index] = {odgovor: value, pravilen: false}; setOdgovori(newAnswers)}} />
-                    {numInputFields.length > 2 && (
-                        <TouchableOpacity onPress={() => removeInputField(index)} style={styles.removeButton} >
-                            <Text style={styles.removeButtonText}>-</Text>
-                        </TouchableOpacity>
-                    )}
+                    <UrejanjeVnosa name="Odgovor" value={odgovori[value].odgovor} onEnteredValue={(value: string) => {const newAnswers = [...odgovori]; newAnswers[index] = {odgovor: value, pravilen: false}; setOdgovori(newAnswers)}} />
+                    
                 </View>
             ))}
             {numInputFields.length < 4 && (
@@ -94,12 +109,12 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
                         onValueChange={(itemValue) => handleCorrectAnswerChange(itemValue)}
                     >
                         {odgovori.map((odgovor, index) => (
-                            <Picker.Item key={index} label={odgovor.odgovor} value={index} />
+                            <Picker.Item key={index} label={odgovor.odgovor} value={odgovor} />
                         ))}
                     </Picker>
                 </View>
             )}
-            <Button title='Shrani dodatno vprašanje' onPress={() => saveQuestion(additionalQuestion)} />
+            <Button title={questionToEdit ? 'Shrani spremembe' : 'Shrani dodatno vprašanje'} onPress={saveQuestion} />
         </View>
     );
 };
