@@ -7,9 +7,12 @@ interface UrejanjeTekstaProps {
     name: string;
     value?: string; 
     onEnteredValue: (value: string) => void;
+    
 }
 
 const UrejanjeTeksta: React.FC<UrejanjeTekstaProps> = ({name, value = '', onEnteredValue}) => {
+
+   
     return (
         <View style={styles.container}>
             <Text>{name}</Text>

@@ -16,6 +16,24 @@ router.post('/dodajPot', async (req, res) => {
     }
 });
 
+router.put('/posodobiPot/:id', async (req, res) => {
+    try {
+        const potId = req.params.id;
+        const updatedPot = await Pot.findByIdAndUpdate(potId, req.body, { new: true });
+        
+        if (!updatedPot) {
+            return res.status(404).send({ error: 'Pot not found' });
+        }
+
+        console.log('successfully updated');
+        res.status(200).send(updatedPot);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ error: error });
+    }
+});
+
+
 router.get('/pridobiPoti', async (req, res) => {
     try {
         const poti = await Pot.find({});

@@ -6,7 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import styles from './styles';
 import { RootStackParamList } from '../../Navigacija/types';
 import PremikDoZacetneLokacije from '../../IzvajanjePoti/PremikDoZacetneLokacije/PremikDoZacetneLokacije';
-
+import { Card, Title, Paragraph, List, Button } from 'react-native-paper';
 
 type PotScreenRouteProp = RouteProp<RootStackParamList, 'Pot'>;
 type PotScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Pot'>;
@@ -21,15 +21,24 @@ const Pot: React.FC<NavProps> = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ime poti: {pot.ime}</Text>
-      <Text>Id: {pot._id}</Text>
-      <Text>Težavnost: {pot.tezavnost}</Text>
-      <Text>Dolžina poti: {pot.dolzina}</Text>
-      <Text>Opis: {pot.opis}</Text>
-      <Text>Število točk: {pot.tocke}</Text>
-    <Text>Vmesna točka 1: {pot.vmesne_tocke[0].ime}</Text>
-    <Text>Lokacija: {pot.vmesne_tocke[0].lokacija.lat}, {pot.vmesne_tocke[0].lokacija.lng}</Text>
-    <Text>Uganka: {pot.vmesne_tocke[0].uganka}</Text>
+    <Card style={styles.card}>
+      <Card.Content>
+        <Title>{pot.ime}</Title>
+        <Paragraph>Id: {pot._id}</Paragraph>
+        <Paragraph>Težavnost: {pot.tezavnost}</Paragraph>
+        <Paragraph>Dolžina poti: {pot.dolzina}</Paragraph>
+        <Paragraph>Opis: {pot.opis}</Paragraph>
+        <Paragraph>Število točk: {pot.tocke}</Paragraph>
+      </Card.Content>
+    </Card>
+    <Card style={styles.card}>
+        <Card.Content>
+          <List.Subheader>Vmesna točka 1</List.Subheader>
+          <Paragraph>Ime: {pot.vmesne_tocke[0].ime}</Paragraph>
+          <Paragraph>Lokacija: {pot.vmesne_tocke[0].lokacija.lat}, {pot.vmesne_tocke[0].lokacija.lng}</Paragraph>
+          <Paragraph>Uganka: {pot.vmesne_tocke[0].uganka}</Paragraph>
+        </Card.Content>
+      </Card>
     <PremikDoZacetneLokacije pot={pot}/>
     </View>
   );

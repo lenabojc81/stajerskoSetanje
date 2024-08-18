@@ -10,7 +10,7 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 const Domov = ({ navigation}: { navigation: HomeScreenNavigationProp}) => {
  return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
+      
       <Poti />
     </View>
  );

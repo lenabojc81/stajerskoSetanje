@@ -15,7 +15,7 @@ import UrediPot from '../UrediPot/UrediPot';
 import Lestvica from '../Lestvica/Lestvica';
 import DodajanjePoti from '../DodajanjePoti/DodajanjePoti';
 import UrejanjePotiII from '../UrediPot/UrejanjePoti';
-
+import ProfilUporabnika from '../ProfilUporabnika/ProfilUporabnika';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -70,22 +70,22 @@ const UsersScreen = () => {
   );
 };
 
-const SettingsScreen = () => (
+/*const SettingsScreen = () => (
   <View style={styles.screen}>
     <Text>Settings Screen</Text>
   </View>
-);
+);*/
 
 const MyTabs = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={Domov} options={{headerShown: false}}/>
       <Tab.Screen name="AI" component={ImageUpload} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} />
-      <Tab.Screen name="Users" component={UsersScreen} />
-      <Tab.Screen name="UrediPot" component={UrediPot} />
-      <Tab.Screen name="UrejanjePoti" component={UrejanjePotiII} />
+      <Tab.Screen name="ProfilUporabnika" component={ProfilUporabnika} options={{headerShown: false}} />
+      <Tab.Screen name="Dodajanje poti" component={DodajanjePoti} options={{headerShown: false}} />
+      <Tab.Screen name="Users" component={UsersScreen} options={{headerShown: false}} />
+     {/* <Tab.Screen name="UrediPot" component={UrediPot} />*/}
+     {/* <Tab.Screen name="UrejanjePoti" component={UrejanjePotiII} />*/}
       {/* <Tab.Screen name="Poti" component={Poti} />
       <Tab.Screen name="Izvajanje poti" component={IzvajanjePoti} /> */}
   

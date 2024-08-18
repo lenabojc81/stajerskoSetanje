@@ -15,6 +15,8 @@ import Lestvica from "./components/Lestvica/Lestvica";
 import MyTabs from "./components/Navigacija/Nav";
 import { useNavigation } from '@react-navigation/native';
 import UrejanjePotiII from "./components/UrediPot/UrejanjePoti";
+import { IconButton } from 'react-native-paper';
+import ProfilUporabnika from "./components/ProfilUporabnika/ProfilUporabnika";
 enableScreens();
 
 const Stack = createStackNavigator();
@@ -86,13 +88,20 @@ const MainStack = () => {
     screenOptions={{
       headerRight: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Text style={styles.headerButtonText}>Domov</Text>
-        </TouchableOpacity>
+        <IconButton
+          icon="home"
+          size={24}
+         
+        />
+      </TouchableOpacity>
       ),
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Lestvica')}>
-          <Text style={styles.headerButtonText}>Lestvica</Text>
-        </TouchableOpacity>
+        <IconButton
+          icon="trophy-outline"
+          size={24}
+        />
+      </TouchableOpacity>
       ),
     }}
   >
@@ -101,7 +110,8 @@ const MainStack = () => {
     <Stack.Screen name="Pot" component={Pot} />
     <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerLeft: () => null }} />
     <Stack.Screen name="Poti" component={Poti} />
-    <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII} />
+    <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII}  />
+    <Stack.Screen name="ProfilUporabnika" component={ProfilUporabnika} />
   </Stack.Navigator>
   );
 };

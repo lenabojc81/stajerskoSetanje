@@ -33,5 +33,15 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ status: 'error', message: (err as Error).message });
   }
 });
+/*router.get('/profile/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  
+  try {
+    const user = await getUserProfile(userId);
+    res.status(200).json({ status: 'success', data: user });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: (err as Error).message });
+  }
+});*/
 
 export default router;

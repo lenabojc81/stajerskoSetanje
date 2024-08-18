@@ -14,30 +14,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { haversineDistance } from "../IzvajanjePoti/Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
 import { TextInput, Button, Text, Divider, Dialog, Portal, IconButton, Card } from "react-native-paper";
 import IzvajanjeVmesneTocke from "../IzvajanjePoti/IzvajanjeVmesneTocke/IzvajanjeVmesneTocke";
-const initialPot: IPot = {
-  dolzina: 0,
-  ime: "",
-  opis: "",
-  tezavnost: 0,
-  tocke: 0,
-  vmesne_tocke: [],
-  zacetna_lokacija: {
-    lat: 0,
-    lng: 0,
-  },
-};
+
 
 const UrejanjePotiII = () => {
    // const { Pot } = route.params;
   //  console.log(Pot);
   const route = useRoute();
   const { pot } = route.params;
- console.log("to je izbrana pot", pot);
+ //console.log("to je izbrana pot", pot);
 
   const [potU, setPotU] = useState<IPot>(pot);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  console.log("shranjena pot v potU",potU);
+ // console.log("shranjena pot v potU",potU);
 
 
 
@@ -48,7 +37,7 @@ const UrejanjePotiII = () => {
   const [visibleMidwaypoint, setVisibleMidwaypoint] = useState<boolean>(false);
 
 
-  console.log("to je pot", pot);
+ // console.log("to je pot", pot);
 
   useEffect(() => {
     if (potU) {
@@ -59,7 +48,7 @@ const UrejanjePotiII = () => {
     }
   }, [potU]);
 
-console.log("to so vmesne točke poti UUUU", potU.vmesne_tocke);
+//console.log("to so vmesne točke poti UUUU", potU.vmesne_tocke);
 
   const handleMidwayPoint = (
     midwayPoints: IVmesnaTocka[],
@@ -127,7 +116,7 @@ console.log("to so vmesne točke poti UUUU", potU.vmesne_tocke);
       }
     };
 
-    const newPot: IPot = {
+    const posodobljenaPot: IPot = {
       dolzina: Number((allDistance / 1000).toFixed(2)),
       ime: enteredName,
       opis: enteredDescription,
@@ -138,24 +127,30 @@ console.log("to so vmesne točke poti UUUU", potU.vmesne_tocke);
       zacetna_lokacija: potU.zacetna_lokacija,
     };
 
-    //save to db
+    //posodobi v bazi
     try {
-      const response = await fetch(`${baseUrl}/api/paths/dodajPot`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newPot),
+      const response = await fetch(`${baseUrl}/api/paths/posodobiPot/${pot._id}`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(posodobljenaPot),
       });
+
       if (!response.ok) {
-        console.error('Napaka pri pošiljanju podatkov');
+          console.error('Napaka pri posodabljanju poti');
+          Alert.alert('Napaka', 'Posodabljanje poti ni uspelo.');
+          return;
       }
+
       const responseData = await response.json();
+      Alert.alert('Uspeh', 'Pot je uspešno posodobljena.');
       resetForm();
-    } catch (error) {
+  } catch (error) {
       console.error('Napaka pri pošiljanju podatkov', error);
-    };
-  };
+      Alert.alert('Napaka', 'Pri posodabljanju poti je prišlo do napake.');
+  }
+};
 
   const resetForm = () => {
     setPotU(potU);
@@ -200,7 +195,7 @@ console.log("to so vmesne točke poti UUUU", potU.vmesne_tocke);
             style={style.input}
           />
           <Button mode="contained" onPress={() => setVisibleMidwaypoint(true)} style={style.button}>
-            Dodaj točke
+            Uredi točke
           </Button>
           {visibleMidwaypoint && (
             <UrejanjeTocke
@@ -213,7 +208,7 @@ console.log("to so vmesne točke poti UUUU", potU.vmesne_tocke);
         </Card.Content>
         <Card.Actions>
           <Button mode="contained" disabled={potU.vmesne_tocke.length === 0} onPress={savePath} style={style.button}>
-            Dodaj pot
+            Posodobi pot
           </Button>
         </Card.Actions>
       </Card>

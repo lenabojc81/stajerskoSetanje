@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, TouchableOpacity, Alert } from "react-native";
 import IDodatnoVprasanje from "../../../../models/IDodatnoVprasanje";
 import UrejanjeTeksta from "../../UrejanjeTeksta/UrejanjeTeksta";
@@ -31,16 +31,25 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
     console.log("TO BI NAJ BIL NUMINPUTFIELDS ", numInputFields);
     console.log("TO BI NAJ BIL SELECTEDCORRECTANSWER ", selectedCorrectAnswer);
 
+  
+
+
+
     const addInputField = () => {
         if (numInputFields.length < 4) {
             setNumInputFields([...numInputFields, numInputFields.length]);
+            setOdgovori([...odgovori, { odgovor: '', pravilen: false }]);
         }
     };
 
     const removeInputField = (index: number) => {
         if (numInputFields.length > 2) {
             setNumInputFields(numInputFields.filter((_, i) => i !== index));
-            setOdgovori(odgovori.filter((_, i) => i !== index));
+            const updatedOdgovori = odgovori.filter((_, i) => i !== index);
+            setOdgovori(updatedOdgovori);
+            if (selectedCorrectAnswer === index) {
+                setSelectedCorrectAnswer(-1); 
+            }
         }
     };
 
@@ -51,6 +60,7 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
             pravilen: i === index,
         }));
         setOdgovori(newAnswers);
+        
     };
 
     const validateFields = () => {
@@ -66,33 +76,36 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
     };
 
     const saveQuestion = () => {
-        if (!validateFields()) {
-            return;
-        }
-        additionalQuestion.odgovori = odgovori;
+        if (!validateFields()) return;
+
+        const updatedQuestion = {
+            ...additionalQuestion,
+            odgovori,
+        };
+
         if (questionToEdit) {
-            if (onEditComplete) {
-                onEditComplete(additionalQuestion);
-            }
+            onEditComplete?.(updatedQuestion);
         } else {
-            onAddQuestion(additionalQuestion);
+            onAddQuestion(updatedQuestion);
         }
+
         setAdditionalQuestion({ vprasanje: '', odgovori: [] });
         setOdgovori([]);
         setNumInputFields([0, 1]);
-        setSelectedCorrectAnswer(0);
+       // setSelectedCorrectAnswer(-1);
     };
 
 
     return (
         <View>
             <Text>DodajanjeDodatnegaVprasanja</Text>
+
             <UrejanjeVnosa name="Vprašanje" value={additionalQuestion.vprasanje} onEnteredValue={(value: string) => setAdditionalQuestion({ ...additionalQuestion, vprasanje: value })} />
-            {numInputFields.map((index, value) => (
+            {numInputFields.map((_,index) => (
                 console.log("TO BI NAJ BIL INDEX ", index),
-                console.log("TO BI NAJ BIL INDEX ", value),
+                console.log("TO BI NAJ BIL INDEX "),
                 <View key={index} style={styles.inputContainer} >
-                    <UrejanjeVnosa name="Odgovor" value={odgovori[value].odgovor} onEnteredValue={(value: string) => {const newAnswers = [...odgovori]; newAnswers[index] = {odgovor: value, pravilen: false}; setOdgovori(newAnswers)}} />
+                    <UrejanjeVnosa name="Odgovor" value={odgovori[index]?.odgovor || ''} onEnteredValue={(value: string) => {const newAnswers = [...odgovori]; newAnswers[index] = {odgovor: value, pravilen: false}; setOdgovori(newAnswers)}} />
                     
                 </View>
             ))}
@@ -109,7 +122,7 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
                         onValueChange={(itemValue) => handleCorrectAnswerChange(itemValue)}
                     >
                         {odgovori.map((odgovor, index) => (
-                            <Picker.Item key={index} label={odgovor.odgovor} value={odgovor} />
+                            <Picker.Item key={index} label={odgovor.odgovor} value={index} />
                         ))}
                     </Picker>
                 </View>

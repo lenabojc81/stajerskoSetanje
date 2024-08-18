@@ -23,3 +23,14 @@ export const authenticateUser = async (email: string, password: string): Promise
   }
   return null;
 };
+/*export async function getUserProfile(userId: string) {
+  try {
+    const user = await User.findById(userId).select('email');
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user;
+  } catch (error) {
+    throw new Error(`Error fetching user profile: `);
+  }
+}*/

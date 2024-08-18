@@ -10,4 +10,5 @@ export type RootStackParamList = {
     IzvajanjePoti: { pot: IPot };
    // UrediPot: { pot: IPot };
    UrejanjePotiII: { pot: IPot };
+   ProfilUporabnika: undefined;
 };

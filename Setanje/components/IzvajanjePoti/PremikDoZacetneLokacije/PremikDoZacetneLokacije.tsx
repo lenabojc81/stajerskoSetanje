@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, Button, View } from "react-native";
+import { View } from "react-native";
 import Zemljevid from "../Zemljevid/Zemljevid";
 import ILokacija from "../../../models/ILokacija";
 import { haversineDistance } from "../Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
@@ -7,6 +7,8 @@ import IPot from "../../../models/IPot";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../Navigacija/types";
 import { useNavigation } from "@react-navigation/native";
+import { Text, Button, Card, Paragraph } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
 
 type ZacetnaLokacijaNavigationProp = StackNavigationProp<RootStackParamList, 'ZacetnaLokacija'>;
 
@@ -30,18 +32,32 @@ const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }
 
   return (
     <>
-      <Text>
-        Premik do začetne lokacije: Premaknite se do te lokacije, da začnete z
-        igro.
-      </Text>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Paragraph>
+            Premik do začetne lokacije: Premaknite se do te lokacije, da začnete z igro.
+          </Paragraph>
+        </Card.Content>
+      </Card>
       <Zemljevid endLocation={pot.zacetna_lokacija} onLocationUpdate={handleLocationUpdate} />
       {showStartButton && (
         <View>
-          <Button title="Začni igro" onPress={() => navigation.push('IzvajanjePoti', {pot})} />
+          <Button mode="contained" onPress={() => navigation.push('IzvajanjePoti', {pot})} >
+            Začni z igro
+          </Button>
         </View>
       )}
     </>
   );
 };
-
+const styles = StyleSheet.create({
+  card: {
+    marginBottom: 16,
+    backgroundColor: "#E0EFDE"
+  },
+  buttonContainer: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+});
 export default PremikDoZacetneLokacije;

@@ -7,7 +7,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 10,
-    }
+        backgroundColor: 'white',
+    },
+
+
 });
 
 export default styles;
