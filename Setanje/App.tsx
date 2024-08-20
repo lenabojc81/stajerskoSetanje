@@ -9,7 +9,6 @@ import Pot from "./components/Poti/Pot/Pot";
 import Nav from "./components/Navigacija/Nav";
 import IzvajanjePoti from "./components/IzvajanjePoti/IzvajanjePoti";
 import EmailPasswordAuth from './components/LogReg/EmailPasswordAuth';
-import GoogleAuth from './components/LogReg/GoogleAuth'; 
 import { getToken } from "./components/LogReg/AuthServices";
 import Lestvica from "./components/Lestvica/Lestvica";
 import MyTabs from "./components/Navigacija/Nav";
@@ -65,14 +64,12 @@ const App: React.FC = () => {
       <AuthStack.Navigator initialRouteName="Main">
       <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
       <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
-      <AuthStack.Screen name="GoogleLogin" component={GoogleAuth} />
       <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
     </AuthStack.Navigator>
        ) :(
         <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
         <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
-        <AuthStack.Screen name="GoogleLogin" component={GoogleAuth} />
         <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
       </AuthStack.Navigator>
     )}

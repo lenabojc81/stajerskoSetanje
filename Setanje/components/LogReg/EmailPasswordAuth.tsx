@@ -2,14 +2,12 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
 import { register, login } from './AuthServices';
-import GoogleAuth from './GoogleAuth';
 import { useNavigation } from '@react-navigation/native';
 
 const EmailPasswordAuth: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [message, setMessage] = useState<string>('');
-  const [useGoogleSignIn, setUseGoogleSignIn] = useState<boolean>(false);
   const navigation = useNavigation();
 
   const handleRegister = async () => {
@@ -43,32 +41,22 @@ const EmailPasswordAuth: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {useGoogleSignIn ? (
-        <GoogleAuth />
-      ) : (
-        <>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
-          />
-          <Button title="Register" onPress={handleRegister} />
-          <Button title="Login" onPress={handleLogin} />
-          {message ? <Text>{message}</Text> : null}
-        </>
-      )}
-      <Button
-        title={useGoogleSignIn ? "Use Email/Password Sign-In" : "Use Google Sign-In"}
-        onPress={() => setUseGoogleSignIn(!useGoogleSignIn)}
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        style={styles.input}
       />
+      <TextInput
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        style={styles.input}
+      />
+      <Button title="Register" onPress={handleRegister} />
+      <Button title="Login" onPress={handleLogin} />
+      {message ? <Text>{message}</Text> : null}
     </View>
   );
 };
