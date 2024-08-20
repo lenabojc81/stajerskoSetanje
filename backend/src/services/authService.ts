@@ -1,7 +1,7 @@
 // services/authService.ts
 import User, { IUser } from '../models/users';
 import bcrypt from 'bcryptjs';
-import { generateToken } from '../utils/jwtUtils';
+import { generateToken, verifyToken } from '../utils/jwtUtils';
 
 export const registerUser = async (email: string, password: string): Promise<IUser> => {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,14 +23,18 @@ export const authenticateUser = async (email: string, password: string): Promise
   }
   return null;
 };
-/*export async function getUserProfile(userId: string) {
+
+export const getUserFromToken = async (token: string) => {
   try {
-    const user = await User.findById(userId).select('email');
-    if (!user) {
-      throw new Error('User not found');
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.userId) {
+      return null;
     }
+
+    const user = await User.findById(decoded.userId);
     return user;
   } catch (error) {
-    throw new Error(`Error fetching user profile: `);
+    console.error('Error getting user from token:');
+    return null;
   }
-}*/
+};

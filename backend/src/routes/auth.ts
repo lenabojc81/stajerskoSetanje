@@ -1,6 +1,6 @@
 // routes/auth.ts
 import express from 'express';
-import { registerUser, authenticateUser } from '../services/authService';
+import { registerUser, authenticateUser, getUserFromToken } from '../services/authService';
 
 const router = express.Router();
 
@@ -33,15 +33,26 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ status: 'error', message: (err as Error).message });
   }
 });
-/*router.get('/profile/:userId', async (req, res) => {
-  const userId = req.params.userId;
-  
+
+router.get('/user', async (req, res) => {
   try {
-    const user = await getUserProfile(userId);
-    res.status(200).json({ status: 'success', data: user });
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ status: 'error', message: 'Token is missing' });
+    }
+
+    const user = await getUserFromToken(token);
+    if (user) {
+      res.status(200).json({ status: 'success', data: user });
+    } else {
+      res.status(404).json({ status: 'error', message: 'User not found' });
+    }
   } catch (err) {
     res.status(500).json({ status: 'error', message: (err as Error).message });
   }
-});*/
+});
+
+
+
 
 export default router;
