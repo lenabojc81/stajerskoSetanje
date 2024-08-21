@@ -5,7 +5,7 @@ import IVmesnaTocka from "../../../models/IVmesnaTocka";
 import ILokacija from "../../../models/ILokacija";
 import Zemljevid from "../Zemljevid/Zemljevid";
 import { haversineDistance } from "../Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
-import ImageUpload from "../../../LandmarkDetection/landmarkDetection";
+import ImageUpload from "../../LandmarkDetection/landmarkDetection";
 import { baseUrl } from "../../../global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DodatnaVprasanja from "./DodatnaVprasanja/DodatnaVprasanja";
