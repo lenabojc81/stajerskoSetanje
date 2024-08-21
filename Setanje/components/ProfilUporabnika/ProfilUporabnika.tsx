@@ -10,11 +10,12 @@ import { set } from 'react-hook-form';
 
 const UserProfile: React.FC = () => {
     const [email, setEmail] = useState<string | null>(null);
+    const [username, setUsername] = useState<string | null>(null);
     const [message, setMessage] = useState<string>('');
     const navigation = useNavigation();
   
     useEffect(() => {
-      fetchUserData({setMessage, setEmail});
+      fetchUserData({setMessage, setEmail, setUsername});
     }, []);
   
     const handleLogout = async () => {
@@ -22,26 +23,35 @@ const UserProfile: React.FC = () => {
         await logout();
         setMessage('Uspešno odjavljen');
         navigation.navigate('Login'); 
+        setEmail(null); 
+        setUsername(null); 
       } catch (error) {
         setMessage(`Logout error: ${error.message}`);
       }
     };
+    const handleLogin = () => {
+      navigation.navigate('Login');
+    };
   
+    const handleRegister = () => {
+      navigation.navigate('Register');
+    };
     return (
       <View style={styless.container}>
         <Text style={styless.title}>Uporabniški profil</Text>
-        {email ? (
+        {email && username ? (
           <>
-            <Text style={styless.email}>Prijavljen kot: {email}</Text>
+            <Text style={styless.email}>Prijavljen kot: {username} ({email})</Text>
             <Button title="Odjavi me" onPress={handleLogout} />
           </>
         ) : (
-          <View>
-          <Text>{message}</Text>
-          <Button title="Prijavi se" onPress={() => navigation.navigate('Login')} />
-          </View>
-        )}
-      </View>
+          <>
+          <Button title="Prijava" onPress={handleLogin} />
+          <Button title="Registracija" onPress={handleRegister} />
+          {message && <Text>{message}</Text>}
+        </>
+      )}
+    </View>
     );
   };
   

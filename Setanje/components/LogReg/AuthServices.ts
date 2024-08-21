@@ -2,14 +2,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { baseUrl } from '../../global';
 
-export const register = async (email: string, password: string) => {
+export const register = async (email: string, password: string, username: string) => {
   try {
     const response = await fetch(`${baseUrl}/api/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, username }),
     });
     const result = await response.json();
     if (result.status !== 'success') {

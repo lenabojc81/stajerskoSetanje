@@ -4,9 +4,10 @@ import { baseUrl } from '../../global';
 interface IFetchUserData {
     setMessage: (message: string) => void;
     setEmail: (email: string) => void;
+    setUsername: (username: string) => void;
 }
 
-const fetchUserData = async ({ setMessage, setEmail }: IFetchUserData) => {
+const fetchUserData = async ({ setMessage, setEmail, setUsername }: IFetchUserData) => {
     try {
       const token = await getToken();
       if (token) {
@@ -33,6 +34,7 @@ const fetchUserData = async ({ setMessage, setEmail }: IFetchUserData) => {
   
         if (result.status === 'success' && result.data.email) {
           setEmail(result.data.email);
+          setUsername(result.data.username);
         } else {
           setMessage('Failed to fetch user data');
         }

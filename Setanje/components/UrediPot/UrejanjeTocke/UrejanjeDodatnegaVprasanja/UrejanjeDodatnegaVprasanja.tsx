@@ -57,7 +57,7 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
         setSelectedCorrectAnswer(index);
         const newAnswers = odgovori.map((odgovor, i) => ({
             ...odgovor,
-            pravilen: i === index,
+            pravilen: i === index-1,
         }));
         setOdgovori(newAnswers);
         
@@ -70,6 +70,10 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
         }
         if (!(odgovori.length === numInputFields.length)) {
             Alert.alert('Napaka', 'Odgovori ne smejo biti prazni.');
+            return false;
+        }
+        if (selectedCorrectAnswer === 0) {
+            Alert.alert('Napaka', 'Izberi pravilen odgovor.');
             return false;
         }
         return true;
@@ -121,8 +125,9 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
                         selectedValue={selectedCorrectAnswer}
                         onValueChange={(itemValue) => handleCorrectAnswerChange(itemValue)}
                     >
+                         <Picker.Item label='Izberi pravilen odgovor' value={0} />
                         {odgovori.map((odgovor, index) => (
-                            <Picker.Item key={index} label={odgovor.odgovor} value={index} />
+                            <Picker.Item key={index} label={odgovor.odgovor} value={index+1} />
                         ))}
                     </Picker>
                 </View>
