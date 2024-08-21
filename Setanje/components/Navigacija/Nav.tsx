@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs/src';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { openDatabase, initDB, fetchUsers, User } from '../../database';
-import ImageUpload from '../visionApi';
+import ImageUpload from '../../LandmarkDetection/landmarkDetection';
 import Poti from '../Poti/poti';
 import IzvajanjePoti from '../IzvajanjePoti/IzvajanjePoti';
 import Domov from '../Domov/Domov';
-import EmailPasswordAuth from '../LogReg/EmailPasswordAuth'; // Adjust the path as necessary
-import GoogleAuth from '../LogReg/GoogleAuth'; // Adjust the path as necessary
+import EmailPasswordAuth from '../LogReg/EmailPasswordAuth';
 import { createStackNavigator } from '@react-navigation/stack';
 import UrediPot from '../UrediPot/UrediPot';
 import Lestvica from '../Lestvica/Lestvica';
@@ -112,7 +111,6 @@ const AuthStack = () => {
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen name="Login" component={EmailPasswordAuth} />
       <Stack.Screen name="Register" component={EmailPasswordAuth} /> 
-     <Stack.Screen name="GoogleLogin" component={GoogleAuth} />
       <Stack.Screen name="Main" component={MyTabs} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
