@@ -87,17 +87,20 @@ const DodajanjePotiII = () => {
   };
 
   const savePath = async () => {
+    console.log("savePath");
     if (!validateFields()) {
       return;
     }
 
     let allDistance: number = 0;
+    let numOfAdditionalQuestions: number = 0;
     for (let i = 0; i < pot.vmesne_tocke.length; i++) {
       if (i === 0) {
         allDistance += haversineDistance(pot.zacetna_lokacija, pot.vmesne_tocke[i].lokacija);
       } else {
         allDistance += haversineDistance(pot.vmesne_tocke[i - 1].lokacija, pot.vmesne_tocke[i].lokacija);
       }
+      numOfAdditionalQuestions += pot.vmesne_tocke[i].dodatna_vprasanja.length;
     };
 
     const newPot: IPot = {
@@ -105,8 +108,7 @@ const DodajanjePotiII = () => {
       ime: enteredName,
       opis: enteredDescription,
       tezavnost: Number(enteredDifficulty),
-      // max tocke = 100 * tezavnost + 10 * st vmesnih tock
-      tocke: 100 * Number(enteredDifficulty),
+      tocke: 100 * Number(enteredDifficulty) + 10 * numOfAdditionalQuestions,
       vmesne_tocke: pot.vmesne_tocke,
       zacetna_lokacija: pot.zacetna_lokacija,
     };
@@ -172,9 +174,9 @@ const DodajanjePotiII = () => {
             multiline
             style={style.input}
           />
-          <Button mode="contained" onPress={() => setVisibleMidwaypoint(true)} style={style.button}>
+          {!visibleMidwaypoint && <Button mode="contained" onPress={() => setVisibleMidwaypoint(true)} style={style.button} >
             Dodaj točke
-          </Button>
+          </Button>}
           {visibleMidwaypoint && (
             <DodajanjeTocke
               midwayPoint={handleMidwayPoint}

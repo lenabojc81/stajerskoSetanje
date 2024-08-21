@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { baseUrl } from "../../global";
 import styles from "./styles";
@@ -13,7 +14,7 @@ import IPot from "../../models/IPot";
 import { RootStackParamList } from "../Navigacija/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import UrediPot from "../UrediPot/UrediPot";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Card, Button } from 'react-native-paper';
 import UrejanjePotiII from "../UrediPot/UrejanjePoti";
 //`${baseUrl}/pridobiPoti`
@@ -127,6 +128,7 @@ const testPoti: IPot[] = [
 const Poti = () => {
   const [poti, setPoti] = useState<IPot[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const { control, handleSubmit, reset } = useForm();
   const navigation = useNavigation<PotiScreenNavigationProp>();
 
@@ -156,12 +158,19 @@ const Poti = () => {
   useEffect(() => {
     fetchPoti();
     //setPoti(testPoti);
-  });
+  }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setErrorMsg("");
+    await fetchPoti();
+    setRefreshing(false);
+  };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <Text style={styles.title}>Poti</Text>
-      {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
+      {errorMsg != "" && <Text style={styles.error}>{errorMsg}</Text>}
       {poti.map((pot, index) => (
         <TouchableOpacity
           key={index}

@@ -14,7 +14,7 @@ import { set } from "react-hook-form";
 interface IzvajanjeVmesneTockeProps {
   index: number;
   vmesna_tocka: IVmesnaTocka;
-  onIndexChange: (index: number) => void;
+  onIndexChange: (index: number, distance: number, points: number) => void;
 }
 
 interface IOdgovor {
@@ -43,6 +43,8 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     useState<number>(0);
   const [visibleAdditionalQuestion, setVisibleAdditionalQuestion] =
     useState<boolean>(false);
+  const [distance, setDistance] = useState<number>(0);
+  const [additionalPoints, setAdditionalPoints] = useState<number>(0);
 
   useEffect(() => {
     fetchAnswers();
@@ -98,6 +100,10 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     }
   };
 
+  const handleDistanceUpdate = (distance: number) => {
+    setDistance(distance);
+  };
+
   const selectedDestination = (mo: IMozniOdgovori, index: number) => {
     setSelectedEndLocation(mo.lokacija);
     setSelectedButtonIndex(index);
@@ -111,9 +117,10 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     setShowAIButton(false);
 
     //odbitek tock
+    setAdditionalPoints(additionalPoints - 10);
   };
 
-  const nextMidwayPoint = () => {
+  const nextMidwayPoint = (correct: boolean) => {
     setSelectedEndLocation(null);
     setShowAIButton(false);
     setMozniOdgovori([]);
@@ -121,7 +128,14 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     setSelectedButtonIndex(-1);
     setLocationAtEnd(null);
     setRightLocation(false);
-    onIndexChange(index + 1);
+    if (correct) {
+      onIndexChange(index + 1, distance, additionalPoints + 10);
+    } else {
+      onIndexChange(index + 1, distance, additionalPoints);
+    }
+    
+    setDistance(0);
+    setAdditionalPoints(0);
   };
 
   const checkLocation = () => {
@@ -136,18 +150,20 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
   };
 
   const handleIndexOfAdditionalQuestion = (index: number, correct: boolean) => {
+    // console.log("correct", correct);
+    if (correct) {
+      setAdditionalPoints(additionalPoints + 10);
+    };
     if (
       indexOfAdditionalQuestion ==
       vmesna_tocka.dodatna_vprasanja.length - 1
     ) {
       setIndexOfAdditionalQuestion(0);
       setVisibleAdditionalQuestion(false);
-      nextMidwayPoint();
+      nextMidwayPoint(correct);
     } else {
       setIndexOfAdditionalQuestion(indexOfAdditionalQuestion + 1);
     }
-
-    //belezenje pravilnih odgovorov za tocke
   };
 
   return (
@@ -175,7 +191,9 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
             <Zemljevid
               endLocation={selectedEndLocation}
               onLocationUpdate={handleLocationUpdate}
+              onDistanceUpdate={handleDistanceUpdate}
             />
+            <Text>{distance.toFixed(2)}</Text>
           </SafeAreaView>
           <Button onPress={() => resetAnswer()} title="Spremeni odgovor" />
         </View>
@@ -198,7 +216,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
               onIndexChange={handleIndexOfAdditionalQuestion}
             />
           )}
-          <Button title="na naslednjo točko" onPress={nextMidwayPoint} />
+          <Button title="na naslednjo točko" onPress={() => nextMidwayPoint(true)} />
         </View>
       )}
     </ScrollView>

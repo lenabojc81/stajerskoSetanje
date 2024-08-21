@@ -11,9 +11,10 @@ import ILokacija from "../../../models/ILokacija";
 interface ZemljevidProps {
   endLocation: ILokacija;
   onLocationUpdate?: (location: ILokacija) => void;
+  onDistanceUpdate?: (distance: number) => void;
 }
 
-const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) => {
+const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate, onDistanceUpdate }) => {
   const [initialLocation, setInitialLocation] = useState<ILokacija | null>(null);
   const [changedLocation, setChangedLocation] = useState<ILokacija | null>(null);
   const [lastKnownLocation, setLastKnownLocation] = useState<ILokacija | null>(null);
@@ -99,6 +100,12 @@ const Zemljevid: React.FC<ZemljevidProps> = ({ endLocation, onLocationUpdate }) 
       setLastKnownLocation(changedLocation);
     }
   }, [changedLocation]);
+
+  useEffect(() => {
+    if (onDistanceUpdate) {
+      onDistanceUpdate(distanceTraveled);
+    };
+  }, [distanceTraveled]);
 
   const increaseDelta = () => {
     setRegion((prevRegion) => ({
