@@ -7,12 +7,13 @@ import { useNavigation } from '@react-navigation/native';
 const EmailPasswordAuth: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const navigation = useNavigation();
 
   const handleRegister = async () => {
     try {
-      const response = await register(email, password);
+      const response = await register(email, password, username);
       console.log('Register response:', response); // Log response
       if (response && response.email) {
         setMessage(`User registered: ${response.email}`);
@@ -41,6 +42,12 @@ const EmailPasswordAuth: React.FC = () => {
 
   return (
     <View style={styles.container}>
+        <TextInput
+        placeholder="Username" 
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+      />
       <TextInput
         placeholder="Email"
         value={email}

@@ -3,12 +3,13 @@ import User, { IUser } from '../models/users';
 import bcrypt from 'bcryptjs';
 import { generateToken, verifyToken } from '../utils/jwtUtils';
 
-export const registerUser = async (email: string, password: string): Promise<IUser> => {
+export const registerUser = async (email: string, password: string,  username: string): Promise<IUser> => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = new User({
     email,
     password: hashedPassword,
+    username, 
   });
 
   await user.save();

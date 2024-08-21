@@ -26,7 +26,7 @@ const UrejanjePotiII = () => {
   const [potU, setPotU] = useState<IPot>(pot);
   const scrollViewRef = useRef<ScrollView>(null);
 
- // console.log("shranjena pot v potU",potU);
+  console.log("shranjena pot v potU",potU);
 
 
 
@@ -108,12 +108,14 @@ const UrejanjePotiII = () => {
     }
 
     let allDistance: number = 0;
+    let numOfAdditionalQuestions: number = 0;
     for (let i = 0; i < pot.vmesne_tocke.length; i++) {
       if (i === 0) {
         allDistance += haversineDistance(potU.zacetna_lokacija, potU.vmesne_tocke[i].lokacija);
       } else {
         allDistance += haversineDistance(potU.vmesne_tocke[i - 1].lokacija, potU.vmesne_tocke[i].lokacija);
       }
+      numOfAdditionalQuestions += potU.vmesne_tocke[i].dodatna_vprasanja.length;
     };
 
     const posodobljenaPot: IPot = {
@@ -122,7 +124,7 @@ const UrejanjePotiII = () => {
       opis: enteredDescription,
       tezavnost: Number(enteredDifficulty),
       // max tocke = 100 * tezavnost + 10 * st vmesnih tock
-      tocke: 100 * Number(enteredDifficulty),
+      tocke: 100 * Number(enteredDifficulty) + 10 * numOfAdditionalQuestions,
       vmesne_tocke: potU.vmesne_tocke,
       zacetna_lokacija: potU.zacetna_lokacija,
     };
@@ -194,9 +196,9 @@ const UrejanjePotiII = () => {
             multiline
             style={style.input}
           />
-          <Button mode="contained" onPress={() => setVisibleMidwaypoint(true)} style={style.button}>
+             {!visibleMidwaypoint && <Button mode="contained" onPress={() => setVisibleMidwaypoint(true)} style={style.button} >
             Uredi točke
-          </Button>
+          </Button>}
           {visibleMidwaypoint && (
             <UrejanjeTocke
               midwayPoint={handleMidwayPoint}
