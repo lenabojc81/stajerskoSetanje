@@ -8,6 +8,7 @@ import { RootStackParamList } from "../Navigacija/types";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import IzvajanjeVmesneTocke from "./IzvajanjeVmesneTocke/IzvajanjeVmesneTocke";
+import { IzracunTock } from "./IzracunTock";
 
 type IzvajanjePotiScreenProp = RouteProp<RootStackParamList, "IzvajanjePoti">;
 type IzvajanjePotiNavigationProp = StackNavigationProp<
@@ -24,15 +25,21 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
   const navigation = useNavigation<IzvajanjePotiNavigationProp>();
 
   const [gameStarted, setGameStarted] = useState<boolean>(true);
-  const [startTime, setStartTime] = useState<Date>(new Date());
-  const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [gamePlayed, setGamePlayed] = useState<boolean>(false);
   const [indexOfMidwayPoint, setIndexOfMidwayPoint] = useState<number>(0);
+
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [distance, setDistance] = useState<number>(0);
+  const [points, setPoints] = useState<number>(0);
+  const [endPoints, setEndPoints] = useState<number>(0);
 
   const endGame = async () => {
     setGameStarted(false);
     setGamePlayed(true);
+
     // posiljanje podatkov na streznik
+    setEndPoints(IzracunTock(pot.dolzina, distance, elapsedTime, points, pot.tocke));
   };
 
   const handleElapsedTime = (time: number) => {
@@ -45,12 +52,16 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     // posiljanje podatkov na streznik
   };
 
-  const handleIndexChange = (index: number) => {
+  const handleIndexChange = (index: number, newDistance: number, newPoints: number) => {
     if (index < pot.vmesne_tocke.length) {
       setIndexOfMidwayPoint(index);
     } else {
       setIndexOfMidwayPoint(-1);
     }
+    setDistance(distance + newDistance);
+    // console.log("points izvajanje poti", points);
+    // console.log("new points izvajanje poti", newPoints);
+    setPoints(points + newPoints);
   };
 
   return (
@@ -67,7 +78,15 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
           </SafeAreaView>
         )}
         <View>
-          {gamePlayed && <Text>Čas potovanja: {elapsedTime} sekund</Text>}
+          {gamePlayed && (
+            <View>
+              <Text>predvidena distanca: {pot.dolzina}</Text>
+              <Text>Prehojena razdalja: {distance} metrov</Text>
+              <Text>Čas potovanja: {elapsedTime} sekund</Text>
+              <Text>Število točk: {points}</Text>
+              <Text>Končne točke: {endPoints}</Text>
+            </View>
+          )}
         </View>
         {indexOfMidwayPoint == -1 && <Text>konec igre</Text>}
         <View>

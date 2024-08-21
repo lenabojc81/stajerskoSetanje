@@ -2,6 +2,7 @@ import request from "supertest";
 import { app, server } from "../src/index";
 import { mongoose } from "../src/db";
 import {describe, expect, it, afterAll} from '@jest/globals';
+import { v4 as uuid4 } from 'uuid';
 
 describe('GET /DBconnection', () => {
   it('should check MongoDB connection', async () => {
@@ -164,6 +165,86 @@ describe('POST /api/paths/pridobiOdgovore', () => {
       });
   });
 });
+
+describe('POST /auth/register', () => {
+  it('should return 400 if email or password is missing', async () => {
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({ email: '', password: '' });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      status: 'error',
+      message: 'Email and password are required',
+    });
+  });
+
+  it('should return 201 and user data if registration is successful', async () => {
+    const uniqueEmail = `${uuid4()}@example.com`;
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({ email: uniqueEmail, password: 'password123' });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual({
+      status: 'success',
+      data: expect.objectContaining({
+        email: uniqueEmail,
+      }),
+      message: 'User registered successfully',
+    });
+  });
+
+  it('should return 500 if there is a server error', async () => {
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'test@example.com', password: 'password123' });
+
+    expect(response.status).toBe(500);
+  });
+});
+
+describe('POST /auth/login', () => {
+  it('should return 400 if email or password is missing', async () => {
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({ email: '', password: '' });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      status: 'error',
+      message: 'Email and password are required',
+    });
+  });
+
+  it('should return 401 if credentials are invalid', async () => {
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'invalid@example.com', password: 'wrongpassword' });
+
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({
+      status: 'error',
+      message: 'Invalid credentials',
+    });
+  });
+
+  it('should return 200 and user data if login is successful', async () => {
+    const loginResponse = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'test@example.com', password: 'password123' });
+
+    expect(loginResponse.status).toBe(200);
+    expect(loginResponse.body).toEqual({
+      status: 'success',
+      data: expect.any(Object),
+      token: expect.any(String),
+      message: 'User logged in successfully',
+    });
+  });
+});
+
+
 
 
 afterAll(async () => {
