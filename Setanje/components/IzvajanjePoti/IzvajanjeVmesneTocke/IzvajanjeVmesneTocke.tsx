@@ -10,11 +10,14 @@ import { baseUrl } from "../../../global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DodatnaVprasanja from "./DodatnaVprasanja/DodatnaVprasanja";
 import { set } from "react-hook-form";
+import IUPVmesnaTocka from "../../../models/IUPVmesnaTocka";
+import IUporabnikPot from "../../../models/IUporabnikPot";
+import IUPDodatnoVprasanje from "../../../models/IUPDodatnoVprasanje";
 
 interface IzvajanjeVmesneTockeProps {
   index: number;
   vmesna_tocka: IVmesnaTocka;
-  onIndexChange: (index: number, distance: number, points: number) => void;
+  onIndexChange: (index: number, distance: number, points: number, userMidwayPoint: IUPVmesnaTocka) => void;
 }
 
 interface IOdgovor {
@@ -25,6 +28,7 @@ interface IMozniOdgovori {
   lokacija: ILokacija;
   odgovor: IOdgovor;
 }
+
 
 const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
   index,
@@ -45,6 +49,13 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     useState<boolean>(false);
   const [distance, setDistance] = useState<number>(0);
   const [additionalPoints, setAdditionalPoints] = useState<number>(0);
+
+  const [changeAnswerCounter, setChangeAnswerCounter] = useState<number>(0);
+  const [userAdditionalPoints, setUserAdditionalPoints] = useState<IUPDodatnoVprasanje[]>([]);
+
+  // useEffect(() => {
+  //   console.log("userAdditionalPoints", userAdditionalPoints.length);
+  // }, [userAdditionalPoints]);
 
   useEffect(() => {
     fetchAnswers();
@@ -121,9 +132,10 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
 
     //odbitek tock
     setAdditionalPoints(additionalPoints - 10);
+    setChangeAnswerCounter(changeAnswerCounter + 1);
   };
 
-  const nextMidwayPoint = (correct: boolean) => {
+  const nextMidwayPoint = (correct: boolean, additionalQuestionUser: IUPDodatnoVprasanje) => {
     setSelectedEndLocation(null);
     setShowAIButton(false);
     setMozniOdgovori([]);
@@ -131,14 +143,29 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     setSelectedButtonIndex(-1);
     setLocationAtEnd(null);
     setRightLocation(false);
+
+    let allUserAdditionalQuestions = [...userAdditionalPoints, additionalQuestionUser];
+    // console.log("allUserAdditionalQuestions", allUserAdditionalQuestions);
+
+    let userMidwayPoint: IUPVmesnaTocka = {
+      najkrajsa_distanca: 0,
+      distanca: distance,
+      cas: 0,
+      st_spremenjenih_odgovorov: changeAnswerCounter,
+      dodatna_vprasanja: allUserAdditionalQuestions,
+    }
+    // console.log("userMidwayPoint", userMidwayPoint);
+
     if (correct) {
-      onIndexChange(index + 1, distance, additionalPoints + 10);
+      onIndexChange(index + 1, distance, additionalPoints + 10, userMidwayPoint);
     } else {
-      onIndexChange(index + 1, distance, additionalPoints);
+      onIndexChange(index + 1, distance, additionalPoints, userMidwayPoint);
     }
     
     setDistance(0);
     setAdditionalPoints(0);
+    setChangeAnswerCounter(0);
+    setUserAdditionalPoints([]);
   };
 
   const checkLocation = () => {
@@ -152,7 +179,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     setVisibleAdditionalQuestion(true);
   };
 
-  const handleIndexOfAdditionalQuestion = (index: number, correct: boolean) => {
+  const handleIndexOfAdditionalQuestion = (index: number, correct: boolean, additionalQuestionUser: IUPDodatnoVprasanje) => {
     // console.log("correct", correct);
     if (correct) {
       setAdditionalPoints(additionalPoints + 10);
@@ -163,7 +190,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     ) {
       setIndexOfAdditionalQuestion(0);
       setVisibleAdditionalQuestion(false);
-      nextMidwayPoint(correct);
+      nextMidwayPoint(correct, additionalQuestionUser);
     } else {
       setIndexOfAdditionalQuestion(indexOfAdditionalQuestion + 1);
     }
@@ -217,9 +244,10 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
                 vmesna_tocka.dodatna_vprasanja[indexOfAdditionalQuestion]
               }
               onIndexChange={handleIndexOfAdditionalQuestion}
+              setUserAdditionalPoints={setUserAdditionalPoints}
             />
           )}
-          <Button title="na naslednjo točko" onPress={() => nextMidwayPoint(true)} />
+          {/* <Button title="na naslednjo točko" onPress={() => nextMidwayPoint(true, )} /> */}
         </View>
       )}
     </ScrollView>

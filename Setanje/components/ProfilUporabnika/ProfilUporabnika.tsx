@@ -36,7 +36,10 @@ const UserProfile: React.FC = () => {
             <Button title="Odjavi me" onPress={handleLogout} />
           </>
         ) : (
+          <View>
           <Text>{message}</Text>
+          <Button title="Prijavi se" onPress={() => navigation.navigate('Login')} />
+          </View>
         )}
       </View>
     );

@@ -5,6 +5,7 @@ import { connectDB, router as dbRouter } from './db'; // Adjust the path as nece
 import pathsRouter from './routes/paths'; // Adjust the path as necessary
 import mapRouter from './routes/map'; // Adjust the path as necessary
 import authRouter from './routes/auth'; // Adjust the path as necessary
+import userPathRouter from './routes/userPath'; 
 
 const app = express();
 const port = 3000;
@@ -23,6 +24,7 @@ app.use(dbRouter); // Test DB connection route
 app.use('/api/paths', pathsRouter); // Adjust the path as necessary
 app.use('/api/map', mapRouter); // Adjust the path as necessary
 app.use('/api/auth', authRouter); // Authentication routes
+app.use('/api/userPath', userPathRouter);
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {

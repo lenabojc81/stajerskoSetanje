@@ -1,12 +1,13 @@
 import { getToken } from '../LogReg/AuthServices';
 import { baseUrl } from '../../global';
+import IUser from '../../models/IUser';
 
-interface IFetchUserData {
+interface IUserData {
     setMessage: (message: string) => void;
-    setEmail: (email: string) => void;
+    setData: (data: IUser) => void;
 }
 
-const fetchUserData = async ({ setMessage, setEmail }: IFetchUserData) => {
+const userData = async ({ setMessage, setData }: IUserData) => {
     try {
       const token = await getToken();
       if (token) {
@@ -18,8 +19,8 @@ const fetchUserData = async ({ setMessage, setEmail }: IFetchUserData) => {
           },
         });
   
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
+        // console.log('Response status:', response.status);
+        // console.log('Response headers:', response.headers);
   
         if (!response.ok) {
           const errorText = await response.text();
@@ -29,10 +30,10 @@ const fetchUserData = async ({ setMessage, setEmail }: IFetchUserData) => {
         }
   
         const result = await response.json();
-        console.log('Result:', result);
+        // console.log('Result:', result.data);
   
         if (result.status === 'success' && result.data.email) {
-          setEmail(result.data.email);
+          setData(result.data);
         } else {
           setMessage('Failed to fetch user data');
         }
@@ -45,4 +46,4 @@ const fetchUserData = async ({ setMessage, setEmail }: IFetchUserData) => {
     }
 };
 
-export default fetchUserData;
+export default userData;

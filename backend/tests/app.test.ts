@@ -244,7 +244,48 @@ describe('POST /auth/login', () => {
   });
 });
 
+describe('POST /api/userPath/dodajUporabnikPot', () => {
+  it('should create a new UporabnikPot and return 200 status', async () => {
+    const newUporabnikPotData = {
+      idPot: 'potId123',
+      idUporabnik: 'uporabnikId123',
+      celotna_distanca: 1500,
+      celotni_cas: 3600,
+      koncana: false,
+      prisilno_koncana: false,
+      admin: false,
+      skupne_tocke: 100,
+      vmesne_tocke: [
+        {
+          najkrajsa_distanca: 500,
+          cas: 1200, 
+          distanca: 600,
+          st_spremenjenih_odgovorov: 1,
+          dodatna_vprasanja: [
+            {
+              vprasanje: {
+                vprasanje: 'What is the capital of France?',
+                pravilen_odgovor: 'Paris',
+              },
+              izbran_odgovor: 'Paris',
+            },
+          ],
+        },
+      ],
+    };
 
+    const response = await request(app)
+      .post('/api/userPath/dodajUporabnikPot')
+      .send(newUporabnikPotData)
+      .set('Accept', 'application/json');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('_id');
+    expect(response.body.idPot).toBe(newUporabnikPotData.idPot);
+    expect(response.body.idUporabnik).toBe(newUporabnikPotData.idUporabnik);
+    expect(response.body.celotna_distanca).toBe(newUporabnikPotData.celotna_distanca);
+  });
+});
 
 
 afterAll(async () => {

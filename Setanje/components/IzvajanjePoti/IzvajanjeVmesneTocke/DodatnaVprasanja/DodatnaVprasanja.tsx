@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, Touchable, TouchableOpacity, Modal } from "react-native";
 import IDodatnoVprasanje from "../../../../models/IDodatnoVprasanje";
+import IUPDodatnoVprasanje from "../../../../models/IUPDodatnoVprasanje";
+import IUporabnikPot from "../../../../models/IUporabnikPot";
+import { set } from "react-hook-form";
 
 interface DodatnaVprasanjaProps {
     index: number;
     additionalQuestion: IDodatnoVprasanje;
-    onIndexChange: (index: number, correct: boolean) => void;
+    onIndexChange: (index: number, correct: boolean, additionalQuestionUser: IUPDodatnoVprasanje) => void;
+    // setUporabnikPot: (updater: (uporabnikPot: IUporabnikPot) => IUporabnikPot) => void;
+    setUserAdditionalPoints: (updater: (userAdditionalPoints: IUPDodatnoVprasanje[]) => IUPDodatnoVprasanje[]) => void;
 };
 
 interface IDodatniOdgovori  {
@@ -13,11 +18,31 @@ interface IDodatniOdgovori  {
     pravilen: boolean;
 };
 
-const DodatnaVprasanja: React.FC<DodatnaVprasanjaProps> = ({index, additionalQuestion, onIndexChange}) => {
+const DodatnaVprasanja: React.FC<DodatnaVprasanjaProps> = ({index, additionalQuestion, onIndexChange, setUserAdditionalPoints}) => {
     const [shuffledAnswers, setShuffledAnswers] = useState<IDodatniOdgovori[]>([...additionalQuestion.odgovori]);
 
-    const nextAdditionalQuestion = (correct: boolean) => {
-        onIndexChange(index + 1, correct);
+    const nextAdditionalQuestion = (correct: boolean, answer: string) => {
+        const additionalQuestionUser: IUPDodatnoVprasanje = {
+            vprasanje: {
+                vprasanje: additionalQuestion.vprasanje,
+                pravilen_odgovor: additionalQuestion.odgovori.find((odgovor) => odgovor.pravilen)?.odgovor || '',
+            },
+            izbran_odgovor: answer,
+        };
+        // setUporabnikPot((prevState: IUporabnikPot): IUporabnikPot => {
+        //     const updatedVmesneTocke = [...prevState.vmesne_tocke];
+        //     updatedVmesneTocke[index].dodatna_vprasanja.push(additionalQuestionUser);
+        //     return {
+        //         ...prevState,
+        //         vmesne_tocke: updatedVmesneTocke,
+        //     };
+        // });
+        setUserAdditionalPoints((prevState: IUPDodatnoVprasanje[]): IUPDodatnoVprasanje[] => {
+            const updatedUserAdditionalPoints = [...prevState];
+            updatedUserAdditionalPoints.push(additionalQuestionUser);
+            return updatedUserAdditionalPoints;
+        });
+        onIndexChange(index + 1, correct, additionalQuestionUser);
     };
 
     useEffect(() => {
@@ -39,7 +64,7 @@ const DodatnaVprasanja: React.FC<DodatnaVprasanjaProps> = ({index, additionalQue
         <Text>{additionalQuestion.vprasanje}</Text>
         {shuffledAnswers.map((odgovor, index) => (
             <View key={index}>
-                <Button title={odgovor.odgovor} onPress={() => nextAdditionalQuestion(odgovor.pravilen)} />
+                <Button title={odgovor.odgovor} onPress={() => nextAdditionalQuestion(odgovor.pravilen, odgovor.odgovor)} />
             </View>
         ))}
     </View>
