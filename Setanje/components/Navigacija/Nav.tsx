@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs/src';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { openDatabase, initDB, fetchUsers, User } from '../../database';
-import ImageUpload from '../../LandmarkDetection/landmarkDetection';
+import ImageUpload from '../LandmarkDetection/landmarkDetection';
 import Poti from '../Poti/poti';
 import IzvajanjePoti from '../IzvajanjePoti/IzvajanjePoti';
 import Domov from '../Domov/Domov';

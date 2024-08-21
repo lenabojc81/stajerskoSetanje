@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, ScrollView } from "react-native";
+import { View, Text, Button, ScrollView, Alert } from "react-native";
 import IPot from "../../../models/IPot";
 import IVmesnaTocka from "../../../models/IVmesnaTocka";
 import ILokacija from "../../../models/ILokacija";
 import Zemljevid from "../Zemljevid/Zemljevid";
 import { haversineDistance } from "../Zemljevid/MerjenjeDistance/RazdaljaMedDvemaTockama";
-import ImageUpload from "../../../LandmarkDetection/landmarkDetection";
+import ImageUpload from "../../LandmarkDetection/landmarkDetection";
 import { baseUrl } from "../../../global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DodatnaVprasanja from "./DodatnaVprasanja/DodatnaVprasanja";
@@ -92,9 +92,12 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
       currentLocation,
       selectedEndLocation
     );
-    if (distanceToStart <= 50) {
+    if (distanceToStart <= 50 && selectedAnswer == vmesna_tocka.odgovor.odgovor) {
       setShowAIButton(true);
       setLocationAtEnd(currentLocation);
+    } else if (distanceToStart <= 50) {
+      setShowAIButton(false);
+      Alert.alert("Napačen odgovor", "Spremenite svoj odgovor na uganko");
     } else {
       setShowAIButton(false);
     }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Button, Image, Text, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import { getLandmarkDetailsFromImage } from './/ChatGPTService';
+import { getLandmarkDetailsFromImage } from './ChatGPTService';
 
 const ImageUpload = () => {
   const [image, setImage] = useState<string | null>(null);
