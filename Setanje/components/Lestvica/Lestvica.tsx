@@ -32,6 +32,7 @@ const sortedUsers = users.sort((a, b) => b.points - a.points);
 const Lestvica = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>Lestvica</Text>
             {sortedUsers.map((user, index) => (
                 <View 
                     key={index} 
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         padding: 20,
+        paddingTop: 80,
         backgroundColor: '#f8f8f8',
     },
     userContainer: {
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     },
     points: {
         fontSize: 16,
-        color: '#888',
+        color: '#1f1021',
     },
 });
 

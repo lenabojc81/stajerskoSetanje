@@ -6,14 +6,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
   },
   headerContainer: {
-    backgroundColor: '#6200ea',
-    paddingTop: 60,
+    backgroundColor: '#E0EFDE',
+    paddingTop: 70,
     paddingBottom: 10,
     paddingHorizontal: 16,
     alignItems: 'center',
   },
   headerText: {
-    color: 'white',
+    color: 'black',
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
