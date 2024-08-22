@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View,TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { openDatabase, initDB, fetchUsers, User } from "./database";
 import { enableScreens } from "react-native-screens";
 import { createStackNavigator } from '@react-navigation/stack';
 import Poti from "./components/Poti/poti";
 import Pot from "./components/Poti/Pot/Pot";
-import Nav from "./components/Navigacija/Nav";
 import IzvajanjePoti from "./components/IzvajanjePoti/IzvajanjePoti";
 import EmailPasswordAuth from './components/LogReg/EmailPasswordAuth';
 import { getToken } from "./components/LogReg/AuthServices";
 import Lestvica from "./components/Lestvica/Lestvica";
 import MyTabs from "./components/Navigacija/Nav";
-import { useNavigation } from '@react-navigation/native';
 import UrejanjePotiII from "./components/UrediPot/UrejanjePoti";
-import { IconButton } from 'react-native-paper';
 import ProfilUporabnika from "./components/ProfilUporabnika/ProfilUporabnika";
+
 enableScreens();
 
 const Stack = createStackNavigator();
@@ -60,59 +58,38 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? ( 
-      <AuthStack.Navigator initialRouteName="Main">
-      <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
-      <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
-      <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
-    </AuthStack.Navigator>
-       ) :(
+      {isLoggedIn ? (
+        <AuthStack.Navigator initialRouteName="Main">
+          <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
+          <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
+          <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
+        </AuthStack.Navigator>
+      ) : (
         <AuthStack.Navigator initialRouteName="Login">
-        <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
-        <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
-        <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
-      </AuthStack.Navigator>
-    )}
-      
+          <AuthStack.Screen name="Login" component={EmailPasswordAuth} />
+          <AuthStack.Screen name="Register" component={EmailPasswordAuth} />
+          <AuthStack.Screen name="Main" component={MainStack} options={{ headerShown: false }} />
+        </AuthStack.Navigator>
+      )}
     </NavigationContainer>
   );
 };
 
 const MainStack = () => {
-  const navigation = useNavigation();
   return (
-    <Stack.Navigator
-    screenOptions={{
-      headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-        <IconButton
-          icon="home"
-          size={24}
-         
-        />
-      </TouchableOpacity>
-      ),
-      headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Lestvica')}>
-        <IconButton
-          icon="trophy-outline"
-          size={24}
-        />
-      </TouchableOpacity>
-      ),
-    }}
-  >
-    <Stack.Screen name="Setanje" component={MyTabs} options={{ headerShown: true }} />
-    <Stack.Screen name="Lestvica" component={Lestvica} options={{ headerShown: true }} />
-    <Stack.Screen name="Pot" component={Pot} />
-    <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerLeft: () => null }} />
-    <Stack.Screen name="Poti" component={Poti} />
-    <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII}  />
-    <Stack.Screen name="ProfilUporabnika" component={ProfilUporabnika} />
-  </Stack.Navigator>
+    <Stack.Navigator>
+      {/* Hide the header on the "Setanje" screen */}
+      <Stack.Screen name="Setanje" component={MyTabs} options={{ headerShown: false }} />
+      {/* Show the header only on these specific screens */}
+      <Stack.Screen name="Lestvica" component={Lestvica} options={{ headerShown: true }} />
+      <Stack.Screen name="Pot" component={Pot} />
+      <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerShown: false }} />
+      <Stack.Screen name="Poti" component={Poti} />
+      <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII} />
+      <Stack.Screen name="ProfilUporabnika" component={ProfilUporabnika} />
+    </Stack.Navigator>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -121,11 +98,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
-  },
-  headerButtonText: {
-    color: '#000',
-    paddingHorizontal: 10,
-    fontSize: 16,
   },
 });
 
