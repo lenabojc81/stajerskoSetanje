@@ -153,7 +153,7 @@ const Poti = () => {
               {isLoggedIn && isAdmin && ( // Only show the button if the user is logged in and an admin
                 <Button
                   mode="contained"
-                  onPress={() => navigation.navigate("UrejanjePotiII", { pot })}
+                  onPress={() => navigation.navigate("UrejanjePoti", { pot })}
                   style={styles.button}
                 >
                   Uredi Pot

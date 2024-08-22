@@ -44,7 +44,7 @@ const UserProfile: React.FC = () => {
   };
 
   const handleAddPath = () => {
-    // Navigate to the add path screen or modal
+    navigation.navigate('DodajanjePoti');
     console.log('Add Path');
   };
 
