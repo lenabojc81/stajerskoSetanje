@@ -65,8 +65,6 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
 
   useEffect(() => {
     userData({setMessage, setData: setThisUserData});
-
-    //preveri ce je uporabnik ze kdaj igral to pot in ce je jo je koncal
   }, []);
 
   useEffect(() => {
@@ -83,14 +81,14 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     if (indexOfMidwayPoint == -1) {
       endGame();
     } else if (indexOfMidwayPoint != 0) {
-        Alert.alert('Naslednja točka', 
-            'Med izvajanjem točke ne morate zapustiti igre, če jo želite dokončati in si s tem priigrati točke. Ali želite nadaljevati?', 
-            [
-              { text: 'Nadaljuj', onPress: () => {} },
-              { text: 'Prekini', onPress: () => {stopGame()} }
-            ],
-            { cancelable: false }
-          );
+        // Alert.alert('Naslednja točka', 
+        //     'Med izvajanjem točke ne morate zapustiti igre, če jo želite dokončati in si s tem priigrati točke. Ali želite nadaljevati?', 
+        //     [
+        //       { text: 'Nadaljuj', onPress: () => {} },
+        //       { text: 'Prekini', onPress: () => {stopGame()} }
+        //     ],
+        //     { cancelable: false }
+        //   );
     };
   }, [indexOfMidwayPoint]);
 
@@ -110,7 +108,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
       celotni_cas: elapsedTime,
       skupne_tocke: IzracunTock(pot.dolzina, distance, elapsedTime, points, pot.tocke),
     };
-
+    console.log("koncana igra");
     // posiljanje podatkov na streznik
     posiljanjePodatkovUporabnikPot(newUporabnikPot);
   };
@@ -133,22 +131,18 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     navigation.goBack();
   };
 
-  const stopGame = () => {
-    goBack();
-    // posiljanje podatkov na streznik
-    console.log("zacasno ustavi igro");
-    if (uporabnikPot == null) {
-      console.log("uporabnikPot je null");
-      return;
-    }
-    const newUporabnikPot: IUporabnikPot = {
-      ...uporabnikPot,
-      celotna_distanca: distance,
-      celotni_cas: elapsedTime,
-      koncana: false,
-    };
-    posiljanjePodatkovUporabnikPot(newUporabnikPot);
-  };
+  // const stopGame = () => {
+  //   goBack();
+  //   // posiljanje podatkov na streznik
+  //   console.log("zacasno ustavi igro");
+  //   const newUporabnikPot: IUporabnikPot = {
+  //     ...uporabnikPot,
+  //     celotna_distanca: distance,
+  //     celotni_cas: elapsedTime,
+  //     koncana: false,
+  //   };
+  //   posiljanjePodatkovUporabnikPot(newUporabnikPot);
+  // };
 
   const handleIndexChange = (index: number, newDistance: number, newPoints: number, userMidwayPoint: IUPVmesnaTocka) => {
     if (index < pot.vmesne_tocke.length) {
@@ -209,7 +203,6 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
                 startTime={startTime!}
                 onElapsedTime={handleElapsedTime}
               />
-              {/* ustvari novo metodo, ki prepreci navadnemu userju, da bi se kdaj igral to igro */}
               <Button title="Končaj igro" onPress={forceEndGame} />
             </View>
           )}

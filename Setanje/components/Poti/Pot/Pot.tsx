@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import IPot from "../../../models/IPot";
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -7,6 +7,10 @@ import styles from './styles';
 import { RootStackParamList } from '../../Navigacija/types';
 import PremikDoZacetneLokacije from '../../IzvajanjePoti/PremikDoZacetneLokacije/PremikDoZacetneLokacije';
 import { Card, Title, Paragraph, List, Button } from 'react-native-paper';
+import IUser from '../../../models/IUser';
+import IUporabnikPot from '../../../models/IUporabnikPot';
+import userData from '../../ProfilUporabnika/userData';
+import { preveriUporabnikPot } from '../../IzvajanjePoti/posiljanjePodatkovUporabnikPot';
 
 type PotScreenRouteProp = RouteProp<RootStackParamList, 'Pot'>;
 type PotScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Pot'>;
@@ -15,9 +19,30 @@ type NavProps = {
   route: PotScreenRouteProp;
 };
 
+const initialUser: IUser = {
+  __v: 0,
+  _id: '',
+  email: '',
+  password: '',
+};
+
 const Pot: React.FC<NavProps> = ({ route }) => {
   const { pot } = route.params;
   const navigation = useNavigation<PotScreenNavigationProp>();
+
+  const [message, setMessage] = useState<string>('');
+  const [thisUserData, setThisUserData] = useState<IUser>(initialUser);
+  const [uporabnikPot, setUporabnikPot] = useState<IUporabnikPot | null>(null);
+
+  useEffect(() => {
+    userData({ setMessage, setData: setThisUserData });
+  }, []);
+
+  useEffect(() => {
+    if (thisUserData._id != '' && pot._id != undefined) {  
+      preveriUporabnikPot({idUporabnik: thisUserData._id, idPot: pot._id, setUporabnikPot});
+    };
+  }, [thisUserData]);
 
   return (
     <View style={styles.container}>
@@ -39,7 +64,7 @@ const Pot: React.FC<NavProps> = ({ route }) => {
           <Paragraph>Uganka: {pot.vmesne_tocke[0].uganka}</Paragraph>
         </Card.Content>
       </Card>
-    <PremikDoZacetneLokacije pot={pot}/>
+    {uporabnikPot===null && <PremikDoZacetneLokacije pot={pot} />}
     </View>
   );
 };
