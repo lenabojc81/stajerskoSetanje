@@ -24,6 +24,7 @@ const initialUser: IUser = {
   _id: '',
   email: '',
   password: '',
+  username: '',
 };
 
 const Pot: React.FC<NavProps> = ({ route }) => {

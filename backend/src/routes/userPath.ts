@@ -37,8 +37,20 @@ router.get('/:idUporabnik/:idPot', async (req, res) => {
 });
 
 //pridobi vse uporabnikove poti
-router.get('/uporabnikovePoti/:idUporabnik', async (req, res) => {
-    //vrni vse uporabnikove poti
+router.get('/:idUporabnik', async (req, res) => {
+    try {
+        const uporabnikPot = await UporabnikPot.aggregate([
+            {
+                $match: {
+                    'idUporabnik': req.params.idUporabnik
+                }
+            }
+        ]);
+        res.status(200).json(uporabnikPot);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error });
+    }
 });
 
 export default router;

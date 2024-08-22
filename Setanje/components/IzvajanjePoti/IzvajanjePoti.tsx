@@ -29,6 +29,8 @@ type NavProps = {
 const initialUporabnikPot: IUporabnikPot = {
   idUporabnik: '',
   idPot: '',
+  pot_naziv: '',
+  uporabnik_naziv: '',
   koncana: false,
   prisilno_koncana: false,
   admin: false,
@@ -43,6 +45,7 @@ const initialUser: IUser = {
   _id: '',
   email: '',
   password: '',
+  username: '',
 };
 
 const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
@@ -74,6 +77,8 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
       ...uporabnikPot,
       idPot: pot._id || '',
       idUporabnik: thisUserData._id,
+      pot_naziv: pot.ime,
+      uporabnik_naziv: thisUserData.username,
     });
   }, [thisUserData]);
 

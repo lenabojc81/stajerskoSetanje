@@ -13,6 +13,8 @@ import Lestvica from "./components/Lestvica/Lestvica";
 import MyTabs from "./components/Navigacija/Nav";
 import UrejanjePotiII from "./components/UrediPot/UrejanjePoti";
 import ProfilUporabnika from "./components/ProfilUporabnika/ProfilUporabnika";
+import Statistika from "./components/Statistika/Statistika";
+import SeznamOdigranihIger from "./components/SeznamOdigranihIger/SeznamOdigranihIger";
 import Login from "./components/LogReg/Login";
 import Register from "./components/LogReg/Register";
 import UserProfile from "./components/ProfilUporabnika/ProfilUporabnika";
@@ -90,6 +92,8 @@ const MainStack = () => {
       <Stack.Screen name="Pot" component={Pot} />
       <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerShown: false }} />
       <Stack.Screen name="Poti" component={Poti} />
+      <Stack.Screen name="Statistika" component={Statistika} />
+      <Stack.Screen name="SeznamiOdigranihIger" component={SeznamOdigranihIger} />
       <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII} />
       <Stack.Screen name="UserProfile" component={UserProfile} />
     </Stack.Navigator>

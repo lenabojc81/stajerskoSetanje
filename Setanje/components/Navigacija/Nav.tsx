@@ -6,6 +6,7 @@ import Domov from '../Domov/Domov';
 import Poti from '../Poti/poti'; // List of all paths
 import Lestvica from '../Lestvica/Lestvica'; // Leaderboard/Statistics
 import ProfilUporabnika from '../ProfilUporabnika/ProfilUporabnika'; // User Profile
+import SeznamOdigranihIger from '../SeznamOdigranihIger/SeznamOdigranihIger'; // List of played games
 
 const Tab = createBottomTabNavigator();
 
@@ -38,19 +39,12 @@ const MyTabs = () => {
       <Tab.Screen name="Home" component={Domov} />
       <Tab.Screen name="Leaderboard" component={Lestvica} />
       <Tab.Screen name="Paths" component={Poti} />
-      <Tab.Screen name="Statistics" component={PersonalStats} />
+      <Tab.Screen name="Statistics" component={SeznamOdigranihIger} />
       <Tab.Screen name="Profile" component={ProfilUporabnika} />
     </Tab.Navigator>
   );
 };
 
-const PersonalStats = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Statistics</Text>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   tabBar: {

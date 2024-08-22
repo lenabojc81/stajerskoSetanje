@@ -3,6 +3,8 @@ import mongoose, {Schema, Document} from "mongoose";
 interface IUporabnikPot extends Document {
     idPot: string;
     idUporabnik: string;
+    pot_naziv: string;
+    uporabnik_naziv: string;
     celotna_distanca: number;
     celotni_cas: number;
     koncana: boolean;
@@ -47,6 +49,8 @@ const UporabnikPotVmesnaTockaSchema: Schema = new Schema({
 const UporabnikPotSchema: Schema = new Schema({
     idPot: {type: String, required: true},
     idUporabnik: {type: String, required: true},
+    pot_naziv: {type: String, required: true},
+    uporabnik_naziv: {type: String, required: true},
     celotna_distanca: {type: Number, required: true},
     celotni_cas: {type: Number, required: true},
     koncana: {type: Boolean, required: true},
