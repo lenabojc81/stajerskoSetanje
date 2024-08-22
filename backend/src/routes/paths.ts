@@ -61,4 +61,19 @@ router.post('/pridobiOdgovore', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const potId = new mongoose.Types.ObjectId(req.params.id);
+        console.log(potId);
+        const pot = await Pot.findById(potId);
+        if (!pot) {
+            return res.status(404).send({ error: 'Pot not found' });
+        }
+        res.status(200).json(pot);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error });
+    }
+});
+
 export default router;

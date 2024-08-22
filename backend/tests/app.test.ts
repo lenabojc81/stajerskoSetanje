@@ -287,6 +287,15 @@ describe('POST /api/userPath/dodajUporabnikPot', () => {
   });
 });
 
+describe('GET /uporabnikovePoti/:idUporabnik', () => {
+  it('should return 200 and user paths for a valid user ID', async () => {
+    const validUserId = 'uporabnikId123'; // Zamenjajte z veljavnim ID-jem za testiranje
+    const response = await request(app).get(`/api/userPath/uporabnikovePoti/${validUserId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+});
+
 
 afterAll(async () => {
   await mongoose.disconnect();
