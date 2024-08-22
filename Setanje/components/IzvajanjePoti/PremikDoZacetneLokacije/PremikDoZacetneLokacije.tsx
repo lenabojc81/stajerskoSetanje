@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import Zemljevid from "../Zemljevid/Zemljevid";
 import ILokacija from "../../../models/ILokacija";
@@ -9,12 +9,29 @@ import { RootStackParamList } from "../../Navigacija/types";
 import { useNavigation } from "@react-navigation/native";
 import { Text, Button, Card, Paragraph } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
+import IUser from "../../../models/IUser";
+import userData from "../../ProfilUporabnika/userData";
+import { preveriUporabnikPot } from "../posiljanjePodatkovUporabnikPot";
+import IUporabnikPot from "../../../models/IUporabnikPot";
+import { set } from "react-hook-form";
 
 type ZacetnaLokacijaNavigationProp = StackNavigationProp<RootStackParamList, 'ZacetnaLokacija'>;
 
 interface PremikDoZacetneLokacijeProps {
   pot: IPot;
 }
+
+const initialUporabnikPot: IUporabnikPot = {
+  idUporabnik: '',
+  idPot: '',
+  koncana: false,
+  prisilno_koncana: false,
+  admin: false,
+  celotna_distanca: 0,
+  celotni_cas: 0,
+  skupne_tocke: 0,
+  vmesne_tocke: [],
+};
 
 const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }) => {
   const [showStartButton, setShowStartButton] = useState<boolean>(false);

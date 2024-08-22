@@ -1,10 +1,11 @@
+import { set } from "react-hook-form";
 import { baseUrl } from "../../global";
 import IUporabnikPot from "../../models/IUporabnikPot";
 
 interface IPreveriUporabnikPot {
     idUporabnik: string;
     idPot: string;
-    setUporabnikPot: (uporabnikPot: IUporabnikPot) => void;
+    setUporabnikPot: (uporabnikPot: IUporabnikPot | null) => void;
 }
 
 const posiljanjePodatkovUporabnikPot = async (uporabnikPot: IUporabnikPot) => {
@@ -34,8 +35,13 @@ const preveriUporabnikPot = async ({ idUporabnik, idPot, setUporabnikPot }: IPre
             },
         });
         const data = await response.json();
-        //console.log(data);
-        setUporabnikPot(data);
+        console.log(data);
+        if (data.length === 0) {
+            setUporabnikPot(null);
+        } else {
+            setUporabnikPot(data);
+        }
+        
     } catch (error) {
         console.error(error);
         console.log('Napaka pri pridobivanju podatkov');
