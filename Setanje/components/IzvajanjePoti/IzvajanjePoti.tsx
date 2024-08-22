@@ -15,6 +15,7 @@ import userData from "../ProfilUporabnika/userData";
 import IUser from "../../models/IUser";
 import {posiljanjePodatkovUporabnikPot, preveriUporabnikPot} from "./posiljanjePodatkovUporabnikPot";
 import { set } from "react-hook-form";
+import { initialUser } from "../../models/initialValues";
 
 type IzvajanjePotiScreenProp = RouteProp<RootStackParamList, "IzvajanjePoti">;
 type IzvajanjePotiNavigationProp = StackNavigationProp<
@@ -38,14 +39,6 @@ const initialUporabnikPot: IUporabnikPot = {
   celotni_cas: 0,
   skupne_tocke: 0,
   vmesne_tocke: [],
-};
-
-const initialUser: IUser = {
-  __v: 0,
-  _id: '',
-  email: '',
-  password: '',
-  username: '',
 };
 
 const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {

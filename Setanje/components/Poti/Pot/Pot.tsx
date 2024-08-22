@@ -11,20 +11,13 @@ import IUser from '../../../models/IUser';
 import IUporabnikPot from '../../../models/IUporabnikPot';
 import userData from '../../ProfilUporabnika/userData';
 import { preveriUporabnikPot } from '../../IzvajanjePoti/posiljanjePodatkovUporabnikPot';
+import { initialUser } from '../../../models/initialValues';
 
 type PotScreenRouteProp = RouteProp<RootStackParamList, 'Pot'>;
 type PotScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Pot'>;
 
 type NavProps = {
   route: PotScreenRouteProp;
-};
-
-const initialUser: IUser = {
-  __v: 0,
-  _id: '',
-  email: '',
-  password: '',
-  username: '',
 };
 
 const Pot: React.FC<NavProps> = ({ route }) => {
@@ -50,7 +43,6 @@ const Pot: React.FC<NavProps> = ({ route }) => {
     <Card style={styles.card}>
       <Card.Content>
         <Title>{pot.ime}</Title>
-        <Paragraph>Id: {pot._id}</Paragraph>
         <Paragraph>Težavnost: {pot.tezavnost}</Paragraph>
         <Paragraph>Dolžina poti: {pot.dolzina}</Paragraph>
         <Paragraph>Opis: {pot.opis}</Paragraph>
