@@ -35,7 +35,7 @@ export const login = async (email: string, password: string) => {
       throw new Error(result.message || 'Login failed');
     }
 
-    console.log('Login response token:', result.token); // Debugging: Log the token
+    console.log('Login response token:', result.token);
     if (!result.token) {
       throw new Error('Token is missing in the response');
     }

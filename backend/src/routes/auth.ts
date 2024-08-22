@@ -1,4 +1,3 @@
-// routes/auth.ts
 import express from 'express';
 import { registerUser, authenticateUser, getUserFromToken } from '../services/authService';
 

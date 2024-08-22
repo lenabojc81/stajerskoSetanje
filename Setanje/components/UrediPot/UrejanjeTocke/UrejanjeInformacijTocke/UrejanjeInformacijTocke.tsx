@@ -28,14 +28,14 @@ const UrejanjeInformacijTocke: React.FC<UrejanjeInformacijTockeProps> = ({ midwa
         setAdditionalQuestions(midwayPoint.dodatna_vprasanja || []);
     }, [midwayPoint]);
 
-    console.log('midwayPoint v urejanju informacij točke', midwayPoint);
+    //console.log('midwayPoint v urejanju informacij točke', midwayPoint);
 
     const handleAddQuestion = (data: IDodatnoVprasanje) => {
         setVisible(false);
         setAdditionalQuestions([...additionalQuestions, data]);
         setEditingQuestion(null);
     };
-    console.log("markerji v urejnanju informacij točke!!!!!!!!!!!!!!", marker);
+  //  console.log("markerji v urejnanju informacij točke!!!!!!!!!!!!!!", marker);
 
     const handleEditQuestion = (question: IDodatnoVprasanje) => {
         setEditingQuestion(question);
@@ -163,7 +163,7 @@ const UrejanjeInformacijTocke: React.FC<UrejanjeInformacijTockeProps> = ({ midwa
                         <Button
                             mode="contained"
                             onPress={handleSaveMidwayPoint}
-                            disabled={additionalQuestions.length === 0}
+                            
                             style={styles.saveButton}
                             
                         >   

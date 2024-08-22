@@ -153,7 +153,7 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
       lat: startLocation.lokacija.lat,
       lng: startLocation.lokacija.lng,
     });
-    
+    handleCloseModal();
     setCurrentMarker(initialMarker);
   };
 
@@ -162,8 +162,9 @@ const UrejanjeTocke: React.FC<UrejanjeTockeProps> = ({
 
   const handleCloseModal = () => {
     //setVisibleInput(false);
-    setCurrentMarker(initialMarker);
     setIsModalVisible(false);
+    setCurrentMarker(initialMarker);
+    
   };
 
 
