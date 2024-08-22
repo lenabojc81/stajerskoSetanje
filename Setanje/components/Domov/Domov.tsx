@@ -6,6 +6,7 @@ import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Text, Appbar, Card } from 'react-native-paper';
 import fetchUserData from '../ProfilUporabnika/FetchUserData';
 import { fetchPoti } from '../Poti/poti';
+import IPot from '../../models/IPot';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -55,8 +56,8 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
     return natureIcons[Math.floor(Math.random() * natureIcons.length)];
   };
 
-  const handleCardPress = (path: any) => {
-    navigation.navigate('IzvajanjePoti', { pot: path });
+  const handleCardPress = (path: IPot) => {
+    navigation.navigate("Pot", { pot: path });
   };
 
   const randomFeaturedPaths = getRandomPaths();
