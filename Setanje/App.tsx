@@ -14,6 +14,9 @@ import MyTabs from "./components/Navigacija/Nav";
 import UrejanjePotiII from "./components/UrediPot/UrejanjePoti";
 import ProfilUporabnika from "./components/ProfilUporabnika/ProfilUporabnika";
 import DodajanjePotiII from "./components/DodajanjePoti/DodajanjePoti";
+import Statistika from "./components/Statistika/Statistika";
+import SeznamOdigranihIger from "./components/SeznamOdigranihIger/SeznamOdigranihIger";
+
 
 enableScreens();
 
@@ -92,7 +95,6 @@ const MainStack = () => {
       <Stack.Screen name="Statistika" component={Statistika} />
       <Stack.Screen name="SeznamiOdigranihIger" component={SeznamOdigranihIger} options={{headerShown: false}}/>
       <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII} />
-      <Stack.Screen name="UserProfile" component={UserProfile} />
     </Stack.Navigator>
   );
 };
