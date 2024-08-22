@@ -26,7 +26,7 @@ const UrejanjePotiII = () => {
   const [potU, setPotU] = useState<IPot>(pot);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  console.log("shranjena pot v potU",potU);
+ // console.log("shranjena pot v potU",potU);
 
 
 

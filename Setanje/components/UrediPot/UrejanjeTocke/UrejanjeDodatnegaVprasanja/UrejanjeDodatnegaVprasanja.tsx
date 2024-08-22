@@ -26,10 +26,10 @@ const UrejanjeDodatnegaVprasanja: React.FC<UrejanjeDodatnegaVprasanjaProps> = ({
 
  
 
-    console.log("TO BI NAJ BIL ADDITIONALQUESTINS ", additionalQuestion);
-    console.log("TO BI NAJ BIL ODGOVORI ", odgovori);
-    console.log("TO BI NAJ BIL NUMINPUTFIELDS ", numInputFields);
-    console.log("TO BI NAJ BIL SELECTEDCORRECTANSWER ", selectedCorrectAnswer);
+   // console.log("TO BI NAJ BIL ADDITIONALQUESTINS ", additionalQuestion);
+   // console.log("TO BI NAJ BIL ODGOVORI ", odgovori);
+   // console.log("TO BI NAJ BIL NUMINPUTFIELDS ", numInputFields);
+   // console.log("TO BI NAJ BIL SELECTEDCORRECTANSWER ", selectedCorrectAnswer);
 
   
 

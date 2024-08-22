@@ -131,7 +131,7 @@ const Poti = () => {
             <Card.Actions>
               <Button
                 mode="contained"
-                onPress={() => navigation.navigate("IzvajanjePoti", { pot })}
+                onPress={() => navigation.navigate("UrejanjePotiII", { pot })}
                 style={styles.button}
               >
                 Uredi Pot
