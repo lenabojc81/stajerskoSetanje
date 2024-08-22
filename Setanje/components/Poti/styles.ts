@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
+        paddingTop: 70
       },
     pathItem: {
         marginBottom: 10,

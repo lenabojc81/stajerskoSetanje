@@ -68,12 +68,12 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
     <ScrollView style={styles.container}>
       {/* Top Section */}
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>{`Hello: ${username || 'User'}`}</Text>
+        <Text style={styles.headerText}>{`Zdravo ${username || 'User'}`}</Text>
       </View>
 
       <View style={styles.content}>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Featured Paths</Text>
+          <Text style={styles.sectionTitle}>Priljubljene poti</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
             {randomFeaturedPaths.length > 0 ? (
               randomFeaturedPaths.map((path, index) => (
@@ -97,7 +97,7 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Newest Paths</Text>
+          <Text style={styles.sectionTitle}>Najnovejše poti</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
             {newestPaths.map((path, index) => (
               <TouchableOpacity key={index} onPress={() => handleCardPress(path)}>
@@ -117,7 +117,7 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Try This</Text>
+          <Text style={styles.sectionTitle}>Poskusi tole</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
             {randomTryThisPaths.length > 0 ? (
               randomTryThisPaths.map((path, index) => (
@@ -135,7 +135,7 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
                 </TouchableOpacity>
               ))
             ) : (
-              <Text>No paths available</Text>
+              <Text>Poti niso na voljo</Text>
             )}
           </ScrollView>
         </View>
