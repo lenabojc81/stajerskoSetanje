@@ -14,6 +14,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         backgroundColor: "#E0EFDE"
       },
+      cardRed: {
+        marginBottom: 5,
+        backgroundColor: "#EF6F6F"
+      },
       button: {
         marginTop: 16,
       },

@@ -21,18 +21,6 @@ interface PremikDoZacetneLokacijeProps {
   pot: IPot;
 }
 
-const initialUporabnikPot: IUporabnikPot = {
-  idUporabnik: '',
-  idPot: '',
-  koncana: false,
-  prisilno_koncana: false,
-  admin: false,
-  celotna_distanca: 0,
-  celotni_cas: 0,
-  skupne_tocke: 0,
-  vmesne_tocke: [],
-};
-
 const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }) => {
   const [showStartButton, setShowStartButton] = useState<boolean>(false);
 

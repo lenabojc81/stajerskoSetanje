@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Zemljevid from "./Zemljevid/Zemljevid";
-import { Alert, Button, Modal, SafeAreaView, View } from "react-native";
+import { Alert, Button, Modal, SafeAreaView, Touchable, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import styles from "./styles";
 import Stoparica from "./Stoparica/Stoparica";
@@ -16,6 +16,8 @@ import IUser from "../../models/IUser";
 import {posiljanjePodatkovUporabnikPot, preveriUporabnikPot} from "./posiljanjePodatkovUporabnikPot";
 import { set } from "react-hook-form";
 import { initialUser } from "../../models/initialValues";
+import { initialUporabnikPot } from "../../models/initialValues";
+import { Card } from "react-native-paper";
 
 type IzvajanjePotiScreenProp = RouteProp<RootStackParamList, "IzvajanjePoti">;
 type IzvajanjePotiNavigationProp = StackNavigationProp<
@@ -25,20 +27,6 @@ type IzvajanjePotiNavigationProp = StackNavigationProp<
 
 type NavProps = {
   route: IzvajanjePotiScreenProp;
-};
-
-const initialUporabnikPot: IUporabnikPot = {
-  idUporabnik: '',
-  idPot: '',
-  pot_naziv: '',
-  uporabnik_naziv: '',
-  koncana: false,
-  prisilno_koncana: false,
-  admin: false,
-  celotna_distanca: 0,
-  celotni_cas: 0,
-  skupne_tocke: 0,
-  vmesne_tocke: [],
 };
 
 const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
@@ -173,7 +161,6 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
   return (
     <Modal visible={true} animationType="slide">
       <View style={styles.container}>
-        <Text>Izvajanje poti</Text>
         {indexOfMidwayPoint > -1 && (
           <SafeAreaView>
             <IzvajanjeVmesneTocke
@@ -186,14 +173,25 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
         <View>
           {gamePlayed && (
             <View>
-              <Text>predvidena distanca: {pot.dolzina}</Text>
-              <Text>Prehojena razdalja: {distance} metrov</Text>
-              <Text>Čas potovanja: {elapsedTime} sekund</Text>
-              <Text>Število točk: {points}</Text>
+              <Card style={styles.cardPath}>
+                <Card.Content>
+                  <Text style={styles.titlePath}>{pot.ime}</Text>
+                </Card.Content>
+              </Card>
+              <Card style={styles.cardLight}>
+                <Card.Content>
+                  <Text style={styles.cong}>Čestitke!</Text>
+                  <Text style={styles.opr}>Pot je uspešno opravljena</Text>
+                  <Text style={styles.text}>Težavnost: {pot.tezavnost}</Text>
+                  <Text style={styles.text}>Dolžina poti: {distance} m</Text>
+                  <Text style={styles.text}>Porabljen čas: {elapsedTime} s</Text>
+                  <Text style={styles.text}>Število točk: {points}</Text>
+                </Card.Content>
+              </Card>
             </View>
           )}
         </View>
-        {indexOfMidwayPoint == -1 && <Text>konec igre</Text>}
+
         <View>
           {gameStarted && (
             <View>
@@ -201,12 +199,18 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
                 startTime={startTime!}
                 onElapsedTime={handleElapsedTime}
               />
-              <Button title="Končaj igro" onPress={forceEndGame} />
             </View>
           )}
         </View>
-        <View>
-        <Button title="Nazaj" onPress={goBack} />
+        <View style={styles.bottomOfPage}>
+        {/* <Button title="Končaj igro" onPress={forceEndGame} /> */}
+        {gameStarted && (<TouchableOpacity onPress={forceEndGame} style={styles.purpleButton} >
+          <Text style={styles.buttonText}>Končaj igro</Text>
+        </TouchableOpacity>)}
+        <TouchableOpacity onPress={goBack} style={styles.grayButton} >
+          <Text style={styles.buttonText}>Nazaj</Text>
+        </TouchableOpacity>
+        {/* <Button title="Nazaj" onPress={goBack} /> */}
         </View>
       </View>
     </Modal>

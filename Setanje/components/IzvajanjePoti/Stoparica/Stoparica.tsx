@@ -40,7 +40,7 @@ const Stoparica: React.FC<StoparicaProps> = ({ startTime, onElapsedTime }) => {
 
     return (
         <View>
-            <Text>{formatTime(time)}</Text>
+            {/* <Text>{formatTime(time)}</Text> */}
         </View>
     );
 };
