@@ -124,51 +124,64 @@ const testPoti: IPot[] = [
   },
 ];
 
+
+
 // Poti.tsx
+// Extracted fetchPoti function
+export const fetchPoti = async (): Promise<IPot[]> => {
+  try {
+    const response = await fetch(`${baseUrl}/api/paths/pridobiPoti`);
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Invalid content type, expected application/json");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.message || "Error fetching paths");
+  }
+};
+
 const Poti = () => {
   const [poti, setPoti] = useState<IPot[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { control, handleSubmit, reset } = useForm();
   const navigation = useNavigation<PotiScreenNavigationProp>();
 
-  const fetchPoti = async () => {
+  const loadPoti = async () => {
     try {
-      const response = await fetch(`${baseUrl}/api/paths/pridobiPoti`);
-
-      // Check if the response is OK (status code 200-299)
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-
-      // Ensure the response is of type JSON
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Invalid content type, expected application/json");
-      }
-
-      const data = await response.json();
-      setPoti(data);
-    } catch (error) {
-      console.error(error);
-      setErrorMsg(error.message || "Napaka pri pridobivanju podatkov");
+      const fetchedPoti = await fetchPoti();
+      setPoti(fetchedPoti);
+    } catch (error: any) {
+      setErrorMsg(error.message || "Error fetching paths");
     }
   };
 
   useEffect(() => {
-    fetchPoti();
-    //setPoti(testPoti);
+    loadPoti();
   }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
     setErrorMsg("");
-    await fetchPoti();
+    await loadPoti();
     setRefreshing(false);
   };
 
   return (
-    <ScrollView style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Text style={styles.title}>Poti</Text>
       {errorMsg != "" && <Text style={styles.error}>{errorMsg}</Text>}
       {poti.map((pot, index) => (
@@ -176,22 +189,21 @@ const Poti = () => {
           key={index}
           onPress={() => navigation.navigate("Pot", { pot })}
         >
-        <Card key={index} style={styles.card}>
-          <Card.Title title={`Ime poti: ${pot.ime}`} />
-          <Card.Content>
-            <Text>Opis: {pot.opis}</Text>
-          </Card.Content>
-          <Card.Actions>
-         
-            <Button
-              mode="contained"
-              onPress={() => navigation.navigate("UrejanjePotiII", {pot})}
-              style={styles.button}
-            >
-              Uredi Pot
-            </Button>
-          </Card.Actions>
-        </Card>
+          <Card key={index} style={styles.card}>
+            <Card.Title title={`Ime poti: ${pot.ime}`} />
+            <Card.Content>
+              <Text>Težavnost: {pot.tezavnost}</Text>
+            </Card.Content>
+            <Card.Actions>
+              <Button
+                mode="contained"
+                onPress={() => navigation.navigate("UrejanjePotiII", { pot })}
+                style={styles.button}
+              >
+                Uredi Pot
+              </Button>
+            </Card.Actions>
+          </Card>
         </TouchableOpacity>
       ))}
     </ScrollView>
