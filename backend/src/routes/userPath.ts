@@ -16,4 +16,29 @@ router.post('/dodajUporabnikPot', async (req, res) => {
     };
 });
 
+//pridobi iz baze in nadaljuj z vnosom v to uporabnikPot 
+//(200-koncana, 201-nadaljuj, 404-zacni od zacetka, 203-prisilno koncana)
+//vrne uporabnikPot
+router.get('/:idUporabnik/:idPot', async (req, res) => {
+    try {
+        const uporabnikPot = await UporabnikPot.aggregate([
+            {
+                $match: {
+                    'idUporabnik': req.params.idUporabnik,
+                    'idPot': req.params.idPot
+                }
+            }
+        ]);
+        res.status(200).json(uporabnikPot);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error });
+    }
+});
+
+//pridobi vse uporabnikove poti
+router.get('/uporabnikovePoti/:idUporabnik', async (req, res) => {
+    //vrni vse uporabnikove poti
+});
+
 export default router;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Zemljevid from "./Zemljevid/Zemljevid";
-import { Button, Modal, SafeAreaView, View } from "react-native";
+import { Alert, Button, Modal, SafeAreaView, View } from "react-native";
 import { Text } from "react-native";
 import styles from "./styles";
 import Stoparica from "./Stoparica/Stoparica";
@@ -10,11 +10,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import IzvajanjeVmesneTocke from "./IzvajanjeVmesneTocke/IzvajanjeVmesneTocke";
 import { IzracunTock } from "./IzracunTock";
 import IUporabnikPot from "../../models/IUporabnikPot";
-import IUPDodatnoVprasanje from "../../models/IUPDodatnoVprasanje";
 import IUPVmesnaTocka from "../../models/IUPVmesnaTocka";
 import userData from "../ProfilUporabnika/userData";
 import IUser from "../../models/IUser";
-import { baseUrl } from "../../global";
+import {posiljanjePodatkovUporabnikPot, preveriUporabnikPot} from "./posiljanjePodatkovUporabnikPot";
+import { set } from "react-hook-form";
 
 type IzvajanjePotiScreenProp = RouteProp<RootStackParamList, "IzvajanjePoti">;
 type IzvajanjePotiNavigationProp = StackNavigationProp<
@@ -81,18 +81,23 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
 
   useEffect(() => {
     if (indexOfMidwayPoint == -1) {
-      // setUporabnikPot({
-      //   ...uporabnikPot,
-      //   celotna_distanca: distance,
-      //   celotni_cas: elapsedTime,
-      //   koncana: true,
-      //   skupne_tocke: IzracunTock(pot.dolzina, distance, elapsedTime, points, pot.tocke),
-      // })
       endGame();
-    }
+    } else if (indexOfMidwayPoint != 0) {
+        Alert.alert('Naslednja točka', 
+            'Med izvajanjem točke ne morate zapustiti igre, če jo želite dokončati in si s tem priigrati točke. Ali želite nadaljevati?', 
+            [
+              { text: 'Nadaljuj', onPress: () => {} },
+              { text: 'Prekini', onPress: () => {stopGame()} }
+            ],
+            { cancelable: false }
+          );
+    };
   }, [indexOfMidwayPoint]);
 
   // useEffect(() => {console.log(uporabnikPot)}, [uporabnikPot]);
+  const handleElapsedTime = (time: number) => {
+    setElapsedTime(time);
+  };
 
   const endGame = async () => {
     setGameStarted(false);
@@ -107,30 +112,42 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     };
 
     // posiljanje podatkov na streznik
-    try {
-      const response = await fetch(`${baseUrl}/api/userPath/dodajUporabnikPot`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUporabnikPot),
-      });
-      if (response.ok) {
-        console.log('successfully added');
-      }
-    } catch (error) {
-      console.error(error);
-    };
+    posiljanjePodatkovUporabnikPot(newUporabnikPot);
   };
 
-  const handleElapsedTime = (time: number) => {
-    setElapsedTime(time);
+  const forceEndGame = () => {
+    setGameStarted(false);
+    setGamePlayed(true);
+    const newUporabnikPot: IUporabnikPot = {
+      ...initialUporabnikPot,
+      idPot: pot._id || '',
+      idUporabnik: thisUserData._id,
+      koncana: false,
+      prisilno_koncana: true,
+    }
+    posiljanjePodatkovUporabnikPot(newUporabnikPot);
+  };
+
+  const goBack = () => {
+    setGameStarted(false);
+    navigation.goBack();
   };
 
   const stopGame = () => {
-    setGameStarted(false);
-    navigation.goBack();
+    goBack();
     // posiljanje podatkov na streznik
+    console.log("zacasno ustavi igro");
+    if (uporabnikPot == null) {
+      console.log("uporabnikPot je null");
+      return;
+    }
+    const newUporabnikPot: IUporabnikPot = {
+      ...uporabnikPot,
+      celotna_distanca: distance,
+      celotni_cas: elapsedTime,
+      koncana: false,
+    };
+    posiljanjePodatkovUporabnikPot(newUporabnikPot);
   };
 
   const handleIndexChange = (index: number, newDistance: number, newPoints: number, userMidwayPoint: IUPVmesnaTocka) => {
@@ -193,13 +210,12 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
                 onElapsedTime={handleElapsedTime}
               />
               {/* ustvari novo metodo, ki prepreci navadnemu userju, da bi se kdaj igral to igro */}
-              <Button title="Končaj igro" onPress={endGame} />
+              <Button title="Končaj igro" onPress={forceEndGame} />
             </View>
           )}
         </View>
         <View>
-          {/* prikaz zgolj pri prehodu na novo vmesni tocko in ustavi igro, tj. lahko nadaljuje od tiste tocke */}
-          <Button title="Nazaj" onPress={stopGame} />
+        <Button title="Nazaj" onPress={goBack} />
         </View>
       </View>
     </Modal>
