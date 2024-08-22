@@ -93,7 +93,7 @@ const MainStack = () => {
       <Stack.Screen name="IzvajanjePoti" component={IzvajanjePoti} options={{ headerShown: false }} />
       <Stack.Screen name="Poti" component={Poti} />
       <Stack.Screen name="Statistika" component={Statistika} />
-      <Stack.Screen name="SeznamiOdigranihIger" component={SeznamOdigranihIger} />
+      <Stack.Screen name="SeznamiOdigranihIger" component={SeznamOdigranihIger} options={{headerShown: false}}/>
       <Stack.Screen name="UrejanjePotiII" component={UrejanjePotiII} />
       <Stack.Screen name="UserProfile" component={UserProfile} />
     </Stack.Navigator>

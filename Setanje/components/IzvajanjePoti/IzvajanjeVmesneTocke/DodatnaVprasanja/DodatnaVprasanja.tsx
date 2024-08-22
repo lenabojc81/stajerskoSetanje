@@ -4,6 +4,8 @@ import IDodatnoVprasanje from "../../../../models/IDodatnoVprasanje";
 import IUPDodatnoVprasanje from "../../../../models/IUPDodatnoVprasanje";
 import IUporabnikPot from "../../../../models/IUporabnikPot";
 import { set } from "react-hook-form";
+import styles from "../styles";
+import { Card } from "react-native-paper";
 
 interface DodatnaVprasanjaProps {
     index: number;
@@ -60,11 +62,16 @@ const DodatnaVprasanja: React.FC<DodatnaVprasanjaProps> = ({index, additionalQue
   return (
     <Modal animationType="slide" visible={true}>
     <View>
-        <Text>Dodatna vprašanja</Text>
-        <Text>{additionalQuestion.vprasanje}</Text>
+        <Card style={styles.card}>
+            <Card.Content>
+                <Text style={styles.question}>{additionalQuestion.vprasanje}</Text>
+            </Card.Content>
+        </Card>
         {shuffledAnswers.map((odgovor, index) => (
             <View key={index}>
-                <Button title={odgovor.odgovor} onPress={() => nextAdditionalQuestion(odgovor.pravilen, odgovor.odgovor)} />
+                <TouchableOpacity style={styles.button} onPress={() => nextAdditionalQuestion(odgovor.pravilen, odgovor.odgovor)}>
+                    <Text style={styles.buttonText}>{odgovor.odgovor}</Text>
+                </TouchableOpacity>
             </View>
         ))}
     </View>

@@ -49,15 +49,16 @@ const Pot: React.FC<NavProps> = ({ route }) => {
         <Paragraph>Število točk: {pot.tocke}</Paragraph>
       </Card.Content>
     </Card>
-    <Card style={styles.card}>
+    {uporabnikPot===null && <PremikDoZacetneLokacije pot={pot} />}
+    {uporabnikPot!==null && (
+      <Card style={styles.cardRed}>
         <Card.Content>
-          <List.Subheader>Vmesna točka 1</List.Subheader>
-          <Paragraph>Ime: {pot.vmesne_tocke[0].ime}</Paragraph>
-          <Paragraph>Lokacija: {pot.vmesne_tocke[0].lokacija.lat}, {pot.vmesne_tocke[0].lokacija.lng}</Paragraph>
-          <Paragraph>Uganka: {pot.vmesne_tocke[0].uganka}</Paragraph>
+          <Title>Že opravljena pot</Title>
+          <Paragraph>Poti ne morete ponovno opravljati. Podrobno statistiko izvajanja si lahko ogledate med opravljenimi potmi.</Paragraph>
+          {/* <Button mode="contained" onPress={() => navigation.navigate('SeznamiOdigranihIger')}>Opravljene poti</Button> */}
         </Card.Content>
       </Card>
-    {uporabnikPot===null && <PremikDoZacetneLokacije pot={pot} />}
+    )}
     </View>
   );
 };

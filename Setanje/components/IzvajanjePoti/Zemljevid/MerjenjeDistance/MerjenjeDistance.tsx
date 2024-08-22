@@ -9,7 +9,7 @@ const MerjenjeDistance: React.FC<MerjenjeDistanceProps> = ({ distance }) => {
 
     return (
         <View>
-            <Text>Prehojena pot: {distance.toFixed(2)} m</Text>
+            {/* <Text>Prehojena pot: {distance.toFixed(2)} m</Text> */}
         </View>
     );
 }

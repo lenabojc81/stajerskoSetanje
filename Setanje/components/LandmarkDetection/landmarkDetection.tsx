@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, Image, Text, Alert } from 'react-native';
+import { View, Button, Image, Text, Alert, Touchable, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { getLandmarkDetailsFromImage } from './ChatGPTService';
+import styles from '../IzvajanjePoti/IzvajanjeVmesneTocke/styles';
 
-const ImageUpload = () => {
+interface ImageUploadProps {
+  handlePicture: (picture: boolean) => void;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({handlePicture}) => {
   const [image, setImage] = useState<string | null>(null);
   const [landmarkDetails, setLandmarkDetails] = useState<string | null>(null);
 
@@ -19,9 +24,10 @@ const ImageUpload = () => {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const imageUri = result.assets[0].uri;
         setImage(imageUri);
+        handlePicture(true);
 
-        const details = await getLandmarkDetailsFromImage(imageUri);
-        setLandmarkDetails(details);
+        // const details = await getLandmarkDetailsFromImage(imageUri);
+        // setLandmarkDetails(details);
       } else {
         console.log('Image capture was canceled or no assets were returned.');
       }
@@ -32,7 +38,9 @@ const ImageUpload = () => {
 
   return (
     <View>
-      <Button title="Take a picture" onPress={takePicture} />
+      <TouchableOpacity onPress={takePicture} style={styles.button}>
+        <Text style={styles.buttonText}>Take a picture</Text>
+      </TouchableOpacity>
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
       {landmarkDetails && (
         <View>

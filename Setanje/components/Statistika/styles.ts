@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         textAlign: 'center',
+        textTransform: 'uppercase',
     },
     textPath: {
         color: 'white',

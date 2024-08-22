@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, ScrollView, Alert } from "react-native";
+import { View, Text, Button, ScrollView, Alert, TouchableOpacity } from "react-native";
 import IPot from "../../../models/IPot";
 import IVmesnaTocka from "../../../models/IVmesnaTocka";
 import ILokacija from "../../../models/ILokacija";
@@ -13,6 +13,8 @@ import { set } from "react-hook-form";
 import IUPVmesnaTocka from "../../../models/IUPVmesnaTocka";
 import IUporabnikPot from "../../../models/IUporabnikPot";
 import IUPDodatnoVprasanje from "../../../models/IUPDodatnoVprasanje";
+import styles from "./styles";
+import { Card } from "react-native-paper";
 
 interface IzvajanjeVmesneTockeProps {
   index: number;
@@ -49,6 +51,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     useState<boolean>(false);
   const [distance, setDistance] = useState<number>(0);
   const [additionalPoints, setAdditionalPoints] = useState<number>(0);
+  const [picture, setPicture] = useState<boolean>(false);
 
   const [changeAnswerCounter, setChangeAnswerCounter] = useState<number>(0);
   const [userAdditionalPoints, setUserAdditionalPoints] = useState<IUPDodatnoVprasanje[]>([]);
@@ -128,6 +131,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     setSelectedEndLocation(null);
     setSelectedButtonIndex(-1);
     setSelectedAnswer("");
+    setPicture(false);
     setShowAIButton(false);
 
     //odbitek tock
@@ -140,6 +144,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     setShowAIButton(false);
     setMozniOdgovori([]);
     setSelectedAnswer("");
+    setPicture(false);
     setSelectedButtonIndex(-1);
     setLocationAtEnd(null);
     setRightLocation(false);
@@ -167,6 +172,10 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     setChangeAnswerCounter(0);
     setUserAdditionalPoints([]);
   };
+
+  useEffect(() => {
+    checkLocation();
+  }, [picture]);
 
   const checkLocation = () => {
     if (locationAtEnd == null) return;
@@ -202,37 +211,45 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
       contentContainerStyle={{ paddingBottom: 30 }}
     >
       <View>
-        <Text>
-          uganka: {vmesna_tocka.uganka}, {vmesna_tocka.odgovor.odgovor}
-        </Text>
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text style={styles.question}>
+              {vmesna_tocka.uganka}?
+            </Text>
+          </Card.Content>
+        </Card>
         {selectedButtonIndex == -1 &&
           mozniOdgovori.map((mo, index) => (
-            <Button
+            <TouchableOpacity
               key={index}
               onPress={() => selectedDestination(mo, index)}
-              title={mo.odgovor.odgovor}
-            />
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>{mo.odgovor.odgovor}</Text>
+            </TouchableOpacity>
           ))}
       </View>
       {selectedEndLocation != null && (
         <View>
-          <Text>{selectedAnswer}</Text>
+          <Text style={styles.selectedAnswer}>{selectedAnswer}</Text>
+            <TouchableOpacity onPress={() => resetAnswer()} style={styles.button}>
+              <Text style={styles.buttonText}>Spremeni odgovor</Text>
+            </TouchableOpacity>
           <SafeAreaView>
             <Zemljevid
               endLocation={selectedEndLocation}
               onLocationUpdate={handleLocationUpdate}
               onDistanceUpdate={handleDistanceUpdate}
             />
-            <Text>{distance.toFixed(2)}</Text>
+            {/* <Text>{distance.toFixed(2)}</Text> */}
           </SafeAreaView>
-          <Button onPress={() => resetAnswer()} title="Spremeni odgovor" />
         </View>
       )}
-      {/* ne morem testirat */}
+
       {showAIButton && (
         <View>
-          <ImageUpload />
-          <Button title="preveri okolico" onPress={checkLocation} />
+          <ImageUpload handlePicture={setPicture}/>
+          {/* <Button title="preveri okolico" onPress={checkLocation} /> */}
         </View>
       )}
       {rightLocation && (
