@@ -10,6 +10,7 @@ interface IPot {
       lokacija: { lat: string; lng: string };
       uganka: string;
     }[];
+    createdAt: string;
 }
 
 export default IPot;
