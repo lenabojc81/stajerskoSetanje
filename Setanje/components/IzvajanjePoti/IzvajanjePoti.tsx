@@ -163,7 +163,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
   return (
     <Modal visible={true} animationType="slide">
       <View style={styles.container}>
-        {gameStarted && (
+        {gameStarted && indexOfMidwayPoint > -1 && (
           <SafeAreaView>
             <IzvajanjeVmesneTocke
               index={indexOfMidwayPoint}
