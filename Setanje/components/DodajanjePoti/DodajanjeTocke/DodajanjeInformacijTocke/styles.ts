@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    containerBig: {
+        padding: 16,
+    },
     removeButton: {
         backgroundColor: 'red',
         borderRadius: 50,
@@ -18,6 +21,33 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    card: {
+        marginVertical: 16,
+        backgroundColor: "#E0EFDE",
+    },
+    button: {
+        marginTop: 16,
+        backgroundColor: 'gray',
+        padding: 10,
+        borderRadius: 45,
+        width: '90%',
+        alignSelf: 'center',
+    },
+    buttonGreen: {
+        marginTop: 16,
+        backgroundColor: '#A8B8A6',
+        padding: 10,
+        borderRadius: 45,
+        width: '90%',
+        alignSelf: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        textTransform: 'uppercase',
     },
 });
 

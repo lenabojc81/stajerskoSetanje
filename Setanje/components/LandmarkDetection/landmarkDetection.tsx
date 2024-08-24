@@ -26,8 +26,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({handlePicture}) => {
         setImage(imageUri);
         handlePicture(true);
 
-        // const details = await getLandmarkDetailsFromImage(imageUri);
-        // setLandmarkDetails(details);
+        const details = await getLandmarkDetailsFromImage(imageUri);
+        setLandmarkDetails(details);
       } else {
         console.log('Image capture was canceled or no assets were returned.');
       }

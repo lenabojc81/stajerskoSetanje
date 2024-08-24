@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { TextInput, View } from "react-native";
+import { TextInput } from "react-native-paper";
+import { View } from "react-native";
 import styles from "../../DodajanjeTeksta/styles";
 
 interface DodajanjeTekstaProps {
@@ -22,9 +23,10 @@ const DodajanjeTeksta: React.FC<DodajanjeTekstaProps> = ({name, onEnteredValue})
                 name={name}
                 render={({field: {value}}) => (
                     <TextInput
-                        style={styles.input}
+                        style={{marginBottom: 16}}
                         placeholder={name}
                         value={value}
+                        mode="outlined"
                         onChangeText={handleChange}
                     />
                 )}

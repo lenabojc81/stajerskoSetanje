@@ -31,6 +31,13 @@ const style = StyleSheet.create({
         marginVertical: 16,
         backgroundColor: "gray",
       },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
+        textTransform: 'uppercase',
+      }
 });
 
 export default style;

@@ -56,6 +56,7 @@ const SeznamOdigranihIger = () => {
         setUporabnikovePoti: setListOfGames,
       });
     }
+    setRefreshing(false);
   };
 
   return (
@@ -65,6 +66,7 @@ const SeznamOdigranihIger = () => {
       </View>
       <ScrollView
         style={styles.container}
+        contentContainerStyle={{paddingBottom: 120}}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }

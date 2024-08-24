@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     removeButton: {
-        backgroundColor: 'red',
+        backgroundColor: '#EF6F6F',
         borderRadius: 50,
         width: 30,
         height: 30,
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     addButton: {
-        backgroundColor: 'green',
+        backgroundColor: '#A8B8A6',
         borderRadius: 50,
         width: 30,
         height: 30,
@@ -32,6 +32,26 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    card: {
+        marginBottom: 16,
+        padding: 8,
+        backgroundColor: "#E0EFDE",
+    },
+    saveButton: {
+            marginTop: 16,
+            backgroundColor: '#A8B8A6',
+            padding: 10,
+            borderRadius: 45,
+            width: '90%',
+            alignSelf: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        textTransform: 'uppercase',
     }
 });
 

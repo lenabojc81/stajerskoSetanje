@@ -5,6 +5,7 @@ import DodajanjeTeksta from "../../DodajanjeTeksta/DodajanjeTeksta";
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import DodajanjeVnosa from "../DodajanjeInformacijTocke/DodajanjeVnosa";
+import { Card } from "react-native-paper";
 
 interface DodajanjeDodatnegaVprasanjaProps {
     onAddQuestion: (value: IDodatnoVprasanje) => void;
@@ -73,7 +74,8 @@ const DodajanjeDodatnegaVprasanja: React.FC<DodajanjeDodatnegaVprasanjaProps> = 
 
     return (
         <View>
-            <Text>DodajanjeDodatnegaVprasanja</Text>
+            <Card style={styles.card}>
+                <Card.Content>
             <DodajanjeVnosa name="Vprašanje" onEnteredValue={(value: string) => setAdditionalQuestion({ ...additionalQuestion, vprasanje: value })} />
             {numInputFields.map((index) => (
                 <View key={index} style={styles.inputContainer} >
@@ -104,7 +106,12 @@ const DodajanjeDodatnegaVprasanja: React.FC<DodajanjeDodatnegaVprasanjaProps> = 
                     </Picker>
                 </View>
             )}
-            <Button title='Shrani dodatno vprašanje' onPress={() => saveQuestion(additionalQuestion)} />
+            {/* <Button title='Shrani dodatno vprašanje' onPress={() => saveQuestion(additionalQuestion)} /> */}
+                <TouchableOpacity style={styles.saveButton} onPress={() => saveQuestion(additionalQuestion)}>
+                    <Text style={styles.buttonText}>Shrani dodatno vprašanje</Text>
+                </TouchableOpacity>
+            </Card.Content>
+            </Card>
         </View>
     );
 };

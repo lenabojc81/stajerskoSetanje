@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView, Alert, TextStyle } from "react-native";
 import DodajanjeTeksta from "./DodajanjeTeksta/DodajanjeTeksta";
 import IPot from "../../models/IPot";
 import style from "./style";
@@ -145,7 +145,6 @@ const DodajanjePotiII = () => {
     <SafeAreaView style={style.safeArea}>
     <ScrollView ref={scrollViewRef} contentContainerStyle={{ paddingBottom: 30 }} style={style.container}>
       <Card style={style.card}>
-        <Card.Title title="Dodajanje Poti II" />
         <Card.Content>
           <TextInput
             label="Ime poti"

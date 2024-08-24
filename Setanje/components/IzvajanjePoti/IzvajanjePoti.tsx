@@ -86,6 +86,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
   const endGame = async () => {
     setGameStarted(false);
     setGamePlayed(true);
+    setIndexOfMidwayPoint(-1);
 
     const newUporabnikPot: IUporabnikPot = {
       ...uporabnikPot,
@@ -101,7 +102,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
 
   const forceEndGame = () => {
     setGameStarted(false);
-    setGamePlayed(true);
+    setGamePlayed(false);
     const newUporabnikPot: IUporabnikPot = {
       ...initialUporabnikPot,
       idPot: pot._id || '',
@@ -110,6 +111,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
       prisilno_koncana: true,
     }
     posiljanjePodatkovUporabnikPot(newUporabnikPot);
+    navigation.goBack();
   };
 
   const goBack = () => {
@@ -161,7 +163,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
   return (
     <Modal visible={true} animationType="slide">
       <View style={styles.container}>
-        {indexOfMidwayPoint > -1 && (
+        {gameStarted && (
           <SafeAreaView>
             <IzvajanjeVmesneTocke
               index={indexOfMidwayPoint}
@@ -183,7 +185,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
                   <Text style={styles.cong}>Čestitke!</Text>
                   <Text style={styles.opr}>Pot je uspešno opravljena</Text>
                   <Text style={styles.text}>Težavnost: {pot.tezavnost}</Text>
-                  <Text style={styles.text}>Dolžina poti: {distance} m</Text>
+                  <Text style={styles.text}>Dolžina poti: {(Number(distance.toFixed(0)) / 1000).toFixed(2)} km</Text>
                   <Text style={styles.text}>Porabljen čas: {elapsedTime} s</Text>
                   <Text style={styles.text}>Število točk: {points}</Text>
                 </Card.Content>
@@ -207,9 +209,9 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
         {gameStarted && (<TouchableOpacity onPress={forceEndGame} style={styles.purpleButton} >
           <Text style={styles.buttonText}>Končaj igro</Text>
         </TouchableOpacity>)}
-        <TouchableOpacity onPress={goBack} style={styles.grayButton} >
+        {!gameStarted && <TouchableOpacity onPress={goBack} style={styles.grayButton} >
           <Text style={styles.buttonText}>Nazaj</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
         {/* <Button title="Nazaj" onPress={goBack} /> */}
         </View>
       </View>
