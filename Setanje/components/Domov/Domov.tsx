@@ -1,24 +1,34 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import styles from './styles';
-import { RootStackParamList } from '../Navigacija/types';
-import * as React from 'react';
-import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { Text, Appbar, Card } from 'react-native-paper';
-import fetchUserData from '../ProfilUporabnika/FetchUserData';
-import { fetchPoti } from '../Poti/poti';
-import IPot from '../../models/IPot';
+import { StackNavigationProp } from "@react-navigation/stack";
+import styles from "./styles";
+import { RootStackParamList } from "../Navigacija/types";
+import * as React from "react";
+import { View, ScrollView, Image, TouchableOpacity } from "react-native";
+import { Text, Appbar, Card } from "react-native-paper";
+import fetchUserData from "../ProfilUporabnika/FetchUserData";
+import { fetchPoti } from "../Poti/poti";
+import IPot from "../../models/IPot";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faMonument,
+  faMosque,
+  faLandmarkDome,
+  faLandmarkFlag,
+  faLandmark,
+} from "@fortawesome/free-solid-svg-icons";
 
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
-const natureIcons = [
-  'https://image.flaticon.com/icons/png/512/616/616438.png', // Mountain
-  'https://image.flaticon.com/icons/png/512/616/616451.png', // Tree
-  'https://image.flaticon.com/icons/png/512/616/616407.png', // Waterfall
-  'https://image.flaticon.com/icons/png/512/616/616401.png', // River
-  'https://image.flaticon.com/icons/png/512/616/616418.png', // Forest
-  'https://image.flaticon.com/icons/png/512/616/616408.png', // Leaf
-  'https://image.flaticon.com/icons/png/512/616/616430.png', // Sun
+const LandmarkIcons = [
+  faMonument,
+  faMosque,
+  faLandmarkDome,
+  faLandmarkFlag,
+  faLandmark,
 ];
+
+const getRandomFontAwesomeIcon = () => {
+  return LandmarkIcons[Math.floor(Math.random() * LandmarkIcons.length)];
+};
 
 const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
   const [username, setUsername] = React.useState<string | null>(null);
@@ -37,7 +47,7 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
         const fetchedPaths = await fetchPoti();
         setPoti(fetchedPaths);
       } catch (error: any) {
-        setMessage(error.message || 'Failed to load paths');
+        setMessage(error.message || "Failed to load paths");
       }
     };
 
@@ -53,10 +63,6 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
     return [];
   };
 
-  const getRandomNatureIcon = () => {
-    return natureIcons[Math.floor(Math.random() * natureIcons.length)];
-  };
-
   const handleCardPress = (path: IPot) => {
     navigation.navigate("Pot", { pot: path, isAdmin });
   };
@@ -67,26 +73,36 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Top Section */}
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>{`Zdravo ${username || 'User'}`}</Text>
+        <Text style={styles.headerText}>{`Zdravo ${username || "User"}`}</Text>
       </View>
 
       <View style={styles.content}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Priljubljene poti</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.horizontalScrollView}
+          >
             {randomFeaturedPaths.length > 0 ? (
               randomFeaturedPaths.map((path, index) => (
-                <TouchableOpacity key={index} onPress={() => handleCardPress(path)}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleCardPress(path)}
+                >
                   <Card style={styles.card}>
-                    <Card.Content>
-                      <Image
-                        source={{ uri: getRandomNatureIcon() }}
-                        style={styles.cardImage}
+                    <Card.Content style={styles.cardContent}>
+                      <FontAwesomeIcon
+                        icon={getRandomFontAwesomeIcon()}
+                        size={40}
+                        color="#4CAF50"
+                        style={styles.cardIcon}
                       />
                       <Text style={styles.cardTitle}>{path.ime}</Text>
-                      <Text style={styles.cardDifficulty}>{'★'.repeat(path.tezavnost)}</Text>
+                      <Text style={styles.cardDifficulty}>
+                        {"★".repeat(path.tezavnost)}
+                      </Text>
                     </Card.Content>
                   </Card>
                 </TouchableOpacity>
@@ -99,17 +115,28 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Najnovejše poti</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.horizontalScrollView}
+          >
             {newestPaths.map((path, index) => (
-              <TouchableOpacity key={index} onPress={() => handleCardPress(path)}>
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleCardPress(path)}
+              >
                 <Card style={styles.card}>
-                  <Card.Content>
-                    <Image
-                      source={{ uri: getRandomNatureIcon() }}
-                      style={styles.cardImage}
+                  <Card.Content style={styles.cardContent}>
+                    <FontAwesomeIcon
+                      icon={getRandomFontAwesomeIcon()}
+                      size={40}
+                      color="#4CAF50"
+                      style={styles.cardIcon}
                     />
                     <Text style={styles.cardTitle}>{path.ime}</Text>
-                    <Text style={styles.cardDifficulty}>{'★'.repeat(path.tezavnost)}</Text>
+                    <Text style={styles.cardDifficulty}>
+                      {"★".repeat(path.tezavnost)}
+                    </Text>
                   </Card.Content>
                 </Card>
               </TouchableOpacity>
@@ -119,18 +146,28 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Poskusi tole</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.horizontalScrollView}
+          >
             {randomTryThisPaths.length > 0 ? (
               randomTryThisPaths.map((path, index) => (
-                <TouchableOpacity key={index} onPress={() => handleCardPress(path)}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleCardPress(path)}
+                >
                   <Card style={styles.card}>
                     <Card.Content>
-                      <Image
-                        source={{ uri: getRandomNatureIcon() }}
-                        style={styles.cardImage}
+                      <FontAwesomeIcon
+                        icon={getRandomFontAwesomeIcon()}
+                        size={40}
+                        color="#4CAF50"
                       />
                       <Text style={styles.cardTitle}>{path.ime}</Text>
-                      <Text style={styles.cardDifficulty}>{'★'.repeat(path.tezavnost)}</Text>
+                      <Text style={styles.cardDifficulty}>
+                        {"★".repeat(path.tezavnost)}
+                      </Text>
                     </Card.Content>
                   </Card>
                 </TouchableOpacity>
