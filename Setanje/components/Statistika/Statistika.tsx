@@ -56,7 +56,7 @@ const Statistika: React.FC<NavProps> = ({route}) => {
             <Card.Content>
               <Paragraph>{pot.opis}</Paragraph>
               <Paragraph>Težavnost: {pot.tezavnost}</Paragraph>
-              <Paragraph>Dolžina poti: {pot.dolzina} m</Paragraph>
+              <Paragraph>Dolžina poti: {(Number(pot.dolzina.toFixed(0)) /1000).toFixed(2)} km</Paragraph>
               <Paragraph>Število točk: {pot.tocke}</Paragraph>
             </Card.Content>
           </Card>
@@ -67,7 +67,7 @@ const Statistika: React.FC<NavProps> = ({route}) => {
           </Card>
           <Card style={styles.card}>
             <Card.Content>
-              <Paragraph>Prehojena pot: {game.celotna_distanca} m</Paragraph>
+              <Paragraph>Prehojena pot: {(Number(game.celotna_distanca.toFixed(0)) / 1000).toFixed(2)} km</Paragraph>
               <Paragraph>Porabljen čas: {game.celotni_cas} s</Paragraph>
               <Paragraph>Povprečna hoja: {(game.celotna_distanca/game.celotni_cas)*3.6} km/h</Paragraph>
               <Paragraph>Pridobljene točke: {game.skupne_tocke} ({(game.skupne_tocke*100/pot.tocke).toFixed(0)}%)</Paragraph>
@@ -83,7 +83,7 @@ const Statistika: React.FC<NavProps> = ({route}) => {
                 </Card>
               <Card key={index} style={styles.card}>
                 <Card.Content>
-                  <Paragraph>Prehojena razdalja: {tocka.distanca} m</Paragraph>
+                  <Paragraph>Prehojena razdalja: {(Number(tocka.distanca.toFixed(2))/1000).toFixed(2)} km</Paragraph>
                   <Paragraph>Porabljen čas: {tocka.cas} s</Paragraph>
                 </Card.Content>
               </Card>

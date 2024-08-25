@@ -79,7 +79,7 @@ const SeznamOdigranihIger = () => {
             <Card key={index} style={styles.card}>
               <Card.Title title={game.pot_naziv} />
               <Card.Content>
-                <Text>prehojena pot: {game.celotna_distanca} m</Text>
+                <Text>prehojena pot: {(Number(game.celotna_distanca.toFixed(0)) / 1000).toFixed(2)} km</Text>
                 <Text>porabljen čas: {game.celotni_cas} s</Text>
                 <Text>pridobljene točke: {game.skupne_tocke}</Text>
               </Card.Content>
