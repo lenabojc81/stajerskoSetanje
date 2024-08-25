@@ -22,6 +22,7 @@ type NavProps = {
 
 const Pot: React.FC<NavProps> = ({ route }) => {
   const { pot } = route.params;
+  const {isAdmin} = route.params;
   const navigation = useNavigation<PotScreenNavigationProp>();
 
   const [message, setMessage] = useState<string>('');
@@ -49,7 +50,7 @@ const Pot: React.FC<NavProps> = ({ route }) => {
         <Paragraph>Število točk: {pot.tocke}</Paragraph>
       </Card.Content>
     </Card>
-    {uporabnikPot===null && <PremikDoZacetneLokacije pot={pot} />}
+    {(uporabnikPot===null || isAdmin) && <PremikDoZacetneLokacije pot={pot} isAdmin={isAdmin} />}
     {uporabnikPot!==null && (
       <Card style={styles.cardRed}>
         <Card.Content>

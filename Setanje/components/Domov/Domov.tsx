@@ -25,10 +25,11 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
   const [poti, setPoti] = React.useState<any[]>([]);
   const [message, setMessage] = React.useState<string | null>(null);
   const [email, setEmail] = React.useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const loadUserData = async () => {
-      await fetchUserData({ setMessage, setUsername, setEmail });
+      await fetchUserData({ setMessage, setUsername, setEmail, setIsAdmin });
     };
 
     const loadPaths = async () => {
@@ -57,7 +58,7 @@ const Domov = ({ navigation }: { navigation: HomeScreenNavigationProp }) => {
   };
 
   const handleCardPress = (path: IPot) => {
-    navigation.navigate("Pot", { pot: path });
+    navigation.navigate("Pot", { pot: path, isAdmin });
   };
 
   const randomFeaturedPaths = getRandomPaths();

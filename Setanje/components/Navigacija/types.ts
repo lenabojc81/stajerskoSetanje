@@ -5,12 +5,12 @@ export type RootStackParamList = {
     BottomNav: undefined;
     Home: undefined;
     Poti: undefined;
-    Pot: { pot: IPot };
+    Pot: { pot: IPot, isAdmin: boolean };
     UporabnikPoti: undefined;
     Statistika: { game: IUporabnikPot };
     ZacetnaLokacija: { pot: IPot };
     DodajanjePotiII: undefined;
-    IzvajanjePoti: { pot: IPot };
+    IzvajanjePoti: { pot: IPot, isAdmin: boolean };
    // UrediPot: { pot: IPot };
    UrejanjePotiII: { pot: IPot };
    ProfilUporabnika: undefined;

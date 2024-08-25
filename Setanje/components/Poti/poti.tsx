@@ -141,7 +141,7 @@ const Poti = () => {
       {poti.map((pot, index) => (
         <TouchableOpacity
           key={index}
-          onPress={() => navigation.navigate("Pot", { pot })}
+          onPress={() => navigation.navigate("Pot", { pot, isAdmin })}
         >
           <Card key={index} style={styles.card}>
             <Card.Title title={`Ime poti: ${pot.ime}`} />

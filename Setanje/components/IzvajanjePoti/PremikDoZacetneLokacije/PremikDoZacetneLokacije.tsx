@@ -19,9 +19,10 @@ type ZacetnaLokacijaNavigationProp = StackNavigationProp<RootStackParamList, 'Za
 
 interface PremikDoZacetneLokacijeProps {
   pot: IPot;
+  isAdmin: boolean;
 }
 
-const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }) => {
+const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot, isAdmin }) => {
   const [showStartButton, setShowStartButton] = useState<boolean>(false);
 
   const navigation = useNavigation<ZacetnaLokacijaNavigationProp>();
@@ -45,9 +46,9 @@ const PremikDoZacetneLokacije: React.FC<PremikDoZacetneLokacijeProps> = ({ pot }
         </Card.Content>
       </Card>
       <Zemljevid endLocation={pot.zacetna_lokacija} onLocationUpdate={handleLocationUpdate} />
-      {showStartButton && (
+      {(showStartButton || isAdmin) && (
         <View>
-          <Button mode="contained" onPress={() => navigation.push('IzvajanjePoti', {pot})} >
+          <Button mode="contained" onPress={() => navigation.push('IzvajanjePoti', {pot, isAdmin})} >
             Začni z igro
           </Button>
         </View>

@@ -1,6 +1,6 @@
 // EmailPasswordAuth.tsx
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
 import { register, login } from './AuthServices';
 import { useNavigation } from '@react-navigation/native';
 
@@ -61,8 +61,14 @@ const EmailPasswordAuth: React.FC = () => {
         secureTextEntry
         style={styles.input}
       />
-      <Button title="Register" onPress={handleRegister} />
-      <Button title="Login" onPress={handleLogin} />
+      {/* <Button title="Register" onPress={handleRegister} /> */}
+      <TouchableOpacity onPress={handleRegister} style={styles.button}>
+        <Text style={styles.buttonText}>Registracija</Text>
+      </TouchableOpacity>
+      {/* <Button title="Login" onPress={handleLogin} /> */}
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Prijava</Text>
+      </TouchableOpacity>
       {message ? <Text>{message}</Text> : null}
     </View>
   );
@@ -81,6 +87,21 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 10,
   },
+  button: {
+    marginTop: 16,
+    backgroundColor: 'gray',
+    padding: 10,
+    borderRadius: 45,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  }
 });
 
 export default EmailPasswordAuth;

@@ -31,6 +31,7 @@ type NavProps = {
 
 const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
   const { pot } = route.params;
+  const { isAdmin } = route.params;
   const navigation = useNavigation<IzvajanjePotiNavigationProp>();
 
   const [gameStarted, setGameStarted] = useState<boolean>(true);
@@ -103,6 +104,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
   const forceEndGame = () => {
     setGameStarted(false);
     setGamePlayed(false);
+    setIndexOfMidwayPoint(0);
     const newUporabnikPot: IUporabnikPot = {
       ...initialUporabnikPot,
       idPot: pot._id || '',
@@ -169,6 +171,7 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
               index={indexOfMidwayPoint}
               vmesna_tocka={pot.vmesne_tocke[indexOfMidwayPoint]}
               onIndexChange={handleIndexChange}
+              isAdmin={isAdmin}
             />
           </SafeAreaView>
         )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, Button, Touchable, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { logout } from './../LogReg/AuthServices';
 import fetchUserData from './FetchUserData';
@@ -69,11 +69,20 @@ const UserProfile: React.FC = () => {
             <Text style={styles.value}>{email}</Text>
           </View>
 
-          <Button title="Spremeni geslo" onPress={handleChangePassword} />
-          <Button title="Odjavi se" onPress={handleLogout} />
+          {/* <Button title="Spremeni geslo" onPress={handleChangePassword} /> */}
+          <TouchableOpacity onPress={handleChangePassword} style={styles.button}>
+            <Text style={styles.buttonText}>Spremeni geslo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogout}>
+            <Text style={styles.buttonText}>Odjavi se</Text>
+          </TouchableOpacity>
+          {/* <Button title="Odjavi se" onPress={handleLogout} /> */}
 
           {isAdmin && (
-            <Button title="Dodaj pot" onPress={handleAddPath} />
+            <TouchableOpacity style={styles.button} onPress={handleAddPath}>
+              <Text style={styles.buttonText}>Dodaj pot</Text>
+            </TouchableOpacity>
+            // <Button title="Dodaj pot" onPress={handleAddPath} />
           )}
         </>
       ) : (
@@ -122,6 +131,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 15,
   },
+  button: {
+    marginTop: 16,
+    backgroundColor: 'gray',
+    padding: 10,
+    borderRadius: 45,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  }
 });
 
 export default UserProfile;

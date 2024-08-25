@@ -7,9 +7,10 @@ import styles from '../IzvajanjePoti/IzvajanjeVmesneTocke/styles';
 
 interface ImageUploadProps {
   handlePicture: (picture: boolean) => void;
+  isAdmin: boolean;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({handlePicture}) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({handlePicture, isAdmin}) => {
   const [image, setImage] = useState<string | null>(null);
   const [landmarkDetails, setLandmarkDetails] = useState<string | null>(null);
 
@@ -25,9 +26,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({handlePicture}) => {
         const imageUri = result.assets[0].uri;
         setImage(imageUri);
         handlePicture(true);
-
-        const details = await getLandmarkDetailsFromImage(imageUri);
-        setLandmarkDetails(details);
+        if (!isAdmin) {
+          const details = await getLandmarkDetailsFromImage(imageUri);
+          setLandmarkDetails(details);
+        }
       } else {
         console.log('Image capture was canceled or no assets were returned.');
       }
@@ -41,7 +43,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({handlePicture}) => {
       <TouchableOpacity onPress={takePicture} style={styles.button}>
         <Text style={styles.buttonText}>Take a picture</Text>
       </TouchableOpacity>
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      {image && !isAdmin && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
       {landmarkDetails && (
         <View>
           <Text>{landmarkDetails}</Text>

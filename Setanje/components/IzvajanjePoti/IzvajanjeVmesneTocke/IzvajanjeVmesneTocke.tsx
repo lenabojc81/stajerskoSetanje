@@ -20,6 +20,7 @@ interface IzvajanjeVmesneTockeProps {
   index: number;
   vmesna_tocka: IVmesnaTocka;
   onIndexChange: (index: number, distance: number, points: number, userMidwayPoint: IUPVmesnaTocka) => void;
+  isAdmin: boolean;
 }
 
 interface IOdgovor {
@@ -36,6 +37,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
   index,
   vmesna_tocka,
   onIndexChange,
+  isAdmin,
 }) => {
   const [selectedEndLocation, setSelectedEndLocation] =
     React.useState<ILokacija | null>(null);
@@ -174,7 +176,12 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
   };
 
   useEffect(() => {
-    checkLocation();
+    if (isAdmin && picture) {
+      setRightLocation(true);
+      setVisibleAdditionalQuestion(true);
+    } else {
+      checkLocation();
+    }
   }, [picture]);
 
   const checkLocation = () => {
@@ -182,10 +189,10 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     const distance = haversineDistance(locationAtEnd, vmesna_tocka.lokacija);
     if (distance <= 50) {
       setRightLocation(true);
+      setVisibleAdditionalQuestion(true);
     } else {
       setRightLocation(false);
     }
-    setVisibleAdditionalQuestion(true);
   };
 
   const handleIndexOfAdditionalQuestion = (index: number, correct: boolean, additionalQuestionUser: IUPDodatnoVprasanje) => {
@@ -246,9 +253,9 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
         </View>
       )}
 
-      {showAIButton && (
+      {(showAIButton || (isAdmin && selectedEndLocation != null)) && (
         <View>
-          <ImageUpload handlePicture={setPicture}/>
+          <ImageUpload handlePicture={setPicture} isAdmin={isAdmin}/>
           {/* <Button title="preveri okolico" onPress={checkLocation} /> */}
         </View>
       )}
