@@ -24,6 +24,6 @@ Aplikacija združuje zabavo in izobraževanje ter spodbuja k raziskovanju kultur
 
 
 ## Avtorji
-*Lena Bojc
-*Vivien Štampfer
-*Nik Fišer
+* Lena Bojc
+* Vivien Štampfer
+* Nik Fišer
