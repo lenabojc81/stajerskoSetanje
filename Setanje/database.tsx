@@ -6,8 +6,13 @@ export type User = {
   name: string;
 };
 
+let dbInstance: Promise<SQLite.SQLiteDatabase> | null = null;
+
 export const openDatabase = async () => {
-  return SQLite.openDatabaseAsync('SetanjeDB.db');
+  if (!dbInstance) {
+    dbInstance =  SQLite.openDatabaseAsync('SetanjeDB.db');
+  }
+  return dbInstance;
 };
 
 export const initDB = async (db: SQLite.WebSQLDatabase) => {

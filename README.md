@@ -1,6 +1,7 @@
 
 # ŠETANJE
 
+<img src="dokumentacija/logo.png" alt="Logo" width="500"/>
 
 ## O naši aplikaciji
 
@@ -20,3 +21,9 @@ Aplikacija združuje zabavo in izobraževanje ter spodbuja k raziskovanju kultur
 * Nastavitev backend strežnika: Pojdite v mapo backend in znova zaženite ukaz "npm install", da zagotovite pravilno delovanje backend strežnika.
 * Zagon aplikacije: V mapi backend zaženite ukaz "npm start". Vrnite se v mapo Setanje in v terminal vpišite "npx expo start". Ta ukaz bo zagnal aplikacijo ter prikazal QR kodo.
 * Povezava z mobilno napravo: Odprite Expo aplikacijo na svojem telefonu in skenirajte prikazano QR kodo. Aplikacijo lahko po želji preizkusite tudi v emulatorju na računalniku.
+
+
+## Avtorji
+* Lena Bojc
+* Vivien Štampfer
+* Nik Fišer
