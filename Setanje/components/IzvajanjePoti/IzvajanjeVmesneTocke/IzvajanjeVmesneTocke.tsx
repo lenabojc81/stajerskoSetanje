@@ -195,6 +195,17 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
     }
   };
 
+  const checkIALocation = (location: ILokacija) => {
+    if (location == null) return;
+    const distance = haversineDistance(location, vmesna_tocka.lokacija);
+    if (distance <= 250) {
+      setRightLocation(true);
+      setVisibleAdditionalQuestion(true);
+    } else {
+      setRightLocation(true);
+    }
+  }
+
   const handleIndexOfAdditionalQuestion = (index: number, correct: boolean, additionalQuestionUser: IUPDodatnoVprasanje) => {
     // console.log("correct", correct);
     if (correct) {
@@ -255,7 +266,7 @@ const IzvajanjeVmesneTocke: React.FC<IzvajanjeVmesneTockeProps> = ({
 
       {(showAIButton || (isAdmin && selectedEndLocation != null)) && (
         <View>
-          <ImageUpload handlePicture={setPicture} isAdmin={isAdmin}/>
+          <ImageUpload handlePicture={setPicture} isAdmin={isAdmin} handleLandmarkDetails={checkIALocation}/>
           {/* <Button title="preveri okolico" onPress={checkLocation} /> */}
         </View>
       )}

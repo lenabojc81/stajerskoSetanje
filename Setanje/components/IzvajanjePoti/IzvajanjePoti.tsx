@@ -89,12 +89,19 @@ const IzvajanjePoti: React.FC<NavProps> = ({ route }) => {
     setGamePlayed(true);
     setIndexOfMidwayPoint(-1);
 
+    let allPoint: number = IzracunTock(pot.dolzina, distance, elapsedTime, points, pot.tocke);
+    console.log("allPoint", allPoint);
+    if (allPoint > pot.tocke) {
+      allPoint = pot.tocke;
+    } else if (allPoint < 0) {
+      allPoint = 0;
+    };
     const newUporabnikPot: IUporabnikPot = {
       ...uporabnikPot,
       koncana: true,
       celotna_distanca: distance,
       celotni_cas: elapsedTime,
-      skupne_tocke: IzracunTock(pot.dolzina, distance, elapsedTime, points, pot.tocke),
+      skupne_tocke: allPoint,
     };
     console.log("koncana igra");
     // posiljanje podatkov na streznik
