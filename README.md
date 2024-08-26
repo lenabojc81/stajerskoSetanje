@@ -1,6 +1,6 @@
 
 # ŠETANJE
-
+![Logo](S/dokumentacija/logo.png)
 
 ## O naši aplikaciji
 
