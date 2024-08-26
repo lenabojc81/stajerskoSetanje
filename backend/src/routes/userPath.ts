@@ -4,6 +4,34 @@ import {mongoose} from  '../db';
 
 const router = express.Router();
 
+
+
+router.get('/lestvica', async (req, res) => {
+    console.log('API klic za /lestvica dosežen');
+    try {
+        const uporabnikPoti = await UporabnikPot.aggregate([
+            {
+                $group: {
+                    _id: "$idUporabnik", 
+                    skupneTocke: { $sum: "$skupne_tocke" }, 
+                    uporabnik_naziv: { $first: "$uporabnik_naziv" }
+                }
+            },
+            {
+                $sort: { skupneTocke: -1 } 
+            }
+        ]);
+
+        console.log('UporabnikPoti:', uporabnikPoti); 
+        res.status(200).json(uporabnikPoti);
+    } catch (error) {
+        console.error('Napaka pri pridobivanju podatkov:', error);
+        res.status(500).json({ error: (error as any).message });
+    }
+});
+
+
+
 router.post('/dodajUporabnikPot', async (req, res) => {
     try {
         const uporabnikPot = new UporabnikPot(req.body);
@@ -52,5 +80,9 @@ router.get('/:idUporabnik', async (req, res) => {
         res.status(500).json({ error: error });
     }
 });
+
+
+
+
 
 export default router;

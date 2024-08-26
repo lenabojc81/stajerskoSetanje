@@ -48,12 +48,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cardImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
   cardTitle: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -66,6 +60,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: 'center',
   },
+  cardIcon: {
+    alignSelf: 'center',
+    marginBottom: 10,
+  }
 });
 
 export default styles;
